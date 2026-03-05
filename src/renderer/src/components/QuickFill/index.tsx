@@ -15,11 +15,11 @@ export function QuickFill({ onApply }: QuickFillProps) {
   const [phases, setPhases] = useState<PhaseCount>('3')
 
   return (
-    <div className="flex-1 flex items-center gap-3 bg-[#0d1117] border border-[#30363d] rounded-lg px-4 py-2">
-      <span className="text-[10px] uppercase tracking-widest text-[#8b949e] flex-shrink-0">
+    <div className="flex items-center gap-3 bg-[#0d1117] border border-[#30363d] rounded-lg px-4 py-2">
+      <span className="text-[10px] uppercase tracking-widest text-[#8b949e] ">
         Быстрое заполнение
       </span>
-      <div className="w-[1px] h-6 bg-[#30363d] flex-shrink-0" />
+      <div className="w-[1px] h-6 bg-[#30363d] shrink-0" />
 
       <FieldLabel text="Кол-во опор">
         <input
@@ -42,7 +42,7 @@ export function QuickFill({ onApply }: QuickFillProps) {
         </select>
       </FieldLabel>
 
-      <FieldLabel text="Нагрузка в узле, кВт">
+      <FieldLabel text="Нагрузка, кВт">
         <input
           value={load}
           onChange={(e) => setLoad(e.target.value)}

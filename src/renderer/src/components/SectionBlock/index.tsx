@@ -53,7 +53,7 @@ export function SectionBlock({
     >
       {/* Index + remove */}
       <div className="flex flex-col items-center justify-start gap-1 pt-1">
-        <span className="text-[10px] text-[#8b949e]">#{index + 1}</span>
+        <span className="text-[12px] text-[#8b949e]">#{index + 1}</span>
         <button
           onClick={(e) => {
             stop(e)
@@ -66,10 +66,12 @@ export function SectionBlock({
       </div>
 
       {/* Block 1 — Section params */}
-      <div className="flex flex-col gap-2 min-w-[160px] border-r border-[#30363d] pr-3">
-        <span className={sectionTitleCls}>Участок</span>
+      <div className="flex flex-col gap-2 min-w-[130px] border-r border-[#30363d] pr-3">
+        <span className={sectionTitleCls}>
+          Участок {Number(s.poleNumber) - 1} - {s.poleNumber}
+        </span>
 
-        <FieldLabel text="№ опоры">
+        <FieldLabel text="№ конечной опоры">
           <input
             value={s.poleNumber}
             onClick={stop}
@@ -126,6 +128,10 @@ export function SectionBlock({
           </span>
           <span>
             Абонентов: <span className="text-[#cdd9e5]">{s.loads.length}</span>
+          </span>
+          //todo
+          <span>
+            В т.ч. нагревов: <span className="text-[#cdd9e5]">{s.loads.length}</span>
           </span>
         </div>
         <div className="flex flex-wrap gap-1 min-h-[24px]">

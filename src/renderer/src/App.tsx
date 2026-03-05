@@ -9,6 +9,15 @@ export default function App() {
   const [sections, setSections] = useState<Section[]>([mkSection(1)])
   const [activeId, setActiveId] = useState<number>(1)
 
+  const handleSave = async () => {
+    await window.api.saveSections(sections)
+  }
+
+  const handleLoad = async () => {
+    const data = await window.api.loadSections()
+    if (data) setSections(data as Section[])
+  }
+
   const applyQuickFill = (count: number, wire: WireMark, load: string, phases: PhaseCount) => {
     if (!count || count < 1) return
     const next = Array.from({ length: count }, (_, i) => ({
@@ -46,7 +55,7 @@ export default function App() {
 
   return (
     <div className="h-screen w-screen flex flex-col bg-[#0d1117] text-[#cdd9e5] overflow-hidden font-mono">
-      <Header applyQuickFill={applyQuickFill} />
+      <Header applyQuickFill={applyQuickFill} handleLoad={handleLoad} handleSave={handleSave} />
       <Schema sections={sections} activeId={activeId} onActivate={setActiveId} />
 
       <main className="flex-1 overflow-y-auto px-6 py-4">

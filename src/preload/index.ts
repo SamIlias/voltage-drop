@@ -3,8 +3,10 @@ import { electronAPI } from '@electron-toolkit/preload'
 
 // Custom APIs for renderer
 const api = {
-    loadTodos: () => ipcRenderer.invoke('todos:load'),
+  loadTodos: () => ipcRenderer.invoke('todos:load'),
   saveTodos: (todos: unknown) => ipcRenderer.invoke('todos:save', todos),
+  saveSections: (sections: unknown) => ipcRenderer.invoke('sections:save', sections),
+  loadSections: () => ipcRenderer.invoke('sections:load')
 }
 
 // Use `contextBridge` APIs to expose Electron APIs to
