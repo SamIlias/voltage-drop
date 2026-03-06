@@ -1,9 +1,10 @@
 import { useState } from 'react'
 import { LoadType, PhaseCount, Section, WireMark } from './types'
-import { mkSection } from './utils'
+import { getLoadThroughSection, mkSection } from './utils'
 import { Schema } from './components/Schema'
 import { SectionBlock } from './components/SectionBlock'
 import { Header } from './components/Header'
+import { WIRE_RESISTANCE } from './constants'
 
 export default function App() {
   const [sections, setSections] = useState<Section[]>([mkSection(1)])
@@ -38,20 +39,54 @@ export default function App() {
 
   const removeSection = (id: number) => setSections((prev) => prev.filter((s) => s.id !== id))
 
-  const updateSection = (id: number, patch: Partial<Section>) =>
-    setSections((prev) => prev.map((s) => (s.id === id ? { ...s, ...patch } : s)))
+  const updateSection = (id: number, patch: Partial<Section>) => {
+    setSections((prev) => {
+      // 1. Применяем patch к нужной секции
+      const patched = prev.map((s) => (s.id === id ? { ...s, ...patch } : s))
 
-  const addLoad = (id: number) =>
-    setSections((prev) =>
-      prev.map((s) => {
-        if (s.id !== id || !s.newLoadPower) return s
+      // 2. Пересчитываем все секции по порядку, накапливая dUsec
+      let accDUsec = 0
+
+      return patched.map((s) => {
+        const Psec = getLoadThroughSection(s.id, patched)
+        const phases = parseInt(s.phases)
+        const length = parseFloat(s.length) / 1000
+
+        const Isec1 = Psec / (phases * 220 * 0.9)
+        const R0 = WIRE_RESISTANCE[s.wire] ?? 0
+        const Rsec = R0 * length
+
+        const dUsec = phases === 3 ? Isec1 * Rsec : 2 * Isec1 * Rsec
+
+        const dUsecPercent = ((accDUsec + dUsec) * 100) / 220
+        const Uend = 230 - accDUsec
+
+        accDUsec += dUsec
+
         return {
           ...s,
-          loads: [...s.loads, { power: s.newLoadPower, type: s.newLoadType }],
-          newLoadPower: ''
+          results: {
+            Psec: +Psec.toFixed(0),
+            Isec1: +Isec1.toFixed(2),
+            Rsec: +Rsec.toFixed(4),
+            dUsec: +dUsec.toFixed(2),
+            dUsecPercent: +dUsecPercent.toFixed(2),
+            Uend: +Uend.toFixed(1)
+          }
         }
       })
-    )
+    })
+  }
+
+  const addLoad = (id: number) => {
+    const section = sections.find((s) => s.id === id)
+    if (!section || !section.newLoadPower) return
+
+    updateSection(id, {
+      loads: [...section.loads, { power: section.newLoadPower, type: section.newLoadType }],
+      newLoadPower: ''
+    })
+  }
 
   return (
     <div className="h-screen w-screen flex flex-col bg-[#0d1117] text-[#cdd9e5] overflow-hidden font-mono">

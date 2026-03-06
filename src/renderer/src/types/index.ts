@@ -1,4 +1,4 @@
-import { WIRE_MARKS } from '@renderer/constants'
+import { SECTION_RESULT_LABEL, WIRE_MARKS } from '@renderer/constants'
 
 export type LoadType = 'быт' | 'нагрев'
 export type PhaseCount = '1' | '2' | '3'
@@ -9,6 +9,9 @@ export interface Load {
   type: LoadType
 }
 
+export type SectionResults = Record<keyof typeof SECTION_RESULT_LABEL, number | null>
+export type SectionResultsKeys = keyof SectionResults
+
 export interface Section {
   id: number
   poleNumber: string
@@ -18,4 +21,5 @@ export interface Section {
   loads: Load[]
   newLoadPower: string
   newLoadType: LoadType
+  results: SectionResults
 }

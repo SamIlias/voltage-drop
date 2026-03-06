@@ -2,7 +2,7 @@ import { Load, LoadType, PhaseCount, Section, WireMark } from '@renderer/types'
 import { FieldLabel } from '../FieldLabel'
 import { totalPower } from '@renderer/utils'
 import { inputCls } from '..'
-import { LOAD_TYPES, PHASE_OPTIONS, WIRE_MARKS } from '@renderer/constants'
+import { LOAD_TYPES, PHASE_OPTIONS, SECTION_RESULT_LABEL, WIRE_MARKS } from '@renderer/constants'
 
 const sectionTitleCls = 'text-[10px] uppercase tracking-widest text-[#58a6ff]'
 
@@ -175,25 +175,23 @@ export function SectionBlock({
       </div>
 
       {/* Block 3 — Results */}
-      <div className="flex flex-col gap-2 min-w-[150px]">
+      <div className="flex flex-col gap-2 min-w-[200px]">
         <span className={sectionTitleCls}>Результаты</span>
-        {(
-          [
-            ['Нагрузка в узле', 'кВт'],
-            ['Напряжение в узле', 'В'],
-            ['Потери ΔU', '%']
-          ] as [string, string][]
-        ).map(([label, unit]) => (
-          <div
-            key={label}
-            className="flex justify-between items-center bg-[#0d1117] rounded px-2 py-1"
-          >
-            <span className="text-[10px] text-[#8b949e]">{label}</span>
-            <span className="text-xs font-bold text-[#58a6ff]">
-              — <span className="text-[#8b949e] font-normal">{unit}</span>
-            </span>
-          </div>
-        ))}
+        {Object.keys(s.results).map((key) => {
+          const { label, unit } = SECTION_RESULT_LABEL[key]
+          const value = s.results[key]
+          return (
+            <div
+              key={key}
+              className="flex justify-between items-center bg-[#0d1117] rounded px-2 py-1"
+            >
+              <span className="text-[10px] text-[#8b949e]">{label}</span>
+              <span className="text-xs font-bold text-[#58a6ff]">
+                {value || '__'} <span className="text-[#8b949e] font-normal">{unit}</span>
+              </span>
+            </div>
+          )
+        })}
       </div>
     </div>
   )
