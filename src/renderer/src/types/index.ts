@@ -15,6 +15,12 @@ export interface Load {
 export type SectionResults = Record<keyof typeof SECTION_RESULT_LABEL, number | null>
 export type SectionResultsKeys = keyof SectionResults
 
+export enum ResultStatus {
+  OK = 'ok',
+  WARN = 'warn',
+  DANGER = 'danger'
+}
+
 export interface Section {
   id: number
   poleNumber: string

@@ -14,6 +14,8 @@ export const WIRE_RESISTANCE: Record<(typeof WIRE_MARKS)[number], number> = {
   ШВВП: 0.37
 }
 
+export const TRANSFORMER_POWERS = ['25', '40', '63', '100', '160', '250', '400', '630', '1000']
+
 export const SIMULTANEITY_FACTOR: Record<number, number> = {
   1: 1.0,
   2: 0.91,

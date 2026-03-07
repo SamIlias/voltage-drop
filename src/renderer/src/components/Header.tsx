@@ -1,40 +1,186 @@
-import { JSX } from 'react'
-import { QuickFill } from './QuickFill'
-import { PhaseCount, WireMark } from '@renderer/types'
+import { ResultStatus } from '@renderer/types'
+import { FieldLabel } from './FieldLabel'
+import { TRANSFORMER_POWERS } from '@renderer/constants'
+import { VDivider } from './VerticalDivider'
+import { getStatusByGreater, getStatusByLower } from '@renderer/utils'
+import { ActionButton } from './ActionButton'
 
-type HeaderProps = {
-  applyQuickFill: (count: number, wire: WireMark, load: string, phases: PhaseCount) => void
-  handleSave: () => Promise<void>
-  handleLoad: () => Promise<void>
+export type Theme = 'dark' | 'light'
+
+interface HeaderProps {
+  // Actions
+  handleSave: () => void
+  handleLoad: () => void
+  onInfoOpen: () => void
+  // Inputs
+  lineName: string
+  setLineName: (v: string) => void
+  calcDate: string
+  setCalcDate: (v: string) => void
+  cosPhi: string
+  setCosPhi: (v: string) => void
+  transformerPower: string
+  setTransformerPower: (v: string) => void
+  // Results (null = не рассчитано)
+  transformerLoad: number | null
+  voltageDrop: number | null
+  powerReserve: number | null
+  // Theme
+  theme: Theme
+  onThemeToggle: () => void
 }
 
-export function Header({ applyQuickFill, handleSave, handleLoad }: HeaderProps): JSX.Element {
+function statusCls(status: ResultStatus | undefined): string {
+  if (status === ResultStatus.DANGER) return 'text-[#f85149] border-[#f85149]'
+  if (status === ResultStatus.WARN) return 'text-[#d29922] border-[#d29922]'
+  if (status === ResultStatus.OK) return 'text-[#3fb950] border-[#3fb950]'
+  return 'text-[#6e7681] border-[#30363d]'
+}
+
+function ResultBadge({
+  label,
+  value,
+  unit,
+  status
+}: {
+  label: string
+  value: number | null
+  unit: string
+  status: ResultStatus | undefined
+}) {
+  const cls = statusCls(status)
   return (
-    <header className="h-[16.666vh] w-full flex items-center justify-between px-8 border-b border-[#30363d] bg-[#161b22] gap-8">
-      <p className="text-xs text-[#8b949e] uppercase tracking-widest mb-1">
-        Инженерный расчёт параметров линии электропередачи
-      </p>
-      <QuickFill onApply={applyQuickFill} />
+    <div className={`flex flex-col gap-0.5 pl-2.5 border-l-2 ${cls}`}>
+      <span className="text-[9px] font-mono uppercase tracking-widest text-[#6e7681]">{label}</span>
+      <span className={`text-[13px] font-bold font-mono tracking-wide ${cls.split(' ')[0]}`}>
+        {value != null ? `${value.toFixed(1)} ${unit}` : `— ${unit}`}
+      </span>
+    </div>
+  )
+}
 
-      <div className="flex flex-col items-center gap-2 shrink-0">
-        <button
-          onClick={handleLoad}
-          className="flex items-center gap-1.5 px-3 py-1.5 text-[11px] font-mono uppercase tracking-wider
-            border border-[#30363d] text-[#8b949e] rounded
-            hover:border-[#58a6ff] hover:text-[#58a6ff] hover:bg-[#58a6ff0d]
-            transition-all duration-150 cursor-pointer"
-        >
-          <span className="text-[13px]">📂</span> Загрузить
-        </button>
+const inputCls =
+  'h-7 px-2 text-[12px] font-mono bg-[#010409] border border-[#30363d] rounded text-[#e6edf3] ' +
+  'focus:outline-none focus:border-[#58a6ff] transition-colors'
 
+export function Header({
+  handleSave,
+  handleLoad,
+  onInfoOpen,
+  lineName,
+  setLineName,
+  calcDate,
+  setCalcDate,
+  cosPhi,
+  setCosPhi,
+  transformerPower,
+  setTransformerPower,
+  transformerLoad,
+  voltageDrop,
+  powerReserve,
+  theme,
+  onThemeToggle
+}: HeaderProps) {
+  const loadStatus = getStatusByGreater(transformerLoad, 70, 90)
+  const dropStatus = getStatusByGreater(voltageDrop, 8, 13)
+  const reserveStatus = getStatusByLower(powerReserve, 50, 0)
+
+  return (
+    <header className="w-full flex items-center gap-4 px-5 border-b border-[#21262d] bg-[#161b22] min-h-[68px]">
+      <span className="text-sm font-mono text-[#e6edf3] max-w-50">
+        Расчёт параметров линии электропередачи
+      </span>
+
+      {/* Menu */}
+      <div className="flex flex-col gap-2 min-w-40 my-1">
+        <ActionButton icon="ℹ️" onClick={onInfoOpen}>
+          О программе
+        </ActionButton>
+
+        <ActionButton icon="📂" onClick={handleLoad}>
+          Загрузить
+        </ActionButton>
+
+        <ActionButton icon="💾" variant="success" onClick={handleSave}>
+          Сохранить
+        </ActionButton>
+      </div>
+
+      <VDivider />
+
+      {/* Line name + date */}
+      <div className="flex flex-col gap-1 items-start my-2 ">
+        <FieldLabel text="Название линии">
+          <input
+            className={`${inputCls} min-w-[250px]`}
+            value={lineName}
+            onChange={(e) => setLineName(e.target.value)}
+            placeholder="ВЛ-10кВ №1"
+          />
+        </FieldLabel>
+        <FieldLabel text="Дата расчёта">
+          <input
+            type="date"
+            className={`${inputCls}`}
+            value={calcDate}
+            onChange={(e) => setCalcDate(e.target.value)}
+          />
+        </FieldLabel>
+      </div>
+
+      <VDivider />
+
+      {/* cosPhi + transformer power */}
+      <div className="flex gap-3 items-end">
+        <FieldLabel text="cos φ">
+          <input
+            className={`${inputCls} w-[60px]`}
+            value={cosPhi}
+            onChange={(e) => setCosPhi(e.target.value)}
+            placeholder="0.92"
+          />
+        </FieldLabel>
+        <FieldLabel text="Мощность тр-ра">
+          <select
+            className={`${inputCls} w-[100px] cursor-pointer`}
+            value={transformerPower}
+            onChange={(e) => setTransformerPower(e.target.value)}
+          >
+            {TRANSFORMER_POWERS.map((p) => (
+              <option key={p} value={p}>
+                {p} кВА
+              </option>
+            ))}
+          </select>
+        </FieldLabel>
+      </div>
+
+      <VDivider />
+
+      {/* Results */}
+      <div className="flex gap-4 items-center shrink-0">
+        <ResultBadge label="Загрузка тр-ра" value={transformerLoad} unit="%" status={loadStatus} />
+        <ResultBadge label="Потеря напряжения" value={voltageDrop} unit="%" status={dropStatus} />
+        <ResultBadge
+          label="Резерв мощности"
+          value={powerReserve}
+          unit="кВА"
+          status={reserveStatus}
+        />
+      </div>
+
+      {/* Spacer */}
+      <div className="flex-1" />
+
+      {/* Theme toggle */}
+      <div className="flex gap-1.5 items-center shrink-0">
         <button
-          onClick={handleSave}
-          className="flex items-center gap-1.5 px-3 py-1.5 text-[11px] font-mono uppercase tracking-wider
-            border border-[#30363d] text-[#8b949e] rounded
-            hover:border-[#3fb950] hover:text-[#3fb950] hover:bg-[#3fb9500d]
-            transition-all duration-150 cursor-pointer"
+          onClick={onThemeToggle}
+          title={theme === 'dark' ? 'Светлая тема' : 'Тёмная тема'}
+          className="h-7 px-2 text-sm border border-[#30363d] rounded text-[#6e7681]
+            hover:border-[#58a6ff] hover:text-[#58a6ff] transition-all cursor-pointer"
         >
-          <span className="text-[13px]">💾</span> Сохранить
+          {theme === 'dark' ? '☀️' : '🌙'}
         </button>
       </div>
     </header>

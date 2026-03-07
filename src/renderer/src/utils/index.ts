@@ -5,7 +5,15 @@ import {
   WIRE_MARKS,
   WIRE_RESISTANCE
 } from '@renderer/constants'
-import { Load, LoadType, PhaseCount, Section, SectionResults, WireMark } from '@renderer/types'
+import {
+  Load,
+  LoadType,
+  PhaseCount,
+  ResultStatus,
+  Section,
+  SectionResults,
+  WireMark
+} from '@renderer/types'
 
 export function mkSection(
   id: number,
@@ -126,4 +134,26 @@ export function calculateSectionResults(
     dUsecPercent: +dUsecPercent.toFixed(2),
     Uend: +Uend.toFixed(1)
   }
+}
+
+export function getStatusByGreater(
+  value: number | null,
+  warn: number,
+  danger: number
+): ResultStatus | undefined {
+  if (value === null) return undefined
+  if (value > danger) return ResultStatus.DANGER
+  if (value > warn) return ResultStatus.WARN
+  return ResultStatus.OK
+}
+
+export function getStatusByLower(
+  value: number | null,
+  warn: number,
+  danger: number
+): ResultStatus | undefined {
+  if (value === null) return undefined
+  if (value < danger) return ResultStatus.DANGER
+  if (value < warn) return ResultStatus.WARN
+  return ResultStatus.OK
 }

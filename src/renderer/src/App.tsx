@@ -3,13 +3,26 @@ import { isSectionArray, LoadType, PhaseCount, Section, WireMark } from './types
 import { calculateSectionResults, mkSection } from './utils'
 import { Schema } from './components/Schema'
 import { SectionBlock } from './components/SectionBlock'
-import { Header } from './components/Header'
+import { Header, Theme } from './components/Header'
 
 export default function App() {
   const [sections, setSections] = useState<Section[]>([mkSection(1)])
   const [activeId, setActiveId] = useState<number>(1)
   //todo add input for cosPhi
-  const [cosPhi, setCosPhi] = useState<number>(0.9)
+  const [theme, setTheme] = useState<Theme>('dark')
+  const [lineName, setLineName] = useState('')
+  const [calcDate, setCalcDate] = useState(() => new Date().toISOString().slice(0, 10))
+  const [cosPhi, setCosPhiStr] = useState('0.9')
+  const [transformerPower, setTransformerPower] = useState('160')
+
+  // TODO: вычислять из sections когда будет реализовано
+  const transformerLoad: number | null = null
+  const voltageDrop: number | null = null
+  const powerReserve: number | null = null
+
+  const cosPhiNum = parseFloat(cosPhi) || 0.9
+
+  const bgCls = theme === 'dark' ? 'bg-[#0d1117] text-[#cdd9e5]' : 'bg-[#f0f4f8] text-[#1f2328]'
 
   const handleSave = async () => {
     await window.api.saveSections(sections)
@@ -19,6 +32,10 @@ export default function App() {
     const data = await window.api.loadSections()
     if (isSectionArray(data)) setSections(data)
     //todo handle error
+  }
+
+  const handleInfoOpen = () => {
+    // TODO: открыть модальное окно с информацией
   }
 
   const applyQuickFill = (count: number, wire: WireMark, load: string, phases: PhaseCount) => {
@@ -46,7 +63,7 @@ export default function App() {
       const patched = prev.map((s) => (s.id === id ? { ...s, ...patch } : s))
 
       return patched.map((s) => {
-        const results = calculateSectionResults(s, patched, cosPhi)
+        const results = calculateSectionResults(s, patched, cosPhiNum)
         return {
           ...s,
           results: results
@@ -71,8 +88,25 @@ export default function App() {
     })
 
   return (
-    <div className="h-screen w-screen flex flex-col bg-[#0d1117] text-[#cdd9e5] overflow-hidden font-mono">
-      <Header applyQuickFill={applyQuickFill} handleLoad={handleLoad} handleSave={handleSave} />
+    <div className={`h-screen w-screen flex flex-col font-mono min-w-11 overflow-auto ${bgCls}`}>
+      <Header
+        handleSave={handleSave}
+        handleLoad={handleLoad}
+        onInfoOpen={handleInfoOpen}
+        lineName={lineName}
+        setLineName={setLineName}
+        calcDate={calcDate}
+        setCalcDate={setCalcDate}
+        cosPhi={cosPhi}
+        setCosPhi={setCosPhiStr}
+        transformerPower={transformerPower}
+        setTransformerPower={setTransformerPower}
+        transformerLoad={transformerLoad}
+        voltageDrop={voltageDrop}
+        powerReserve={powerReserve}
+        theme={theme}
+        onThemeToggle={() => setTheme((t) => (t === 'dark' ? 'light' : 'dark'))}
+      />
       <Schema sections={sections} activeId={activeId} onActivate={setActiveId} />
 
       <main className="flex-1 overflow-y-auto px-6 py-4">
