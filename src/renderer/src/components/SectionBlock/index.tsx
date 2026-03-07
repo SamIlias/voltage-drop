@@ -14,19 +14,43 @@ interface SectionBlockProps {
   onRemove: () => void
   onChange: (patch: Partial<Section>) => void
   onAddLoad: () => void
+  onRemoveLoad: (index: number) => void
 }
 
-function LoadBadge({ load }: { load: Load }) {
-  const isHeat = load.type === 'нагрев'
+// function LoadBadge({ load }: { load: Load }) {
+//   const isHeat = load.type === LoadType.Heating
+//   return (
+//     <span
+//       className={`text-[10px] px-2 py-0.5 rounded-full border ${
+//         isHeat
+//           ? 'border-[#f0883e44] text-[#f0883e] bg-[#f0883e11]'
+//           : 'border-[#3fb95044] text-[#3fb950] bg-[#3fb95011]'
+//       }`}
+//     >
+//       {load.power} кВт · {load.type}
+//     </span>
+//   )
+// }
+function LoadBadge({ load, onRemove }: { load: Load; onRemove: () => void }) {
+  const isHeat = load.type === LoadType.Heating
   return (
     <span
-      className={`text-[10px] px-2 py-0.5 rounded-full border ${
+      className={`group relative text-[10px] px-2 py-0.5 rounded-full border ${
         isHeat
           ? 'border-[#f0883e44] text-[#f0883e] bg-[#f0883e11]'
           : 'border-[#3fb95044] text-[#3fb950] bg-[#3fb95011]'
       }`}
     >
       {load.power} кВт · {load.type}
+      <button
+        onClick={(e) => {
+          e.stopPropagation()
+          onRemove()
+        }}
+        className="absolute -top-1.5 -right-1.5 hidden group-hover:flex w-3.5 h-3.5 rounded-full bg-[#f85149] text-white text-[8px] items-center justify-center leading-none"
+      >
+        ✕
+      </button>
     </span>
   )
 }
@@ -38,7 +62,8 @@ export function SectionBlock({
   onActivate,
   onRemove,
   onChange,
-  onAddLoad
+  onAddLoad,
+  onRemoveLoad
 }: SectionBlockProps) {
   const stop = (e: React.MouseEvent) => e.stopPropagation()
 
@@ -138,7 +163,7 @@ export function SectionBlock({
           {s.loads.length === 0 ? (
             <span className="text-[10px] text-[#8b949e] italic">нет нагрузок</span>
           ) : (
-            s.loads.map((l, i) => <LoadBadge key={i} load={l} />)
+            s.loads.map((l, i) => <LoadBadge key={i} load={l} onRemove={() => onRemoveLoad(i)} />)
           )}
         </div>
         <div className="flex gap-2 items-center">
@@ -175,7 +200,7 @@ export function SectionBlock({
       </div>
 
       {/* Block 3 — Results */}
-      <div className="flex flex-col gap-2 min-w-[200px]">
+      <div className="flex flex-col gap-2 min-w-[150px]">
         <span className={sectionTitleCls}>Результаты</span>
         {Object.keys(s.results).map((key) => {
           const { label, unit } = SECTION_RESULT_LABEL[key]
@@ -187,7 +212,7 @@ export function SectionBlock({
             >
               <span className="text-[10px] text-[#8b949e]">{label}</span>
               <span className="text-xs font-bold text-[#58a6ff]">
-                {value || '__'} <span className="text-[#8b949e] font-normal">{unit}</span>
+                {value || '-'} <span className="text-[#8b949e] font-normal">{unit}</span>
               </span>
             </div>
           )

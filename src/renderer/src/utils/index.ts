@@ -1,4 +1,10 @@
-import { SIMULTANEITY_FACTOR, WIRE_MARKS } from '@renderer/constants'
+import {
+  SIMULTANEITY_FACTOR,
+  Unom220,
+  Usource230,
+  WIRE_MARKS,
+  WIRE_RESISTANCE
+} from '@renderer/constants'
 import { Load, LoadType, PhaseCount, Section, SectionResults, WireMark } from '@renderer/types'
 
 export function mkSection(
@@ -18,15 +24,27 @@ export function mkSection(
 
   return {
     id,
-    poleNumber: String((parseInt(prevPole) || 0) + 1),
+    poleNumber: incrementPoleNumber(prevPole),
     wire,
     length: '',
     phases,
     loads: [],
     newLoadPower: '',
-    newLoadType: 'быт',
+    newLoadType: LoadType.Household,
     results: results
   }
+}
+
+function incrementPoleNumber(pole: string): string {
+  const slashIndex = pole.indexOf('/')
+
+  if (slashIndex !== -1) {
+    const base = pole.slice(0, slashIndex)
+    const sub = parseInt(pole.slice(slashIndex + 1)) || 0
+    return `${base}/${sub + 1}`
+  }
+
+  return String((parseInt(pole) || 0) + 1)
 }
 
 export const totalPower = (loads: Load[]) =>
@@ -40,8 +58,8 @@ export const powerByType = (loads: Load[], t: LoadType) =>
     .reduce((s, l) => s + (parseFloat(l.power) || 0), 0)
     .toFixed(2)
 
-export const calculateSectionCurrent = (P, phaseCount, U1, cosPhi) => {
-  return P / (phaseCount * U1 * cosPhi)
+export const calculateSectionCurrent = (Psec, phaseCount, U1, cosPhi) => {
+  return Psec / (phaseCount * U1 * cosPhi)
 }
 
 function getSimultaneityFactor(count: number): number {
@@ -57,29 +75,55 @@ function getSimultaneityFactor(count: number): number {
 export function getLoadThroughSection(sectionId: number, sections: Section[]): number {
   const relevantSections = sections.filter((s) => s.id >= sectionId)
 
-  let bytPower = 0
-  let bytCount = 0
-  let nagrevPower = 0
+  let householdPower = 0
+  let householdCount = 0
+  let heatingPower = 0
 
   for (const s of relevantSections) {
     for (const l of s.loads) {
       const power = parseFloat(l.power) || 0
-      if (l.type === 'нагрев') {
-        nagrevPower += power
+      if (l.type === LoadType.Heating) {
+        heatingPower += power
       } else {
-        bytPower += power
-        bytCount += 1
+        householdPower += power
+        householdCount += 1
       }
     }
   }
 
-  const ksim = getSimultaneityFactor(bytCount)
+  const ksim = getSimultaneityFactor(householdCount)
 
-  return bytPower * ksim + nagrevPower // кВт
+  return householdPower * ksim + heatingPower // кВт
 }
 
-export function getDUsecUpTo(sectionId: number, sections: Section[]): number {
+export function getDUFromStart(sectionId: number, sections: Section[]): number {
   return sections
     .filter((s) => s.id < sectionId)
     .reduce((sum, s) => sum + (s.results.dUsec ?? 0), 0)
+}
+
+export function calculateSectionResults(
+  section: Section,
+  sections: Section[],
+  cosPhi: number
+): SectionResults {
+  const Psec = getLoadThroughSection(section.id, sections)
+  const phases = parseInt(section.phases)
+  const length = parseFloat(section.length)
+  const Isec1 = calculateSectionCurrent(Psec, phases, Unom220, cosPhi)
+  const R0 = WIRE_RESISTANCE[section.wire] ?? null
+  const Rsec = R0 * length
+  const dUsec = phases === 3 ? Isec1 * Rsec : 2 * Isec1 * Rsec
+  const dUsumFromStart = getDUFromStart(section.id, sections) + dUsec
+  const dUsecPercent = (dUsumFromStart * 100) / Unom220
+  const Uend = Usource230 - dUsumFromStart
+
+  return {
+    Psec: +Psec.toFixed(0),
+    Isec1: +Isec1.toFixed(2),
+    Rsec: +Rsec.toFixed(4),
+    dUsec: +dUsec.toFixed(2),
+    dUsecPercent: +dUsecPercent.toFixed(2),
+    Uend: +Uend.toFixed(1)
+  }
 }

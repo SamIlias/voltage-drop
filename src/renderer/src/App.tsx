@@ -1,14 +1,15 @@
 import { useState } from 'react'
-import { LoadType, PhaseCount, Section, WireMark } from './types'
-import { getLoadThroughSection, mkSection } from './utils'
+import { isSectionArray, LoadType, PhaseCount, Section, WireMark } from './types'
+import { calculateSectionResults, mkSection } from './utils'
 import { Schema } from './components/Schema'
 import { SectionBlock } from './components/SectionBlock'
 import { Header } from './components/Header'
-import { WIRE_RESISTANCE } from './constants'
 
 export default function App() {
   const [sections, setSections] = useState<Section[]>([mkSection(1)])
   const [activeId, setActiveId] = useState<number>(1)
+  //todo add input for cosPhi
+  const [cosPhi, setCosPhi] = useState<number>(0.9)
 
   const handleSave = async () => {
     await window.api.saveSections(sections)
@@ -16,7 +17,8 @@ export default function App() {
 
   const handleLoad = async () => {
     const data = await window.api.loadSections()
-    if (data) setSections(data as Section[])
+    if (isSectionArray(data)) setSections(data)
+    //todo handle error
   }
 
   const applyQuickFill = (count: number, wire: WireMark, load: string, phases: PhaseCount) => {
@@ -24,7 +26,7 @@ export default function App() {
     const next = Array.from({ length: count }, (_, i) => ({
       ...mkSection(i + 1, String(i), wire, phases),
       ...(load && {
-        loads: [{ power: load, type: 'быт' as LoadType }]
+        loads: [{ power: load, type: LoadType.Household }]
       })
     }))
     setSections(next)
@@ -41,38 +43,13 @@ export default function App() {
 
   const updateSection = (id: number, patch: Partial<Section>) => {
     setSections((prev) => {
-      // 1. Применяем patch к нужной секции
       const patched = prev.map((s) => (s.id === id ? { ...s, ...patch } : s))
 
-      // 2. Пересчитываем все секции по порядку, накапливая dUsec
-      let accDUsec = 0
-
       return patched.map((s) => {
-        const Psec = getLoadThroughSection(s.id, patched)
-        const phases = parseInt(s.phases)
-        const length = parseFloat(s.length) / 1000
-
-        const Isec1 = Psec / (phases * 220 * 0.9)
-        const R0 = WIRE_RESISTANCE[s.wire] ?? 0
-        const Rsec = R0 * length
-
-        const dUsec = phases === 3 ? Isec1 * Rsec : 2 * Isec1 * Rsec
-
-        const dUsecPercent = ((accDUsec + dUsec) * 100) / 220
-        const Uend = 230 - accDUsec
-
-        accDUsec += dUsec
-
+        const results = calculateSectionResults(s, patched, cosPhi)
         return {
           ...s,
-          results: {
-            Psec: +Psec.toFixed(0),
-            Isec1: +Isec1.toFixed(2),
-            Rsec: +Rsec.toFixed(4),
-            dUsec: +dUsec.toFixed(2),
-            dUsecPercent: +dUsecPercent.toFixed(2),
-            Uend: +Uend.toFixed(1)
-          }
+          results: results
         }
       })
     })
@@ -87,6 +64,11 @@ export default function App() {
       newLoadPower: ''
     })
   }
+
+  const removeLoad = (s) => (i) =>
+    updateSection(s.id, {
+      loads: s.loads.filter((_, idx) => idx !== i)
+    })
 
   return (
     <div className="h-screen w-screen flex flex-col bg-[#0d1117] text-[#cdd9e5] overflow-hidden font-mono">
@@ -105,6 +87,7 @@ export default function App() {
               onRemove={() => removeSection(s.id)}
               onChange={(patch) => updateSection(s.id, patch)}
               onAddLoad={() => addLoad(s.id)}
+              onRemoveLoad={removeLoad(s)}
             />
           ))}
           <button
