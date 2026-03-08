@@ -1,5 +1,6 @@
 import {
   SIMULTANEITY_FACTOR,
+  TransformerPower,
   Unom220,
   Usource230,
   WIRE_MARKS,
@@ -104,9 +105,17 @@ export function getLoadThroughSection(sectionId: number, sections: Section[]): n
   return householdPower * ksim + heatingPower // кВт
 }
 
+export function getTransformerLoad(
+  transformerPower: TransformerPower,
+  sections: Section[]
+): number {
+  const load = getLoadThroughSection(0, sections)
+  return (load * 100) / parseInt(transformerPower)
+}
+
 export function getDUFromStart(sectionId: number, sections: Section[]): number {
   return sections
-    .filter((s) => s.id < sectionId)
+    .filter((s) => s.id <= sectionId)
     .reduce((sum, s) => sum + (s.results.dUsec ?? 0), 0)
 }
 
@@ -118,11 +127,11 @@ export function calculateSectionResults(
   const Psec = getLoadThroughSection(section.id, sections)
   const phases = parseInt(section.phases)
   const length = parseFloat(section.length)
-  const Isec1 = calculateSectionCurrent(Psec, phases, Unom220, cosPhi)
+  const Isec1 = calculateSectionCurrent(Psec * 1000, phases, Unom220, cosPhi)
   const R0 = WIRE_RESISTANCE[section.wire] ?? null
   const Rsec = R0 * length
   const dUsec = phases === 3 ? Isec1 * Rsec : 2 * Isec1 * Rsec
-  const dUsumFromStart = getDUFromStart(section.id, sections) + dUsec
+  const dUsumFromStart = getDUFromStart(section.id, sections)
   const dUsecPercent = (dUsumFromStart * 100) / Unom220
   const Uend = Usource230 - dUsumFromStart
 

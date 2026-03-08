@@ -1,4 +1,5 @@
 import { SECTION_RESULT_LABEL, WIRE_MARKS } from '@renderer/constants'
+export type { TransformerPower } from '@renderer/constants'
 
 export enum LoadType {
   Household = 'быт',

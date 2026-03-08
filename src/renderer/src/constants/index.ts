@@ -5,16 +5,27 @@ export const Usource230 = 230
 
 export const WIRE_MARKS = ['ААШв', 'АСБ', 'ВВГ', 'АВВГ', 'КВВГнг', 'ПВС', 'ШВВП'] as const
 export const WIRE_RESISTANCE: Record<(typeof WIRE_MARKS)[number], number> = {
-  ААШв: 0.62,
-  АСБ: 0.62,
-  ВВГ: 0.37,
-  АВВГ: 0.62,
-  КВВГнг: 0.37,
-  ПВС: 0.37,
-  ШВВП: 0.37
+  ААШв: 0.0012,
+  АСБ: 0.0012,
+  ВВГ: 0.0012,
+  АВВГ: 0.0012,
+  КВВГнг: 0.0012,
+  ПВС: 0.0012,
+  ШВВП: 0.0012
 }
 
-export const TRANSFORMER_POWERS = ['25', '40', '63', '100', '160', '250', '400', '630', '1000']
+export const TRANSFORMER_POWERS = [
+  '25',
+  '40',
+  '63',
+  '100',
+  '160',
+  '250',
+  '400',
+  '630',
+  '1000'
+] as const
+export type TransformerPower = (typeof TRANSFORMER_POWERS)[number]
 
 export const SIMULTANEITY_FACTOR: Record<number, number> = {
   1: 1.0,

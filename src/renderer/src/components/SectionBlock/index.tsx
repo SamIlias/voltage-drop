@@ -17,20 +17,6 @@ interface SectionBlockProps {
   onRemoveLoad: (index: number) => void
 }
 
-// function LoadBadge({ load }: { load: Load }) {
-//   const isHeat = load.type === LoadType.Heating
-//   return (
-//     <span
-//       className={`text-[10px] px-2 py-0.5 rounded-full border ${
-//         isHeat
-//           ? 'border-[#f0883e44] text-[#f0883e] bg-[#f0883e11]'
-//           : 'border-[#3fb95044] text-[#3fb950] bg-[#3fb95011]'
-//       }`}
-//     >
-//       {load.power} кВт · {load.type}
-//     </span>
-//   )
-// }
 function LoadBadge({ load, onRemove }: { load: Load; onRemove: () => void }) {
   const isHeat = load.type === LoadType.Heating
   return (

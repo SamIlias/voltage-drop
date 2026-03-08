@@ -1,6 +1,6 @@
-import { useState } from 'react'
-import { isSectionArray, LoadType, PhaseCount, Section, WireMark } from './types'
-import { calculateSectionResults, mkSection } from './utils'
+import { useEffect, useMemo, useState } from 'react'
+import { isSectionArray, LoadType, PhaseCount, Section, TransformerPower, WireMark } from './types'
+import { calculateSectionResults, getTransformerLoad, mkSection } from './utils'
 import { Schema } from './components/Schema'
 import { SectionBlock } from './components/SectionBlock'
 import { Header, Theme } from './components/Header'
@@ -13,10 +13,9 @@ export default function App() {
   const [lineName, setLineName] = useState('')
   const [calcDate, setCalcDate] = useState(() => new Date().toISOString().slice(0, 10))
   const [cosPhi, setCosPhiStr] = useState('0.9')
-  const [transformerPower, setTransformerPower] = useState('160')
+  const [transformerPower, setTransformerPower] = useState<TransformerPower>('160')
+  const [transformerLoad, setTransformerLoad] = useState<number | null>(null)
 
-  // TODO: вычислять из sections когда будет реализовано
-  const transformerLoad: number | null = null
   const voltageDrop: number | null = null
   const powerReserve: number | null = null
 
@@ -24,8 +23,23 @@ export default function App() {
 
   const bgCls = theme === 'dark' ? 'bg-[#0d1117] text-[#cdd9e5]' : 'bg-[#f0f4f8] text-[#1f2328]'
 
+  useEffect(() => {
+    setTransformerLoad(getTransformerLoad(transformerPower, sections))
+  }, [sections, transformerPower])
+
+  const sectionsWithResults = useMemo(() => {
+    const withLocal = sections.map((s) => ({
+      ...s,
+      results: calculateSectionResults(s, sections, cosPhiNum)
+    }))
+    return withLocal.map((s) => ({
+      ...s,
+      results: calculateSectionResults(s, withLocal, cosPhiNum)
+    }))
+  }, [sections, cosPhiNum])
+
   const handleSave = async () => {
-    await window.api.saveSections(sections)
+    await window.api.saveSections(sectionsWithResults)
   }
 
   const handleLoad = async () => {
@@ -58,19 +72,22 @@ export default function App() {
 
   const removeSection = (id: number) => setSections((prev) => prev.filter((s) => s.id !== id))
 
-  const updateSection = (id: number, patch: Partial<Section>) => {
-    setSections((prev) => {
-      const patched = prev.map((s) => (s.id === id ? { ...s, ...patch } : s))
+  // const updateSection = (id: number, patch: Partial<Section>) => {
+  //   setSections((prev) => {
+  //     const patched = prev.map((s) => (s.id === id ? { ...s, ...patch } : s))
 
-      return patched.map((s) => {
-        const results = calculateSectionResults(s, patched, cosPhiNum)
-        return {
-          ...s,
-          results: results
-        }
-      })
-    })
-  }
+  //     return patched.map((s) => {
+  //       const results = calculateSectionResults(s, patched, cosPhiNum)
+  //       return {
+  //         ...s,
+  //         results: results
+  //       }
+  //     })
+  //   })
+  // }
+
+  const updateSection = (id: number, patch: Partial<Section>) =>
+    setSections((prev) => prev.map((s) => (s.id === id ? { ...s, ...patch } : s)))
 
   const addLoad = (id: number) => {
     const section = sections.find((s) => s.id === id)
@@ -107,11 +124,11 @@ export default function App() {
         theme={theme}
         onThemeToggle={() => setTheme((t) => (t === 'dark' ? 'light' : 'dark'))}
       />
-      <Schema sections={sections} activeId={activeId} onActivate={setActiveId} />
+      <Schema sections={sectionsWithResults} activeId={activeId} onActivate={setActiveId} />
 
       <main className="flex-1 overflow-y-auto px-6 py-4">
         <div className="space-y-3">
-          {sections.map((s, i) => (
+          {sectionsWithResults.map((s, i) => (
             <SectionBlock
               key={s.id}
               section={s}

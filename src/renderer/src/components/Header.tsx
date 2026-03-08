@@ -1,6 +1,6 @@
 import { ResultStatus } from '@renderer/types'
 import { FieldLabel } from './FieldLabel'
-import { TRANSFORMER_POWERS } from '@renderer/constants'
+import { TRANSFORMER_POWERS, TransformerPower } from '@renderer/constants'
 import { VDivider } from './VerticalDivider'
 import { getStatusByGreater, getStatusByLower } from '@renderer/utils'
 import { ActionButton } from './ActionButton'
@@ -20,7 +20,7 @@ interface HeaderProps {
   cosPhi: string
   setCosPhi: (v: string) => void
   transformerPower: string
-  setTransformerPower: (v: string) => void
+  setTransformerPower: (v: TransformerPower) => void
   // Results (null = не рассчитано)
   transformerLoad: number | null
   voltageDrop: number | null
@@ -112,7 +112,7 @@ export function Header({
       <div className="flex flex-col gap-1 items-start my-2 ">
         <FieldLabel text="Название линии">
           <input
-            className={`${inputCls} min-w-[250px]`}
+            className={`${inputCls} min-w-[200px]`}
             value={lineName}
             onChange={(e) => setLineName(e.target.value)}
             placeholder="ВЛ-10кВ №1"
@@ -144,7 +144,7 @@ export function Header({
           <select
             className={`${inputCls} w-[100px] cursor-pointer`}
             value={transformerPower}
-            onChange={(e) => setTransformerPower(e.target.value)}
+            onChange={(e) => setTransformerPower(e.target.value as TransformerPower)}
           >
             {TRANSFORMER_POWERS.map((p) => (
               <option key={p} value={p}>
