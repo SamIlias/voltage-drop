@@ -1,10 +1,10 @@
 import {
-  SIMULTANEITY_FACTOR,
+  RESIDENTIAL_SIMULTANEITY_FACTOR,
   TransformerPower,
   Unom220,
   Usource230,
   WIRE_MARKS,
-  WIRE_RESISTANCE
+  WIRE_RESISTANCE_OM_KM
 } from '@renderer/constants'
 import {
   Load,
@@ -23,7 +23,7 @@ export function mkSection(
   phases: PhaseCount = '3'
 ): Section {
   const results: SectionResults = {
-    Psec: null,
+    Psec_kw: null,
     Isec1: null,
     Rsec: null,
     dUsec: null,
@@ -35,9 +35,9 @@ export function mkSection(
     id,
     poleNumber: incrementPoleNumber(prevPole),
     wire,
-    length: '',
+    length_m: '',
     phases,
-    loads: [],
+    loads_kw: [],
     newLoadPower: '',
     newLoadType: LoadType.Household,
     results: results
@@ -72,13 +72,31 @@ export const calculateSectionCurrent = (Psec, phaseCount, U1, cosPhi) => {
 }
 
 function getSimultaneityFactor(count: number): number {
-  if (count <= 0) return 1
-  const keys = Object.keys(SIMULTANEITY_FACTOR)
+  const keys = Object.keys(RESIDENTIAL_SIMULTANEITY_FACTOR)
     .map(Number)
     .sort((a, b) => a - b)
-  // Берём ближайший ключ снизу
-  const key = keys.filter((k) => k <= count).at(-1) ?? keys[0]
-  return SIMULTANEITY_FACTOR[key]
+
+  const firstKey = keys[0]
+  const lastKey = keys[keys.length - 1]
+
+  // Обработка пограничных значений
+  if (count <= firstKey) return RESIDENTIAL_SIMULTANEITY_FACTOR[firstKey]
+  if (count >= lastKey) return RESIDENTIAL_SIMULTANEITY_FACTOR[lastKey]
+
+  // Поиск индексов для интерполяции
+  const rightIndex = keys.findIndex((k) => k >= count)
+  const leftKey = keys[rightIndex - 1]
+  const rightKey = keys[rightIndex]
+
+  if (leftKey === rightKey) return RESIDENTIAL_SIMULTANEITY_FACTOR[leftKey]
+
+  const leftVal = RESIDENTIAL_SIMULTANEITY_FACTOR[leftKey]
+  const rightVal = RESIDENTIAL_SIMULTANEITY_FACTOR[rightKey]
+
+  // Формула линейной интерполяции: y = y1 + (x - x1) * (y2 - y1) / (x2 - x1)
+  const factor = leftVal + ((count - leftKey) * (rightVal - leftVal)) / (rightKey - leftKey)
+
+  return Number(factor.toFixed(4)) // Округляем для чистоты результата
 }
 
 export function getLoadThroughSection(sectionId: number, sections: Section[]): number {
@@ -89,7 +107,7 @@ export function getLoadThroughSection(sectionId: number, sections: Section[]): n
   let heatingPower = 0
 
   for (const s of relevantSections) {
-    for (const l of s.loads) {
+    for (const l of s.loads_kw) {
       const power = parseFloat(l.power) || 0
       if (l.type === LoadType.Heating) {
         heatingPower += power
@@ -126,17 +144,17 @@ export function calculateSectionResults(
 ): SectionResults {
   const Psec = getLoadThroughSection(section.id, sections)
   const phases = parseInt(section.phases)
-  const length = parseFloat(section.length)
+  const length_m = parseFloat(section.length_m)
   const Isec1 = calculateSectionCurrent(Psec * 1000, phases, Unom220, cosPhi)
-  const R0 = WIRE_RESISTANCE[section.wire] ?? null
-  const Rsec = R0 * length
+  const R0_om_km = WIRE_RESISTANCE_OM_KM[section.wire] ?? null
+  const Rsec = (R0_om_km * length_m) / 1000
   const dUsec = phases === 3 ? Isec1 * Rsec : 2 * Isec1 * Rsec
   const dUsumFromStart = getDUFromStart(section.id, sections)
   const dUsecPercent = (dUsumFromStart * 100) / Unom220
   const Uend = Usource230 - dUsumFromStart
 
   return {
-    Psec: +Psec.toFixed(0),
+    Psec_kw: +Psec.toFixed(2),
     Isec1: +Isec1.toFixed(2),
     Rsec: +Rsec.toFixed(4),
     dUsec: +dUsec.toFixed(2),

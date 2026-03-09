@@ -106,10 +106,10 @@ export function SectionBlock({
 
         <FieldLabel text="Длина, м">
           <input
-            value={s.length}
+            value={s.length_m}
             onClick={stop}
             placeholder="0"
-            onChange={(e) => onChange({ length: e.target.value })}
+            onChange={(e) => onChange({ length_m: e.target.value })}
             className={`${inputCls} w-full`}
           />
         </FieldLabel>
@@ -135,21 +135,23 @@ export function SectionBlock({
         <span className={sectionTitleCls}>Нагрузки</span>
         <div className="flex gap-4 text-xs text-[#8b949e]">
           <span>
-            Σ: <span className="text-[#cdd9e5]">{totalPower(s.loads)} кВт</span>
+            Σ: <span className="text-[#cdd9e5]">{totalPower(s.loads_kw)} кВт</span>
           </span>
           <span>
-            Абонентов: <span className="text-[#cdd9e5]">{s.loads.length}</span>
+            Абонентов: <span className="text-[#cdd9e5]">{s.loads_kw.length}</span>
           </span>
           //todo
           <span>
-            В т.ч. нагревов: <span className="text-[#cdd9e5]">{s.loads.length}</span>
+            В т.ч. нагревов: <span className="text-[#cdd9e5]">{s.loads_kw.length}</span>
           </span>
         </div>
         <div className="flex flex-wrap gap-1 min-h-[24px]">
-          {s.loads.length === 0 ? (
+          {s.loads_kw.length === 0 ? (
             <span className="text-[10px] text-[#8b949e] italic">нет нагрузок</span>
           ) : (
-            s.loads.map((l, i) => <LoadBadge key={i} load={l} onRemove={() => onRemoveLoad(i)} />)
+            s.loads_kw.map((l, i) => (
+              <LoadBadge key={i} load={l} onRemove={() => onRemoveLoad(i)} />
+            ))
           )}
         </div>
         <div className="flex gap-2 items-center">

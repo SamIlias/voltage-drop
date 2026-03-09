@@ -26,9 +26,9 @@ export interface Section {
   id: number
   poleNumber: string
   wire: WireMark
-  length: string
+  length_m: string
   phases: PhaseCount
-  loads: Load[]
+  loads_kw: Load[]
   newLoadPower: string
   newLoadType: LoadType
   results: SectionResults
@@ -41,15 +41,16 @@ export function isSectionArray(data: unknown): data is Section[] {
       (item): item is Section =>
         typeof item === 'object' &&
         item !== null &&
-        typeof (item as Record<string, unknown>).id === 'number' &&
-        typeof (item as Record<string, unknown>).poleNumber === 'string' &&
-        typeof (item as Record<string, unknown>).wire === 'string' &&
-        typeof (item as Record<string, unknown>).length === 'string' &&
-        typeof (item as Record<string, unknown>).phases === 'string' &&
-        Array.isArray((item as Record<string, unknown>).loads) &&
-        typeof (item as Record<string, unknown>).newLoadPower === 'string' &&
-        typeof (item as Record<string, unknown>).newLoadType === 'string' &&
-        typeof (item as Record<string, unknown>).results === 'object'
+        typeof (item as any).id === 'number' &&
+        typeof (item as any).poleNumber === 'string' &&
+        typeof (item as any).wire === 'string' &&
+        typeof (item as any).length_m === 'string' &&
+        (typeof (item as any).phases === 'string' || typeof (item as any).phases === 'number') && // Уточните тип PhaseCount
+        Array.isArray((item as any).loads_kw) &&
+        typeof (item as any).newLoadPower === 'string' &&
+        typeof (item as any).newLoadType === 'string' &&
+        typeof (item as any).results === 'object' &&
+        (item as any).results !== null
     )
   )
 }

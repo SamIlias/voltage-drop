@@ -72,36 +72,22 @@ export default function App() {
 
   const removeSection = (id: number) => setSections((prev) => prev.filter((s) => s.id !== id))
 
-  // const updateSection = (id: number, patch: Partial<Section>) => {
-  //   setSections((prev) => {
-  //     const patched = prev.map((s) => (s.id === id ? { ...s, ...patch } : s))
-
-  //     return patched.map((s) => {
-  //       const results = calculateSectionResults(s, patched, cosPhiNum)
-  //       return {
-  //         ...s,
-  //         results: results
-  //       }
-  //     })
-  //   })
-  // }
-
   const updateSection = (id: number, patch: Partial<Section>) =>
     setSections((prev) => prev.map((s) => (s.id === id ? { ...s, ...patch } : s)))
 
   const addLoad = (id: number) => {
-    const section = sections.find((s) => s.id === id)
+    const section: Section | undefined = sections.find((s) => s.id === id)
     if (!section || !section.newLoadPower) return
 
     updateSection(id, {
-      loads: [...section.loads, { power: section.newLoadPower, type: section.newLoadType }],
+      loads_kw: [...section.loads_kw, { power: section.newLoadPower, type: section.newLoadType }],
       newLoadPower: ''
     })
   }
 
-  const removeLoad = (s) => (i) =>
+  const removeLoad = (s: Section) => (i) =>
     updateSection(s.id, {
-      loads: s.loads.filter((_, idx) => idx !== i)
+      loads_kw: s.loads_kw.filter((_, idx) => idx !== i)
     })
 
   return (
