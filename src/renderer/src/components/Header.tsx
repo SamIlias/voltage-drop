@@ -53,7 +53,7 @@ function ResultBadge({
     <div className={`flex flex-col gap-0.5 pl-2.5 border-l-2 ${cls}`}>
       <span className="text-[9px] font-mono uppercase tracking-widest text-[#6e7681]">{label}</span>
       <span className={`text-[13px] font-bold font-mono tracking-wide ${cls.split(' ')[0]}`}>
-        {value != null ? `${value.toFixed(1)} ${unit}` : `— ${unit}`}
+        {value != null ? `${value.toFixed(2)} ${unit}` : `— ${unit}`}
       </span>
     </div>
   )
@@ -160,7 +160,12 @@ export function Header({
       {/* Results */}
       <div className="flex gap-4 items-center shrink-0">
         <ResultBadge label="Загрузка тр-ра" value={transformerLoad} unit="%" status={loadStatus} />
-        <ResultBadge label="Потеря напряжения" value={voltageDrop} unit="%" status={dropStatus} />
+        <ResultBadge
+          label="Потеря напряжения"
+          value={voltageDrop || 0}
+          unit="%"
+          status={dropStatus}
+        />
         <ResultBadge
           label="Резерв мощности"
           value={powerReserve}

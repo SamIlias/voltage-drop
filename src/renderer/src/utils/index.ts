@@ -131,10 +131,16 @@ export function getTransformerLoad(
   return (load * 100) / parseInt(transformerPower)
 }
 
-export function getDUFromStart(sectionId: number, sections: Section[]): number {
-  return sections
-    .filter((s) => s.id <= sectionId)
-    .reduce((sum, s) => sum + (s.results.dUsec ?? 0), 0)
+export function getDUFromStart(index: number, sections: Section[]): number {
+  return sections.slice(0, index + 1).reduce((sum, s) => sum + (s.results.dUsec ?? 0), 0)
+}
+
+export function getFullDU(sections: Section[]): number {
+  return sections.reduce((sum, s) => sum + (s.results.dUsec ?? 0), 0)
+}
+
+export function getFullDUPercent(sections: Section[]): number {
+  return (getFullDU(sections) * 100) / Unom220
 }
 
 export function calculateSectionResults(
@@ -150,7 +156,7 @@ export function calculateSectionResults(
   const Rsec = (R0_om_km * length_m) / 1000
   const dUsec = phases === 3 ? Isec1 * Rsec : 2 * Isec1 * Rsec
   const dUsumFromStart = getDUFromStart(section.id, sections)
-  const dUsecPercent = (dUsumFromStart * 100) / Unom220
+  const dUsecPercent = (dUsec * 100) / Unom220
   const Uend = Usource230 - dUsumFromStart
 
   return {

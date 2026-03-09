@@ -1,6 +1,12 @@
 import { useEffect, useMemo, useState } from 'react'
 import { isSectionArray, LoadType, PhaseCount, Section, TransformerPower, WireMark } from './types'
-import { calculateSectionResults, getTransformerLoad, mkSection } from './utils'
+import {
+  calculateSectionResults,
+  getFullDU,
+  getFullDUPercent,
+  getTransformerLoad,
+  mkSection
+} from './utils'
 import { Schema } from './components/Schema'
 import { SectionBlock } from './components/SectionBlock'
 import { Header, Theme } from './components/Header'
@@ -15,17 +21,13 @@ export default function App() {
   const [cosPhi, setCosPhiStr] = useState('0.9')
   const [transformerPower, setTransformerPower] = useState<TransformerPower>('160')
   const [transformerLoad, setTransformerLoad] = useState<number | null>(null)
+  const [fullVoltageDrop, setFullVoltageDrop] = useState<number | null>(null)
 
-  const voltageDrop: number | null = null
   const powerReserve: number | null = null
 
   const cosPhiNum = parseFloat(cosPhi) || 0.9
 
   const bgCls = theme === 'dark' ? 'bg-[#0d1117] text-[#cdd9e5]' : 'bg-[#f0f4f8] text-[#1f2328]'
-
-  useEffect(() => {
-    setTransformerLoad(getTransformerLoad(transformerPower, sections))
-  }, [sections, transformerPower])
 
   const sectionsWithResults = useMemo(() => {
     const withLocal = sections.map((s) => ({
@@ -37,6 +39,14 @@ export default function App() {
       results: calculateSectionResults(s, withLocal, cosPhiNum)
     }))
   }, [sections, cosPhiNum])
+
+  useEffect(() => {
+    setTransformerLoad(getTransformerLoad(transformerPower, sectionsWithResults))
+  }, [sectionsWithResults, transformerPower])
+
+  useEffect(() => {
+    setFullVoltageDrop(getFullDUPercent(sectionsWithResults))
+  }, [sectionsWithResults])
 
   const handleSave = async () => {
     await window.api.saveSections(sectionsWithResults)
@@ -105,7 +115,7 @@ export default function App() {
         transformerPower={transformerPower}
         setTransformerPower={setTransformerPower}
         transformerLoad={transformerLoad}
-        voltageDrop={voltageDrop}
+        voltageDrop={fullVoltageDrop}
         powerReserve={powerReserve}
         theme={theme}
         onThemeToggle={() => setTheme((t) => (t === 'dark' ? 'light' : 'dark'))}
