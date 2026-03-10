@@ -20,7 +20,8 @@ export function mkSection(
   id: number,
   prevPole = '0',
   wire: WireMark = WIRE_MARKS[0],
-  phases: PhaseCount = '3'
+  phases: PhaseCount = '3',
+  length_m: string = ''
 ): Section {
   const results: SectionResults = {
     Psec_kw: null,
@@ -35,7 +36,7 @@ export function mkSection(
     id,
     poleNumber: incrementPoleNumber(prevPole),
     wire,
-    length_m: '',
+    length_m,
     phases,
     loads_kw: [],
     newLoadPower: '',

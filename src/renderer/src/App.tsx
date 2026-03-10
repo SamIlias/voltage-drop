@@ -1,15 +1,10 @@
 import { useEffect, useMemo, useState } from 'react'
 import { isSectionArray, LoadType, PhaseCount, Section, TransformerPower, WireMark } from './types'
-import {
-  calculateSectionResults,
-  getFullDU,
-  getFullDUPercent,
-  getTransformerLoad,
-  mkSection
-} from './utils'
+import { calculateSectionResults, getFullDUPercent, getTransformerLoad, mkSection } from './utils'
 import { Schema } from './components/Schema'
 import { SectionBlock } from './components/SectionBlock'
 import { Header, Theme } from './components/Header'
+import { QuickFill } from './components/QuickFill'
 
 export default function App() {
   const [sections, setSections] = useState<Section[]>([mkSection(1)])
@@ -62,22 +57,37 @@ export default function App() {
     // TODO: открыть модальное окно с информацией
   }
 
-  const applyQuickFill = (count: number, wire: WireMark, load: string, phases: PhaseCount) => {
-    if (!count || count < 1) return
-    const next = Array.from({ length: count }, (_, i) => ({
-      ...mkSection(i + 1, String(i), wire, phases),
-      ...(load && {
-        loads: [{ power: load, type: LoadType.Household }]
-      })
-    }))
-    setSections(next)
-    setActiveId(1)
+  const handleCreateNewComputing = () => {
+    setSections([mkSection(1)])
   }
+
+  const applyQuickFill =
+    (prevSection: Section) => (count: number, wire: WireMark, load: string, phases: PhaseCount) => {
+      if (!count || count < 1) return
+
+      const next: Section[] = []
+      let lastPole = prevSection.poleNumber
+
+      for (let i = 0; i < count; i++) {
+        const newSection = mkSection(prevSection.id + i + 1, lastPole, wire, phases)
+
+        if (load) {
+          newSection.loads_kw = [{ power: load, type: LoadType.Household }]
+        }
+
+        next.push(newSection)
+        lastPole = newSection.poleNumber
+      }
+
+      setSections((prev) => [...prev, ...next])
+      setActiveId(next[0].id)
+    }
 
   const addSection = () =>
     setSections((prev) => {
       const last = prev[prev.length - 1]
-      return [...prev, mkSection(prev.length + 1, last?.poleNumber)]
+      const { poleNumber, wire, phases, length_m } = last
+      return [...prev, mkSection(prev.length + 1, poleNumber, wire, phases, length_m)]
     })
 
   const removeSection = (id: number) => setSections((prev) => prev.filter((s) => s.id !== id))
@@ -106,6 +116,7 @@ export default function App() {
         handleSave={handleSave}
         handleLoad={handleLoad}
         onInfoOpen={handleInfoOpen}
+        onCreateNewComputation={handleCreateNewComputing}
         lineName={lineName}
         setLineName={setLineName}
         calcDate={calcDate}
@@ -121,6 +132,7 @@ export default function App() {
         onThemeToggle={() => setTheme((t) => (t === 'dark' ? 'light' : 'dark'))}
       />
       <Schema sections={sectionsWithResults} activeId={activeId} onActivate={setActiveId} />
+      <QuickFill onApply={applyQuickFill(sections[sections.length - 1])} />
 
       <main className="flex-1 overflow-y-auto px-6 py-4">
         <div className="space-y-3">

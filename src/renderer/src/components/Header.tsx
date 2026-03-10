@@ -12,6 +12,7 @@ interface HeaderProps {
   handleSave: () => void
   handleLoad: () => void
   onInfoOpen: () => void
+  onCreateNewComputation: () => void
   // Inputs
   lineName: string
   setLineName: (v: string) => void
@@ -67,6 +68,7 @@ export function Header({
   handleSave,
   handleLoad,
   onInfoOpen,
+  onCreateNewComputation,
   lineName,
   setLineName,
   calcDate,
@@ -92,13 +94,17 @@ export function Header({
       </span>
 
       {/* Menu */}
-      <div className="flex flex-col gap-2 min-w-40 my-1">
+      <div className="grid grid-cols-2 gap-2 min-w-60 my-1">
         <ActionButton icon="ℹ️" onClick={onInfoOpen}>
           О программе
         </ActionButton>
 
         <ActionButton icon="📂" onClick={handleLoad}>
           Загрузить
+        </ActionButton>
+
+        <ActionButton icon="️📝" onClick={onCreateNewComputation}>
+          Новый расчёт
         </ActionButton>
 
         <ActionButton icon="💾" variant="success" onClick={handleSave}>
