@@ -5,7 +5,13 @@ export enum LoadType {
   Household = 'быт',
   Heating = 'нагрев'
 }
-export type PhaseCount = '1' | '2' | '3'
+
+export enum PhaseCount {
+  one = 1,
+  two = 2,
+  three = 3
+}
+
 export type WireMark = (typeof WIRE_MARKS)[number]
 
 export interface Load {

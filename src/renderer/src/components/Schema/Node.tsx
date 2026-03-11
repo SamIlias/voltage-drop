@@ -1,4 +1,4 @@
-import { Section } from '@renderer/types'
+import { LoadType, Section } from '@renderer/types'
 import { countByType, powerByType } from '@renderer/utils'
 import { PhaseLines } from './PhaseLines'
 
@@ -11,7 +11,12 @@ interface SchemaNodeProps {
 
 export function SchemaNode({ section, nextSection, isActive, onClick }: SchemaNodeProps) {
   const isSource = section === null
-  const loads = section?.loads ?? []
+  const loads = section?.loads_kw ?? []
+  const houseHoldCount = countByType(loads, LoadType.Household)
+  const houseHoldLoads = parseFloat(powerByType(loads, LoadType.Household)).toFixed(1)
+
+  const heatingCount = countByType(loads, LoadType.Heating)
+  const heatingLoads = parseFloat(powerByType(loads, LoadType.Heating)).toFixed(1)
 
   return (
     <div className="flex items-end">
@@ -19,14 +24,19 @@ export function SchemaNode({ section, nextSection, isActive, onClick }: SchemaNo
         <div className="relative flex flex-col items-center mb-1 min-h-[52px] justify-end">
           {!isSource && (
             <div className="absolute -translate-x-1/2 whitespace-nowrap left-1/2 flex flex-col gap-2 leading-tight mb-2 pointer-events-none">
-              <div className="flex flex-col text-[10px]">
-                <span className="text-[#3fb950]">Nбыт: {countByType(loads, 'быт')}</span>
-                <span className="text-[#3fb950]">Pб: {powerByType(loads, 'быт')} кВт</span>
-              </div>
-              <div className="flex flex-col text-[9px]">
-                <span className="text-[#f0883e]">Nн: {countByType(loads, 'нагрев')}</span>
-                <span className="text-[#f0883e]">Pн: {powerByType(loads, 'нагрев')} кВт</span>
-              </div>
+              {houseHoldCount ? (
+                <div className="flex flex-col text-[10px]">
+                  <span className="text-[#3fb950]">Nбыт: {houseHoldCount}</span>
+                  <span className="text-[#3fb950]">Pб: {houseHoldLoads} кВт</span>
+                </div>
+              ) : null}
+
+              {heatingCount ? (
+                <div className="flex flex-col text-[9px]">
+                  <span className="text-[#f0883e]">Nн: {heatingCount}</span>
+                  <span className="text-[#f0883e]">Pн: {heatingLoads} кВт</span>
+                </div>
+              ) : null}
             </div>
           )}
         </div>

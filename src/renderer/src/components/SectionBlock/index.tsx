@@ -118,7 +118,7 @@ export function SectionBlock({
           <select
             value={s.phases}
             onClick={stop}
-            onChange={(e) => onChange({ phases: e.target.value as PhaseCount })}
+            onChange={(e) => onChange({ phases: parseInt(e.target.value) as PhaseCount })}
             className={inputCls}
           >
             {PHASE_OPTIONS.map((o) => (

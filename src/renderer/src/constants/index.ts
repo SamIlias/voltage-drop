@@ -104,9 +104,9 @@ export const getTransformerPower = (loadKw) => {
 }
 
 export const PHASE_OPTIONS: { value: PhaseCount; label: string }[] = [
-  { value: '1', label: '1 фаза' },
-  { value: '2', label: '2 фазы' },
-  { value: '3', label: '3 фазы' }
+  { value: PhaseCount.one, label: '1 фаза' },
+  { value: PhaseCount.two, label: '2 фазы' },
+  { value: PhaseCount.three, label: '3 фазы' }
 ]
 export const LOAD_TYPES: { value: LoadType; label: string }[] = [
   { value: LoadType.Household, label: 'быт' },
@@ -139,5 +139,10 @@ export const SECTION_RESULT_LABEL = {
     label: 'U в конце участка',
     unit: 'В',
     description: 'Напряжение в конечной точке участка'
+  },
+  effectivePhaseCount: {
+    label: 'Кол-во эффективных фаз',
+    unit: 'шт',
+    description: 'Кол-во используемых для передачи электроэнергии фаз'
   }
 }
