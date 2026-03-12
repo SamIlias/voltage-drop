@@ -3,7 +3,9 @@ export type { TransformerPower } from '@renderer/constants'
 
 export enum LoadType {
   Household = 'быт',
-  Heating = 'нагрев'
+  Heating = 'нагрев',
+  ElectricCar = 'эл.авто',
+  Prom = 'пром'
 }
 
 export enum PhaseCount {

@@ -110,7 +110,9 @@ export const PHASE_OPTIONS: { value: PhaseCount; label: string }[] = [
 ]
 export const LOAD_TYPES: { value: LoadType; label: string }[] = [
   { value: LoadType.Household, label: 'быт' },
-  { value: LoadType.Heating, label: 'нагрев' }
+  { value: LoadType.Heating, label: 'нагрев' },
+  { value: LoadType.ElectricCar, label: 'эл.авто' },
+  { value: LoadType.Prom, label: 'пром' }
 ]
 
 export const SECTION_RESULT_LABEL = {

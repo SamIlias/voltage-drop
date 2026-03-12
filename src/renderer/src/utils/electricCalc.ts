@@ -1,4 +1,5 @@
 import {
+  INDUSTRIAL_SIMULTANEITY_FACTOR,
   RESIDENTIAL_SIMULTANEITY_FACTOR,
   TransformerPower,
   Unom220,
@@ -12,8 +13,8 @@ const calculateSectionCurrent = (Psec, phaseCount, U1, cosPhi) => {
   return Psec / (phaseCount * U1 * cosPhi)
 }
 
-function getSimultaneityFactor(count: number): number {
-  const keys = Object.keys(RESIDENTIAL_SIMULTANEITY_FACTOR)
+function getSimultaneityFactor(count: number, factorList: Record<number, number>): number {
+  const keys = Object.keys(factorList)
     .map(Number)
     .sort((a, b) => a - b)
 
@@ -21,18 +22,18 @@ function getSimultaneityFactor(count: number): number {
   const lastKey = keys[keys.length - 1]
 
   // Обработка пограничных значений
-  if (count <= firstKey) return RESIDENTIAL_SIMULTANEITY_FACTOR[firstKey]
-  if (count >= lastKey) return RESIDENTIAL_SIMULTANEITY_FACTOR[lastKey]
+  if (count <= firstKey) return factorList[firstKey]
+  if (count >= lastKey) return factorList[lastKey]
 
   // Поиск индексов для интерполяции
   const rightIndex = keys.findIndex((k) => k >= count)
   const leftKey = keys[rightIndex - 1]
   const rightKey = keys[rightIndex]
 
-  if (leftKey === rightKey) return RESIDENTIAL_SIMULTANEITY_FACTOR[leftKey]
+  if (leftKey === rightKey) return factorList[leftKey]
 
-  const leftVal = RESIDENTIAL_SIMULTANEITY_FACTOR[leftKey]
-  const rightVal = RESIDENTIAL_SIMULTANEITY_FACTOR[rightKey]
+  const leftVal = factorList[leftKey]
+  const rightVal = factorList[rightKey]
 
   // Формула линейной интерполяции: y = y1 + (x - x1) * (y2 - y1) / (x2 - x1)
   const factor = leftVal + ((count - leftKey) * (rightVal - leftVal)) / (rightKey - leftKey)
@@ -46,22 +47,38 @@ function getLoadThroughSection(sectionId: number, sections: Section[]): number {
   let householdPower = 0
   let householdCount = 0
   let heatingPower = 0
+  let electricCarPower = 0
+  let electricCarCount = 0
+  let promPower = 0
+  let promCount = 0
 
   for (const s of relevantSections) {
     for (const l of s.loads_kw) {
       const power = parseFloat(l.power) || 0
-      if (l.type === LoadType.Heating) {
-        heatingPower += power
-      } else {
-        householdPower += power
-        householdCount += 1
+      switch (l.type) {
+        case LoadType.Household:
+          householdPower += power
+          householdCount += 1
+          break
+        case LoadType.Heating:
+          heatingPower += power
+          break
+        case LoadType.ElectricCar:
+          electricCarPower += power
+          electricCarCount += 1
+          break
+        case LoadType.Prom:
+          promPower += power
+          promCount += 1
+          break
       }
     }
   }
 
-  const ksim = getSimultaneityFactor(householdCount)
+  const ksim_house = getSimultaneityFactor(householdCount, RESIDENTIAL_SIMULTANEITY_FACTOR)
+  const ksim_prom = getSimultaneityFactor(promCount, INDUSTRIAL_SIMULTANEITY_FACTOR)
 
-  return householdPower * ksim + heatingPower // кВт
+  return householdPower * ksim_house + promPower * ksim_prom + electricCarPower + heatingPower
 }
 
 export function getTransformerLoad(
