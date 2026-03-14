@@ -143,7 +143,7 @@ export function Header({
             className={`${inputCls} w-[60px]`}
             value={cosPhi}
             onChange={(e) => setCosPhi(e.target.value)}
-            placeholder="0.92"
+            placeholder="0.9"
           />
         </FieldLabel>
         <FieldLabel text="Мощность тр-ра">

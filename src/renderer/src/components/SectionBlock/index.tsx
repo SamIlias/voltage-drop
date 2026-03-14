@@ -71,6 +71,7 @@ export function SectionBlock({
   return (
     <div
       onClick={onActivate}
+      data-testid="section-block"
       className={`flex gap-3 rounded-lg p-3 border cursor-pointer transition-all ${
         isActive
           ? 'bg-[#161b22] border-[#58a6ff] shadow-[0_0_12px_#58a6ff22]'
@@ -203,7 +204,7 @@ export function SectionBlock({
       </div>
 
       {/* Block 3 — Results */}
-      <div className="flex flex-col gap-2 min-w-[150px]">
+      <div className="flex flex-col gap-2 min-w-50">
         <span className={sectionTitleCls}>Результаты</span>
         {Object.keys(s.results).map((key) => {
           const { label, unit } = SECTION_RESULT_LABEL[key]

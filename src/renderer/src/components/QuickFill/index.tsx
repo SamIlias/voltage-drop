@@ -1,5 +1,5 @@
 import { PHASE_OPTIONS, WIRE_MARKS } from '@renderer/constants'
-import { PhaseCount, Section, WireMark } from '@renderer/types'
+import { PhaseCount, WireMark } from '@renderer/types'
 import { useState } from 'react'
 import { FieldLabel } from '../FieldLabel'
 import { inputCls } from '..'
@@ -18,7 +18,7 @@ export function QuickFill({ onApply }: QuickFillProps) {
   const [poles, setPoles] = useState('5')
   const [wire, setWire] = useState<WireMark>(WIRE_MARKS[0])
   const [load, setLoad] = useState('')
-  const [phases, setPhases] = useState<PhaseCount>('3')
+  const [phases, setPhases] = useState<PhaseCount>(PhaseCount.three)
 
   return (
     <>
@@ -32,7 +32,7 @@ export function QuickFill({ onApply }: QuickFillProps) {
         {show && (
           <div className="flex items-center gap-3 bg-[#0d1117] border border-[#30363d] rounded-lg px-4 py-2">
             <span className="text-[10px] uppercase tracking-widest text-[#8b949e] ">
-              Заполните параметры для быстрого построения участка
+              Заполните параметры для быстрого добавления участка
             </span>
             <div className="w-[1px] h-6 bg-[#30363d] shrink-0" />
 
@@ -69,7 +69,7 @@ export function QuickFill({ onApply }: QuickFillProps) {
             <FieldLabel text="Число фаз">
               <select
                 value={phases}
-                onChange={(e) => setPhases(e.target.value as PhaseCount)}
+                onChange={(e) => setPhases(Number(e.target.value))}
                 className={inputCls}
               >
                 {PHASE_OPTIONS.map((o) => (
