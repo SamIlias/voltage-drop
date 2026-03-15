@@ -1,8 +1,9 @@
 import { WIRE_MARKS } from '@renderer/constants'
 import { Load, LoadType, PhaseCount, Section, SectionResults, WireMark } from '@renderer/types'
+import { calculateDownstreamPass, calculateUpstreamPass } from './electricCalc'
 
 export function mkSection(
-  id: number,
+  idx: number,
   prevPole = '0',
   wire: WireMark = WIRE_MARKS[0],
   phases: PhaseCount = PhaseCount.three,
@@ -19,8 +20,9 @@ export function mkSection(
   }
 
   return {
-    id,
+    idx,
     poleNumber: incrementPoleNumber(prevPole),
+    prevPoleNumber: prevPole,
     wire,
     length_m,
     phases,
@@ -31,7 +33,7 @@ export function mkSection(
   }
 }
 
-function incrementPoleNumber(pole: string): string {
+export function incrementPoleNumber(pole: string): string {
   const slashIndex = pole.indexOf('/')
 
   if (slashIndex !== -1) {
@@ -55,10 +57,21 @@ export const powerByType = (loads: Load[], t: LoadType) =>
     .toFixed(2)
 
 export function getEffectivePhases(sectionId: number, sections: Section[]): PhaseCount {
-  const currentIndex = sections.findIndex((s) => s.id === sectionId)
+  const currentIndex = sections.findIndex((s) => s.idx === sectionId)
   const precedingSections = sections.slice(0, currentIndex + 1)
 
   const minPhases = Math.min(...precedingSections.map((s) => s.phases))
 
   return minPhases
+}
+
+export const formatResult = (v: number | null | undefined) => {
+  if (v === 0) return '0'
+  if (v === undefined || v === null || Number.isNaN(v)) return '-'
+  return String(v)
+}
+
+export function calculateAllSections(sections: Section[], cosPhi: number): SectionResults[] {
+  const downstreamData = calculateDownstreamPass(sections, cosPhi)
+  return calculateUpstreamPass(sections, downstreamData)
 }

@@ -1,3 +1,10 @@
-export { mkSection, totalPower, countByType, powerByType } from './sections'
-export { getTransformerLoad, getFullDUPercent, calculateSectionResults } from './electricCalc'
+export {
+  mkSection,
+  totalPower,
+  countByType,
+  powerByType,
+  calculateAllSections,
+  incrementPoleNumber
+} from './sections'
+export { getTransformerLoad, getFullDUPercent } from './electricCalc'
 export { getStatusByGreater, getStatusByLower } from './statuses'

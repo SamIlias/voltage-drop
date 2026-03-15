@@ -14,11 +14,11 @@ export function Schema({ sections, activeId, onActivate }: SchemaProps) {
         <SchemaNode section={null} nextSection={sections[0]} isActive={false} />
         {sections.map((s, i) => (
           <SchemaNode
-            key={s.id}
+            key={s.idx}
             section={s}
             nextSection={sections[i + 1]}
-            isActive={s.id === activeId}
-            onClick={() => onActivate(s.id)}
+            isActive={s.idx === activeId}
+            onClick={() => onActivate(s.idx)}
           />
         ))}
       </div>

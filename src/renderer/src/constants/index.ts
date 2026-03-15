@@ -147,4 +147,4 @@ export const SECTION_RESULT_LABEL = {
     unit: 'шт',
     description: 'Кол-во используемых для передачи электроэнергии фаз'
   }
-}
+} as const

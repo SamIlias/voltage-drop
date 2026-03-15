@@ -42,7 +42,7 @@ function getSimultaneityFactor(count: number, factorList: Record<number, number>
 }
 
 function getLoadThroughSection(sectionId: number, sections: Section[]): number {
-  const relevantSections = sections.filter((s) => s.id >= sectionId)
+  const relevantSections = sections.filter((s) => s.idx >= sectionId)
 
   let householdPower = 0
   let householdCount = 0
@@ -89,41 +89,60 @@ export function getTransformerLoad(
   return (load * 100) / parseInt(transformerPower)
 }
 
-function getDUFromStart(index: number, sections: Section[]): number {
-  return sections.slice(0, index + 1).reduce((sum, s) => sum + (s.results.dUsec ?? 0), 0)
-}
-
 function getFullDU(sections: Section[]): number {
   return sections.reduce((sum, s) => sum + (s.results.dUsec ?? 0), 0)
 }
 
 export function getFullDUPercent(sections: Section[]): number {
   return (getFullDU(sections) * 100) / Unom220
+  // return (getFullDU(sections) * 100) / Usource230
 }
 
-export function calculateSectionResults(
-  section: Section,
-  sections: Section[],
-  cosPhi: number
-): SectionResults {
-  const Psec = getLoadThroughSection(section.id, sections)
-  const phases = getEffectivePhases(section.id, sections)
-  const length_m = parseFloat(section.length_m)
-  const Isec1 = calculateSectionCurrent(Psec * 1000, phases, Unom220, cosPhi)
-  const R0_om_km = WIRE_RESISTANCE_OM_KM[section.wire] ?? null
-  const Rsec = (R0_om_km * length_m) / 1000
-  const dUsec = phases === PhaseCount.three ? Isec1 * Rsec : 2 * Isec1 * Rsec
-  const dUsumFromStart = getDUFromStart(section.id, sections)
-  const dUsecPercent = (dUsec * 100) / Unom220
-  const Uend = Usource230 - dUsumFromStart
+//todo add Type
+type DownstreamData = {
+  Psec: number
+  phases: PhaseCount
+  Isec1: number
+  Rsec: number
+  dUsec: number
+}
 
-  return {
-    Psec_kw: +Psec.toFixed(2),
-    Isec1: +Isec1.toFixed(2),
-    Rsec: +Rsec.toFixed(4),
-    dUsec: +dUsec.toFixed(2),
-    dUsecPercent: +dUsecPercent.toFixed(2),
-    Uend: +Uend.toFixed(1),
-    effectivePhaseCount: phases
+export function calculateDownstreamPass(sections: Section[], cosPhi: number): DownstreamData[] {
+  return sections.map((section) => {
+    const Psec = getLoadThroughSection(section.idx, sections)
+    const phases = getEffectivePhases(section.idx, sections)
+    const Isec1 = calculateSectionCurrent(Psec * 1000, phases, Unom220, cosPhi)
+    const R0_om_km = WIRE_RESISTANCE_OM_KM[section.wire] ?? null
+    const Rsec = (R0_om_km * parseFloat(section.length_m)) / 1000
+    const dUsec = phases === PhaseCount.three ? Isec1 * Rsec : 2 * Isec1 * Rsec
+
+    return { Psec, phases, Isec1, Rsec, dUsec }
+  })
+}
+
+export function calculateUpstreamPass(
+  sections: Section[],
+  downstreamData: DownstreamData[]
+): SectionResults[] {
+  let dUsumFromStart = 0
+  const results: SectionResults[] = []
+
+  for (let i = 0; i < sections.length; i++) {
+    const d = downstreamData[i]
+    dUsumFromStart += d.dUsec
+
+    const Uend = Math.max(0, Usource230 - dUsumFromStart)
+
+    results.push({
+      Psec_kw: +d.Psec.toFixed(2),
+      Isec1: +d.Isec1.toFixed(2),
+      Rsec: +d.Rsec.toFixed(4),
+      dUsec: +d.dUsec.toFixed(2),
+      dUsecPercent: +((d.dUsec * 100) / Unom220).toFixed(2),
+      Uend: +Uend.toFixed(1),
+      effectivePhaseCount: d.phases
+    })
   }
+
+  return results
 }
