@@ -6,6 +6,10 @@ import { SectionBlock } from './components/SectionBlock'
 import { Header, Theme } from './components/Header'
 import { QuickFill } from './components/QuickFill'
 import { calculateAllSections, incrementPoleNumber } from './utils'
+import { ErrorBoundary } from './components/ErrorBoundary'
+import { ErrorFallback } from './components/ErrorBoundary/ErrorFallback'
+import { ErrorMessage } from './components/ErrorMessage'
+import { WIRE_MARKS } from './constants'
 
 export default function App() {
   const [sections, setSections] = useState<Section[]>([mkSection(0)])
@@ -17,6 +21,7 @@ export default function App() {
   const [transformerPower, setTransformerPower] = useState<TransformerPower>('160')
   const [transformerLoad, setTransformerLoad] = useState<number | null>(null)
   const [fullVoltageDrop, setFullVoltageDrop] = useState<number | null>(null)
+  const [error, setError] = useState<Error | null>(null)
 
   const powerReserve: number | null = null
 
@@ -58,20 +63,27 @@ export default function App() {
     setSections([mkSection(0)])
   }
 
+  const resetError = () => {
+    handleCreateNewComputing()
+    setError(null)
+  }
+
   const applyQuickFill =
-    (prevSection: Section) => (count: number, wire: WireMark, load: string, phases: PhaseCount) => {
+    (prevSection: Section | undefined) =>
+    (count: number, wire: WireMark, load: string, phases: PhaseCount, length_m: string) => {
       if (!count || count < 1) return
 
+      const baseIdx = prevSection?.idx ?? -1
+      const basePole = prevSection?.poleNumber ?? '0'
+
       const next: Section[] = []
-      let lastPole = prevSection.poleNumber
+      let lastPole = basePole
 
       for (let i = 1; i <= count; i++) {
-        const newSection = mkSection(prevSection.idx + i, lastPole, wire, phases)
-
+        const newSection = mkSection(baseIdx + i, lastPole, wire, phases, length_m)
         if (load) {
           newSection.loads_kw = [{ power: load, type: LoadType.Household }]
         }
-
         next.push(newSection)
         lastPole = newSection.poleNumber
       }
@@ -80,13 +92,19 @@ export default function App() {
       setActiveId(next[0].idx)
     }
 
-  const addSection = () =>
-    setSections((prev) => {
-      //todo add check if the prev is defined
-      const last = computedSections[computedSections.length - 1]
-      const { poleNumber, wire, phases, length_m } = last
-      return [...prev, mkSection(prev.length, poleNumber, wire, phases, length_m)]
-    })
+  const addSection = () => {
+    try {
+      const last = sections.at(-1)
+
+      const newSection = last
+        ? mkSection(sections.length, last.poleNumber, last.wire, last.phases, last.length_m)
+        : mkSection(sections.length, '0', WIRE_MARKS[0], PhaseCount.three, '0')
+
+      setSections((prev) => [...prev, newSection])
+    } catch (e: unknown) {
+      setError(e instanceof Error ? e : new Error(String(e)))
+    }
+  }
 
   const removeSection = (id: number) => setSections((prev) => prev.filter((s) => s.idx !== id))
 
@@ -128,58 +146,62 @@ export default function App() {
     })
 
   return (
-    <div className={`h-screen w-screen flex flex-col font-mono min-w-11 overflow-auto ${bgCls}`}>
-      <Header
-        handleSave={handleSave}
-        handleLoad={handleLoad}
-        onInfoOpen={handleInfoOpen}
-        onCreateNewComputation={handleCreateNewComputing}
-        lineName={lineName}
-        setLineName={setLineName}
-        calcDate={calcDate}
-        setCalcDate={setCalcDate}
-        cosPhi={cosPhi}
-        setCosPhi={setCosPhiStr}
-        transformerPower={transformerPower}
-        setTransformerPower={setTransformerPower}
-        transformerLoad={transformerLoad}
-        voltageDrop={fullVoltageDrop}
-        powerReserve={powerReserve}
-        theme={theme}
-        onThemeToggle={() => setTheme((t) => (t === 'dark' ? 'light' : 'dark'))}
-      />
-      <Schema sections={computedSections} activeId={activeId} onActivate={setActiveId} />
-      <QuickFill onApply={applyQuickFill(sections[sections.length - 1])} />
+    <ErrorBoundary FallbackComponent={ErrorFallback}>
+      <div className={`h-screen w-screen flex flex-col font-mono min-w-11 overflow-auto ${bgCls}`}>
+        {error && <ErrorMessage error={error} reset={resetError} />}
 
-      <main className="flex-1 overflow-y-auto px-6 py-4">
-        <div className="space-y-3">
-          {computedSections.map((s, i) => (
-            <SectionBlock
-              key={s.idx}
-              section={s}
-              index={i}
-              isActive={s.idx === activeId}
-              onActivate={() => setActiveId(s.idx)}
-              onRemove={() => removeSection(s.idx)}
-              onChange={(patch) => updateSection(s.idx, patch)}
-              onAddLoad={() => addLoad(s.idx)}
-              onRemoveLoad={removeLoad(s)}
-            />
-          ))}
-          <button
-            onClick={addSection}
-            className="w-full py-2 border border-dashed border-[#30363d] rounded-lg text-[#8b949e] hover:border-[#58a6ff] hover:text-[#58a6ff] text-sm transition-colors"
-          >
-            + Добавить участок
-          </button>
-        </div>
-      </main>
-      <footer className="flex justify-between px-6 py-1">
-        <span className="text-xs text-[#8b949e] mb-1">
-          Version 1.0.0. Support: Samovichilias@gmail.com
-        </span>
-        <span className="text-xs text-[#8b949e] mb-1">© 2026 All rights reserved.</span>
-      </footer>
-    </div>
+        <Header
+          handleSave={handleSave}
+          handleLoad={handleLoad}
+          onInfoOpen={handleInfoOpen}
+          onCreateNewComputation={handleCreateNewComputing}
+          lineName={lineName}
+          setLineName={setLineName}
+          calcDate={calcDate}
+          setCalcDate={setCalcDate}
+          cosPhi={cosPhi}
+          setCosPhi={setCosPhiStr}
+          transformerPower={transformerPower}
+          setTransformerPower={setTransformerPower}
+          transformerLoad={transformerLoad}
+          voltageDrop={fullVoltageDrop}
+          powerReserve={powerReserve}
+          theme={theme}
+          onThemeToggle={() => setTheme((t) => (t === 'dark' ? 'light' : 'dark'))}
+        />
+        <Schema sections={computedSections} activeId={activeId} onActivate={setActiveId} />
+        <QuickFill onApply={applyQuickFill(sections[sections.length - 1])} />
+
+        <main className="flex-1 overflow-y-auto px-6 py-4">
+          <div className="space-y-3">
+            {computedSections.map((s, i) => (
+              <SectionBlock
+                key={s.idx}
+                section={s}
+                index={i}
+                isActive={s.idx === activeId}
+                onActivate={() => setActiveId(s.idx)}
+                onRemove={() => removeSection(s.idx)}
+                onChange={(patch) => updateSection(s.idx, patch)}
+                onAddLoad={() => addLoad(s.idx)}
+                onRemoveLoad={removeLoad(s)}
+              />
+            ))}
+            <button
+              onClick={addSection}
+              className="w-full py-2 border border-dashed border-[#30363d] rounded-lg text-[#8b949e] hover:border-[#58a6ff] hover:text-[#58a6ff] text-sm transition-colors"
+            >
+              + Добавить участок
+            </button>
+          </div>
+        </main>
+        <footer className="flex justify-between px-6 py-1">
+          <span className="text-xs text-[#8b949e] mb-1">
+            Version 1.0.0. Support: Samovichilias@gmail.com
+          </span>
+          <span className="text-xs text-[#8b949e] mb-1">© 2026 All rights reserved.</span>
+        </footer>
+      </div>
+    </ErrorBoundary>
   )
 }

@@ -5,7 +5,13 @@ import { FieldLabel } from '../FieldLabel'
 import { inputCls } from '..'
 
 interface QuickFillProps {
-  onApply: (poles: number, wire: WireMark, load: string, phases: PhaseCount) => void
+  onApply: (
+    poles: number,
+    wire: WireMark,
+    load: string,
+    phases: PhaseCount,
+    length_m: string
+  ) => void
 }
 
 const toggleShowButtonName = {
@@ -18,6 +24,7 @@ export function QuickFill({ onApply }: QuickFillProps) {
   const [poles, setPoles] = useState('5')
   const [wire, setWire] = useState<WireMark>(WIRE_MARKS[0])
   const [load, setLoad] = useState('')
+  const [length_m, setLength_m] = useState('')
   const [phases, setPhases] = useState<PhaseCount>(PhaseCount.three)
 
   return (
@@ -41,6 +48,15 @@ export function QuickFill({ onApply }: QuickFillProps) {
                 value={poles}
                 onChange={(e) => setPoles(e.target.value)}
                 placeholder="5"
+                className={`${inputCls} w-16`}
+              />
+            </FieldLabel>
+
+            <FieldLabel text="Длина участка">
+              <input
+                value={length_m}
+                onChange={(e) => setLength_m(e.target.value)}
+                placeholder="35"
                 className={`${inputCls} w-16`}
               />
             </FieldLabel>
@@ -81,7 +97,7 @@ export function QuickFill({ onApply }: QuickFillProps) {
             </FieldLabel>
 
             <button
-              onClick={() => onApply(parseInt(poles) || 0, wire, load, phases)}
+              onClick={() => onApply(parseInt(poles) || 0, wire, load, phases, length_m)}
               className="mt-4 px-4 py-1.5 cursor-pointer bg-[#238636] hover:bg-[#2ea043] text-white text-xs rounded transition-colors flex-shrink-0"
             >
               Добавить
