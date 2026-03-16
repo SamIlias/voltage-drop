@@ -11,7 +11,6 @@ interface HeaderProps {
   // Actions
   handleSave: () => void
   handleLoad: () => void
-  onInfoOpen: () => void
   onCreateNewComputation: () => void
   // Inputs
   lineName: string
@@ -26,6 +25,7 @@ interface HeaderProps {
   transformerLoad: number | null
   voltageDrop: number | null
   powerReserve: number | null
+  lineLength: number | null
   // Theme
   theme: Theme
   onThemeToggle: () => void
@@ -35,6 +35,7 @@ function statusCls(status: ResultStatus | undefined): string {
   if (status === ResultStatus.DANGER) return 'text-[#f85149] border-[#f85149]'
   if (status === ResultStatus.WARN) return 'text-[#d29922] border-[#d29922]'
   if (status === ResultStatus.OK) return 'text-[#3fb950] border-[#3fb950]'
+  if (status === ResultStatus.DEFAULT) return 'text-[#58a6ff] border-[#58a6ff]'
   return 'text-[#6e7681] border-[#30363d]'
 }
 
@@ -67,7 +68,6 @@ const inputCls =
 export function Header({
   handleSave,
   handleLoad,
-  onInfoOpen,
   onCreateNewComputation,
   lineName,
   setLineName,
@@ -81,14 +81,17 @@ export function Header({
   voltageDrop,
   powerReserve,
   theme,
-  onThemeToggle
+  onThemeToggle,
+  lineLength
 }: HeaderProps) {
   const loadStatus = getStatusByGreater(transformerLoad, 70, 90)
   const dropStatus = getStatusByGreater(voltageDrop, 8, 13)
   const reserveStatus = getStatusByLower(powerReserve, 50, 0)
 
+  const onInfoOpen = () => {}
+
   return (
-    <header className="w-full flex items-center gap-4 px-5 border-b border-[#21262d] bg-[#161b22] min-h-[68px]">
+    <header className="w-full flex items-center gap-4 px-5 border-b border-[#21262d] bg-[#161b22] min-h-[68px] overflow-x-auto">
       <span className="text-sm font-mono text-[#e6edf3] max-w-50">
         Расчёт параметров линии электропередачи
       </span>
@@ -177,6 +180,13 @@ export function Header({
           value={powerReserve}
           unit="кВА"
           status={reserveStatus}
+        />
+
+        <ResultBadge
+          label="Длина линии"
+          value={lineLength}
+          unit="м"
+          status={ResultStatus.DEFAULT}
         />
       </div>
 

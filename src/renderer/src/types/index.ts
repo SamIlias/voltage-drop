@@ -27,7 +27,8 @@ export type SectionResultsKeys = keyof SectionResults
 export enum ResultStatus {
   OK = 'ok',
   WARN = 'warn',
-  DANGER = 'danger'
+  DANGER = 'danger',
+  DEFAULT = 'default'
 }
 
 export interface Section {

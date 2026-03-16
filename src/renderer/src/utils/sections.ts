@@ -71,6 +71,12 @@ export const formatResult = (v: number | null | undefined) => {
   return String(v)
 }
 
+export function getLineLength(sections: Section[]): number {
+  return sections.reduce((len, s) => {
+    return len + parseFloat(s.length_m) || 0
+  }, 0)
+}
+
 export function calculateAllSections(sections: Section[], cosPhi: number): SectionResults[] {
   const downstreamData = calculateDownstreamPass(sections, cosPhi)
   return calculateUpstreamPass(sections, downstreamData)

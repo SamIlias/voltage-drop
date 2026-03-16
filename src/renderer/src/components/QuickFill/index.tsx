@@ -24,7 +24,7 @@ export function QuickFill({ onApply }: QuickFillProps) {
   const [poles, setPoles] = useState('5')
   const [wire, setWire] = useState<WireMark>(WIRE_MARKS[0])
   const [load, setLoad] = useState('')
-  const [length_m, setLength_m] = useState('')
+  const [length_m, setLength_m] = useState('35')
   const [phases, setPhases] = useState<PhaseCount>(PhaseCount.three)
 
   return (

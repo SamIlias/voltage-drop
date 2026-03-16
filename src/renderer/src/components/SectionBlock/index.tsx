@@ -1,4 +1,4 @@
-import { Load, LoadType, PhaseCount, Section, SectionResultsKeys, WireMark } from '@renderer/types'
+import { Load, LoadType, PhaseCount, Section, WireMark } from '@renderer/types'
 import { FieldLabel } from '../FieldLabel'
 import { totalPower } from '@renderer/utils'
 import { inputCls } from '..'
