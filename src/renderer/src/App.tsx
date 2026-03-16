@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { act, useEffect, useMemo, useRef, useState } from 'react'
 import { isSectionArray, LoadType, PhaseCount, Section, TransformerPower, WireMark } from './types'
 import { getFullDUPercent, getTransformerLoad, mkSection } from './utils'
 import { Schema } from './components/Schema'
@@ -13,7 +13,7 @@ import { WIRE_MARKS } from './constants'
 
 export default function App() {
   const [sections, setSections] = useState<Section[]>([mkSection(0)])
-  const [activeId, setActiveId] = useState<number>(1)
+  const [activeIdx, setActiveId] = useState<number>(1)
   const [theme, setTheme] = useState<Theme>('dark')
   const [lineName, setLineName] = useState('')
   const [calcDate, setCalcDate] = useState(() => new Date().toISOString().slice(0, 10))
@@ -24,6 +24,8 @@ export default function App() {
   const [error, setError] = useState<Error | null>(null)
 
   const powerReserve: number | null = null
+
+  const activeRef = useRef<HTMLDivElement>(null)
 
   const cosPhiNum = parseFloat(cosPhi) || 0.9
 
@@ -36,6 +38,12 @@ export default function App() {
       results: allResults[i]
     }))
   }, [sections, cosPhiNum])
+
+  useEffect(() => {
+    if (activeRef.current) {
+      activeRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    }
+  }, [activeIdx])
 
   useEffect(() => {
     setTransformerLoad(getTransformerLoad(transformerPower, computedSections))
@@ -169,7 +177,7 @@ export default function App() {
           theme={theme}
           onThemeToggle={() => setTheme((t) => (t === 'dark' ? 'light' : 'dark'))}
         />
-        <Schema sections={computedSections} activeId={activeId} onActivate={setActiveId} />
+        <Schema sections={computedSections} activeId={activeIdx} onActivate={setActiveId} />
         <QuickFill onApply={applyQuickFill(sections[sections.length - 1])} />
 
         <main className="flex-1 overflow-y-auto px-6 py-4">
@@ -177,9 +185,10 @@ export default function App() {
             {computedSections.map((s, i) => (
               <SectionBlock
                 key={s.idx}
+                ref={s.idx === activeIdx ? activeRef : null}
                 section={s}
                 index={i}
-                isActive={s.idx === activeId}
+                isActive={s.idx === activeIdx}
                 onActivate={() => setActiveId(s.idx)}
                 onRemove={() => removeSection(s.idx)}
                 onChange={(patch) => updateSection(s.idx, patch)}
