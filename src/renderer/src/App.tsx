@@ -49,7 +49,7 @@ export default function App() {
   const { transformerLoad } = useTransformerLoad(transformerPower, computedSections)
   const { fullVoltageDrop } = useFullVoltageDrop(computedSections)
   const { powerReserve } = usePowerReserve(computedSections)
-  const { handleLoad, handleSave } = useFileHandlers(computedSections, setSections)
+  const { handleLoad, handleSave } = useFileHandlers(computedSections, setSections, lineName)
   const { resetError, error } = useError(handleCreateNewComputing)
   const { lineLength } = useLineLength(computedSections)
 

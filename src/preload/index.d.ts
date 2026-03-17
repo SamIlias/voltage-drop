@@ -1,9 +1,7 @@
 import { ElectronAPI } from '@electron-toolkit/preload'
 
 interface api {
-  loadTodos: () => Promise<unknown>
-  saveTodos: (todos: unknown) => Promise<void>
-  saveSections: (sections: unknown) => Promise<void>
+  saveSections: (sections: unknown, fileName: string) => Promise<void>
   loadSections: () => Promise<unknown>
 }
 

@@ -1,8 +1,8 @@
 import { isSectionArray, Section } from '@renderer/types'
 
-export function useFileHandlers(computedSections: Section[], setSections) {
+export function useFileHandlers(computedSections: Section[], setSections, lineName: string) {
   const handleSave = async () => {
-    await window.api.saveSections(computedSections)
+    await window.api.saveSections(computedSections, lineName)
   }
 
   const handleLoad = async () => {

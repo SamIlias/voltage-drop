@@ -124,7 +124,7 @@ export function Header({
             className={`${inputCls} min-w-[200px]`}
             value={lineName}
             onChange={(e) => setLineName(e.target.value)}
-            placeholder="ВЛ-10кВ №1"
+            placeholder="ВЛ 0,4 кВ от КТП"
           />
         </FieldLabel>
         <FieldLabel text="Дата расчёта">

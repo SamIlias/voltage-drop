@@ -62,20 +62,20 @@ app.whenReady().then(() => {
     }
   })
 
-  ipcMain.handle('todos:save', (_event, todos) => {
-    const TODO_FILE = join(app.getPath('userData'), 'todos.json')
-    try {
-      fs.writeFileSync(TODO_FILE, JSON.stringify(todos, null, 2), 'utf-8')
-      return { success: true }
-    } catch (err) {
-      return { success: false, error: String(err) }
-    }
-  })
+  // ipcMain.handle('todos:save', (_event, todos) => {
+  //   const TODO_FILE = join(app.getPath('userData'), 'todos.json')
+  //   try {
+  //     fs.writeFileSync(TODO_FILE, JSON.stringify(todos, null, 2), 'utf-8')
+  //     return { success: true }
+  //   } catch (err) {
+  //     return { success: false, error: String(err) }
+  //   }
+  // })
 
-  ipcMain.handle('sections:save', async (_event, sections) => {
+  ipcMain.handle('sections:save', async (_event, sections, fileName = 'Новый расчёт') => {
     const { filePath, canceled } = await dialog.showSaveDialog({
-      title: 'Сохранить секции',
-      defaultPath: 'sections.json',
+      title: 'Сохранить расчёт',
+      defaultPath: `${fileName}.json`,
       filters: [{ name: 'JSON', extensions: ['json'] }]
     })
     if (canceled || !filePath) return { success: false }
