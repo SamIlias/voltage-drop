@@ -1,12 +1,27 @@
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useMemo, useReducer, useRef, useState } from 'react'
 import { LoadType, PhaseCount, Section, WireMark } from '@renderer/types'
 import { mkSection } from '@renderer/utils'
 import { calculateAllSections, incrementPoleNumber } from '@renderer/utils'
 import { WIRE_MARKS } from '@renderer/constants'
+import { historyReducer } from '@renderer/reducers/historyReducer'
 
 export function useSections(cosPhiNum: number) {
-  const [sections, setSections] = useState<Section[]>([mkSection(0)])
+  // const [sections, setSections] = useState<Section[]>([mkSection(0)])
   const [activeIdx, setActiveId] = useState<number>(1)
+
+  const [historyState, dispatch] = useReducer(historyReducer, {
+    past: [],
+    present: [mkSection(0)],
+    future: []
+  })
+
+  const sections = historyState.present
+
+  const pushHistory = (payload) => dispatch({ type: 'PUSH', payload })
+  const undo = () => dispatch({ type: 'UNDO' })
+  const redo = () => dispatch({ type: 'REDO' })
+  const canUndo = historyState.past.length > 0
+  const canRedo = historyState.future.length > 0
 
   const activeRef = useRef<HTMLDivElement>(null)
 
@@ -44,7 +59,8 @@ export function useSections(cosPhiNum: number) {
         lastPole = newSection.poleNumber
       }
 
-      setSections((prev) => [...prev, ...next])
+      // setSections((prev) => [...prev, ...next])
+      pushHistory((prev) => [...prev, ...next])
       setActiveId(next[0].idx)
     }
 
@@ -55,14 +71,17 @@ export function useSections(cosPhiNum: number) {
       ? mkSection(sections.length, last.poleNumber, last.wire, last.phases, last.length_m)
       : mkSection(sections.length, '0', WIRE_MARKS[0], PhaseCount.three, '0')
 
-    setSections((prev) => [...prev, newSection])
+    // setSections((prev) => [...prev, newSection])
+    pushHistory((prev) => [...prev, newSection])
     setActiveId(newSection.idx)
   }
 
-  const removeSection = (id: number) => setSections((prev) => prev.filter((s) => s.idx !== id))
+  // const removeSection = (id: number) => setSections((prev) => prev.filter((s) => s.idx !== id))
+  const removeSection = (id: number) => pushHistory((prev) => prev.filter((s) => s.idx !== id))
 
   const updateSection = (id: number, patch: Partial<Section>) => {
-    setSections((prev) => {
+    // setSections((prev) => {
+    pushHistory((prev) => {
       const updated = prev.map((s) => (s.idx === id ? { ...s, ...patch } : s))
 
       const startIndex = updated.findIndex((s) => s.idx === id)
@@ -99,13 +118,17 @@ export function useSections(cosPhiNum: number) {
     })
 
   const handleCreateNewComputing = () => {
-    setSections([mkSection(0)])
+    // setSections([mkSection(0)])
+    pushHistory([mkSection(0)])
   }
 
   return {
     computedSections,
     sections,
-    setSections,
+    // setSections,
+    pushHistory,
+    undo,
+    redo,
     activeIdx,
     setActiveId,
     applyQuickFill,

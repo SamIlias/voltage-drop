@@ -4,12 +4,15 @@ import { TRANSFORMER_POWERS, TransformerPower } from '@renderer/constants'
 import { VDivider } from './VerticalDivider'
 import { getStatusByGreater, getStatusByLower } from '@renderer/utils'
 import { ActionButton } from './ActionButton'
+import { Tooltip } from './Tooltip'
 
 export type Theme = 'dark' | 'light'
 
 interface HeaderProps {
   // Actions
   handleSave: () => void
+  handleUndo: () => void
+  handleRedo: () => void
   handleLoad: () => void
   onCreateNewComputation: () => void
   // Inputs
@@ -67,6 +70,8 @@ const inputCls =
 
 export function Header({
   handleSave,
+  handleUndo,
+  handleRedo,
   handleLoad,
   onCreateNewComputation,
   lineName,
@@ -114,6 +119,18 @@ export function Header({
           Сохранить
         </ActionButton>
       </div>
+
+      <Tooltip content="Отменить">
+        <ActionButton icon="↶" variant="warning" onClick={handleUndo}>
+          {''}
+        </ActionButton>
+      </Tooltip>
+
+      <Tooltip content="Вернуть">
+        <ActionButton icon="↷" variant="warning" onClick={handleRedo}>
+          {''}
+        </ActionButton>
+      </Tooltip>
 
       <VDivider />
 

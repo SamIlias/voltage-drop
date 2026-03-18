@@ -34,7 +34,10 @@ export default function App() {
   const {
     computedSections,
     sections,
-    setSections,
+    // setSections,
+    pushHistory,
+    undo,
+    redo,
     activeIdx,
     setActiveId,
     applyQuickFill,
@@ -49,7 +52,12 @@ export default function App() {
   const { transformerLoad } = useTransformerLoad(transformerPower, computedSections)
   const { fullVoltageDrop } = useFullVoltageDrop(computedSections)
   const { powerReserve } = usePowerReserve(computedSections)
-  const { handleLoad, handleSave } = useFileHandlers(computedSections, setSections, lineName)
+  const { handleLoad, handleSave } = useFileHandlers(
+    computedSections,
+    // setSections,
+    pushHistory,
+    lineName || `Новый расчёт`
+  )
   const { resetError, error } = useError(handleCreateNewComputing)
   const { lineLength } = useLineLength(computedSections)
 
@@ -59,6 +67,8 @@ export default function App() {
         {error && <ErrorMessage error={error} reset={resetError} />}
 
         <Header
+          handleUndo={undo}
+          handleRedo={redo}
           handleSave={handleSave}
           handleLoad={handleLoad}
           onCreateNewComputation={handleCreateNewComputing}
