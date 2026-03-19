@@ -4,7 +4,8 @@ import { totalPower } from '@renderer/utils'
 import { inputCls } from '..'
 import { LOAD_TYPES, PHASE_OPTIONS, SECTION_RESULT_LABEL, WIRE_MARKS } from '@renderer/constants'
 import { formatResult } from '@renderer/utils/sections'
-import { forwardRef } from 'react'
+import { forwardRef, MouseEvent } from 'react'
+import { LengthField, LoadPowerField, PoleNumberField } from './sectionFIelds'
 
 const sectionTitleCls = 'text-[10px] uppercase tracking-widest text-[#58a6ff]'
 
@@ -63,7 +64,7 @@ export const SectionBlock = forwardRef<HTMLDivElement, SectionBlockProps>(
     { section: s, index, isActive, onActivate, onRemove, onChange, onAddLoad, onRemoveLoad },
     ref
   ) => {
-    const stop = (e: React.MouseEvent) => e.stopPropagation()
+    const stop = (e: MouseEvent) => e.stopPropagation()
 
     return (
       <div
@@ -91,19 +92,16 @@ export const SectionBlock = forwardRef<HTMLDivElement, SectionBlockProps>(
         </div>
 
         {/* Block 1 — Section params */}
-        <div className="flex flex-col gap-2 min-w-[130px] border-r border-[#30363d] pr-3">
+        <div className="flex flex-col gap-2 w-50 border-r border-[#30363d] pr-3">
           <span className={sectionTitleCls}>
             Участок {s.prevPoleNumber} - {s.poleNumber}
           </span>
 
-          <FieldLabel text="№ конечной опоры">
-            <input
-              value={s.poleNumber}
-              onClick={stop}
-              onChange={(e) => onChange({ poleNumber: e.target.value })}
-              className={`${inputCls} w-full`}
-            />
-          </FieldLabel>
+          <PoleNumberField
+            value={s.poleNumber}
+            prevPoleNumber={s.prevPoleNumber}
+            onChange={onChange}
+          />
 
           <FieldLabel text="Марка провода">
             <select
@@ -118,15 +116,7 @@ export const SectionBlock = forwardRef<HTMLDivElement, SectionBlockProps>(
             </select>
           </FieldLabel>
 
-          <FieldLabel text="Длина, м">
-            <input
-              value={s.length_m}
-              onClick={stop}
-              placeholder="0"
-              onChange={(e) => onChange({ length_m: e.target.value })}
-              className={`${inputCls} w-full`}
-            />
-          </FieldLabel>
+          <LengthField value={s.length_m} onChange={onChange}></LengthField>
 
           <FieldLabel text="Кол-во фаз">
             <select
@@ -159,6 +149,7 @@ export const SectionBlock = forwardRef<HTMLDivElement, SectionBlockProps>(
               В т.ч. нагревов: <span className="text-[#cdd9e5]">{s.loads_kw.length}</span>
             </span>
           </div>
+
           <div className="flex flex-wrap gap-1 min-h-[24px]">
             {s.loads_kw.length === 0 ? (
               <span className="text-[10px] text-[#8b949e] italic">нет нагрузок</span>
@@ -168,33 +159,31 @@ export const SectionBlock = forwardRef<HTMLDivElement, SectionBlockProps>(
               ))
             )}
           </div>
-          <div className="flex gap-2 items-center">
-            <input
-              value={s.newLoadPower}
-              onClick={stop}
-              placeholder="кВт"
-              onChange={(e) => onChange({ newLoadPower: e.target.value })}
-              onKeyDown={(e) => e.key === 'Enter' && onAddLoad()}
-              className={`${inputCls} w-20`}
-            />
-            <select
-              value={s.newLoadType}
-              onClick={stop}
-              onChange={(e) => onChange({ newLoadType: e.target.value as LoadType })}
-              className={inputCls}
-            >
-              {LOAD_TYPES.map((o) => (
-                <option key={o.value} value={o.value}>
-                  {o.label}
-                </option>
-              ))}
-            </select>
+          <div className="flex gap-2 items-start">
+            <LoadPowerField value={s.newLoadPower} onChange={onChange} onAddLoad={onAddLoad} />
+
+            <div className="flex flex-col gap-0.5">
+              <FieldLabel text="Тип">
+                <select
+                  value={s.newLoadType}
+                  onClick={stop}
+                  onChange={(e) => onChange({ newLoadType: e.target.value as LoadType })}
+                  className={`${inputCls}`}
+                >
+                  {LOAD_TYPES.map((o) => (
+                    <option key={o.value} value={o.value}>
+                      {o.label}
+                    </option>
+                  ))}
+                </select>
+              </FieldLabel>
+            </div>
             <button
               onClick={(e) => {
                 stop(e)
                 onAddLoad()
               }}
-              className="w-6 h-6 rounded bg-[#238636] hover:bg-[#2ea043] text-white text-sm flex items-center justify-center transition-colors"
+              className="w-6 h-6 mt-4.5 rounded bg-[#238636] hover:bg-[#2ea043] text-white text-sm flex items-center justify-center transition-colors"
             >
               +
             </button>

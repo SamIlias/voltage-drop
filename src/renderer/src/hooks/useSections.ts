@@ -4,6 +4,7 @@ import { mkSection } from '@renderer/utils'
 import { calculateAllSections, incrementPoleNumber } from '@renderer/utils'
 import { WIRE_MARKS } from '@renderer/constants'
 import { historyReducer } from '@renderer/reducers/historyReducer'
+import { validateLoadPower } from '@renderer/utils/validation'
 
 export function useSections(cosPhiNum: number) {
   // const [sections, setSections] = useState<Section[]>([mkSection(0)])
@@ -76,11 +77,9 @@ export function useSections(cosPhiNum: number) {
     setActiveId(newSection.idx)
   }
 
-  // const removeSection = (id: number) => setSections((prev) => prev.filter((s) => s.idx !== id))
   const removeSection = (id: number) => pushHistory((prev) => prev.filter((s) => s.idx !== id))
 
   const updateSection = (id: number, patch: Partial<Section>) => {
-    // setSections((prev) => {
     pushHistory((prev) => {
       const updated = prev.map((s) => (s.idx === id ? { ...s, ...patch } : s))
 
@@ -105,6 +104,9 @@ export function useSections(cosPhiNum: number) {
   const addLoad = (id: number) => {
     const section: Section | undefined = sections.find((s) => s.idx === id)
     if (!section || !section.newLoadPower) return
+
+    const validateResult = validateLoadPower(section.newLoadPower)
+    if (validateResult.error) return
 
     updateSection(id, {
       loads_kw: [...section.loads_kw, { power: section.newLoadPower, type: section.newLoadType }],
