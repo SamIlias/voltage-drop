@@ -2,7 +2,7 @@ export interface ValidationResult {
   valid: boolean
   error?: string
 }
-/** Принимает строку вида "3/2" или "5" → число для сравнения */
+
 export function parsePoleNumber(value: string): number | null {
   const trimmed = value.trim()
 
@@ -96,8 +96,6 @@ export function validateLoadPower(value: string): ValidationResult {
 
   return { valid: true }
 }
-
-// ─── Section-level validator ──────────────────────────────────────────────────
 
 export interface SectionValidationErrors {
   length_m?: string

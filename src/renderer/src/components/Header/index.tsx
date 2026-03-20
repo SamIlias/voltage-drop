@@ -1,10 +1,11 @@
 import { ResultStatus } from '@renderer/types'
-import { FieldLabel } from './FieldLabel'
+import { FieldLabel } from '../FieldLabel'
 import { TRANSFORMER_POWERS, TransformerPower } from '@renderer/constants'
-import { VDivider } from './VerticalDivider'
+import { VDivider } from '../VerticalDivider'
 import { getStatusByGreater, getStatusByLower } from '@renderer/utils'
-import { ActionButton } from './ActionButton'
-import { Tooltip } from './Tooltip'
+import { ActionButton } from '../ActionButton'
+import { Tooltip } from '../Tooltip'
+import { ResultBadge } from './ResultBadge'
 
 export type Theme = 'dark' | 'light'
 
@@ -32,36 +33,6 @@ interface HeaderProps {
   // Theme
   theme: Theme
   onThemeToggle: () => void
-}
-
-function statusCls(status: ResultStatus | undefined): string {
-  if (status === ResultStatus.DANGER) return 'text-[#f85149] border-[#f85149]'
-  if (status === ResultStatus.WARN) return 'text-[#d29922] border-[#d29922]'
-  if (status === ResultStatus.OK) return 'text-[#3fb950] border-[#3fb950]'
-  if (status === ResultStatus.DEFAULT) return 'text-[#58a6ff] border-[#58a6ff]'
-  return 'text-[#6e7681] border-[#30363d]'
-}
-
-function ResultBadge({
-  label,
-  value,
-  unit,
-  status
-}: {
-  label: string
-  value: number | null
-  unit: string
-  status: ResultStatus | undefined
-}) {
-  const cls = statusCls(status)
-  return (
-    <div className={`flex flex-col gap-0.5 pl-2.5 border-l-2 ${cls}`}>
-      <span className="text-[9px] font-mono uppercase tracking-widest text-[#6e7681]">{label}</span>
-      <span className={`text-[13px] font-bold font-mono tracking-wide ${cls.split(' ')[0]}`}>
-        {value != null ? `${value.toFixed(2)} ${unit}` : `— ${unit}`}
-      </span>
-    </div>
-  )
 }
 
 const inputCls =
@@ -96,7 +67,7 @@ export function Header({
   const onInfoOpen = () => {}
 
   return (
-    <header className="w-full flex items-center gap-4 px-5 border-b border-[#21262d] bg-[#161b22] min-h-[68px] overflow-x-auto">
+    <header className="w-full flex items-center gap-4 px-5 border-b border-[#21262d] bg-[#161b22] min-h-17 overflow-x-auto">
       <span className="text-sm font-mono text-[#e6edf3] max-w-50">
         Расчёт параметров линии электропередачи
       </span>
@@ -138,7 +109,7 @@ export function Header({
       <div className="flex flex-col gap-1 items-start my-2 ">
         <FieldLabel text="Название линии">
           <input
-            className={`${inputCls} min-w-[200px]`}
+            className={`${inputCls} min-w-50`}
             value={lineName}
             onChange={(e) => setLineName(e.target.value)}
             placeholder="ВЛ 0,4 кВ от КТП"
@@ -160,7 +131,7 @@ export function Header({
       <div className="flex gap-3 items-end">
         <FieldLabel text="cos φ">
           <input
-            className={`${inputCls} w-[60px]`}
+            className={`${inputCls} w-15`}
             value={cosPhi}
             onChange={(e) => setCosPhi(e.target.value)}
             placeholder="0.9"
@@ -168,7 +139,7 @@ export function Header({
         </FieldLabel>
         <FieldLabel text="Мощность тр-ра">
           <select
-            className={`${inputCls} w-[100px] cursor-pointer`}
+            className={`${inputCls} w-25 cursor-pointer`}
             value={transformerPower}
             onChange={(e) => setTransformerPower(e.target.value as TransformerPower)}
           >

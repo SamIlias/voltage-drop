@@ -18,7 +18,7 @@ export function historyReducer(state: HistoryState, action: HistoryAction): Hist
     case 'PUSH': {
       const next =
         typeof action.payload === 'function' ? action.payload(state.present) : action.payload
-      return { past: [...state.past.slice(-50), state.present], present: next, future: [] }
+      return { past: [...state.past.slice(-10), state.present], present: next, future: [] }
     }
     case 'UNDO': {
       if (!state.past.length) return state

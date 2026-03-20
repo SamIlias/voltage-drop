@@ -1,0 +1,34 @@
+import { MouseEvent } from 'react'
+import { validateLength } from '@renderer/utils/validation'
+import { useValidatedField } from '@renderer/hooks/useValidatedField'
+import { FieldLabel } from '@renderer/components/FieldLabel'
+
+interface LengthFieldProps {
+  value: string
+  onChange: (patch: { length_m: string }) => void
+}
+
+export function LengthField({ value, onChange }: LengthFieldProps) {
+  const field = useValidatedField(value, {
+    validate: validateLength,
+    validateOn: 'change'
+  })
+
+  const stop = (e: MouseEvent) => e.stopPropagation()
+
+  return (
+    <FieldLabel text="Длина, м" error={field.error}>
+      <input
+        value={value}
+        onClick={stop}
+        placeholder="0"
+        onChange={(e) => {
+          field.onChange(e)
+          onChange({ length_m: e.target.value })
+        }}
+        onBlur={field.onBlur}
+        className={`${field.inputCls} w-full`}
+      />
+    </FieldLabel>
+  )
+}
