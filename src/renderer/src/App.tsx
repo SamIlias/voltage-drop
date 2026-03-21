@@ -24,8 +24,14 @@ export default function App() {
     setCalcDate,
     cosPhi,
     setCosPhiStr,
+    dUallowNum,
+    setDUallow,
+    useKsim,
+    setUseKsim,
     transformerPower,
-    setTransformerPower
+    setTransformerPower,
+    poleForCalcReserve,
+    setPoleForCalcReserve
   } = useAppSettings()
 
   const bgCls = theme === 'dark' ? 'bg-[#0d1117] text-[#cdd9e5]' : 'bg-[#f0f4f8] text-[#1f2328]'
@@ -47,11 +53,12 @@ export default function App() {
     updateSection,
     addLoad,
     addSection,
-    handleCreateNewComputing
-  } = useSections(cosPhiNum)
-  const { transformerLoad } = useTransformerLoad(transformerPower, computedSections)
+    handleCreateNewComputing,
+    fullLoadSummary
+  } = useSections(cosPhiNum, useKsim)
+  const { transformerLoad } = useTransformerLoad(transformerPower, computedSections, useKsim)
   const { fullVoltageDrop } = useFullVoltageDrop(computedSections)
-  const { powerReserve } = usePowerReserve(computedSections)
+  const { powerReserve } = usePowerReserve(computedSections, poleForCalcReserve)
   const { handleLoad, handleSave } = useFileHandlers(
     computedSections,
     // setSections,
@@ -78,12 +85,20 @@ export default function App() {
           setCalcDate={setCalcDate}
           cosPhi={cosPhi}
           setCosPhi={setCosPhiStr}
+          dUallowNum={dUallowNum}
+          setDUallow={setDUallow}
+          useKsim={useKsim}
+          setUseKsim={setUseKsim}
           transformerPower={transformerPower}
           setTransformerPower={setTransformerPower}
           transformerLoad={transformerLoad}
           voltageDrop={fullVoltageDrop}
           powerReserve={powerReserve}
           lineLength={lineLength}
+          loadSummary={fullLoadSummary}
+          poleForCalcReserve={poleForCalcReserve}
+          setPoleForCalcReserve={setPoleForCalcReserve}
+          sections={sections}
           theme={theme}
           onThemeToggle={() => setTheme((t) => (t === 'dark' ? 'light' : 'dark'))}
         />

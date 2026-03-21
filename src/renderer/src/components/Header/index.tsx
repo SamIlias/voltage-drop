@@ -1,36 +1,42 @@
-import { ResultStatus } from '@renderer/types'
 import { FieldLabel } from '../FieldLabel'
-import { TRANSFORMER_POWERS, TransformerPower } from '@renderer/constants'
+import { TransformerPower } from '@renderer/constants'
 import { VDivider } from '../VerticalDivider'
-import { getStatusByGreater, getStatusByLower } from '@renderer/utils'
 import { ActionButton } from '../ActionButton'
 import { Tooltip } from '../Tooltip'
-import { ResultBadge } from './ResultBadge'
+import { LoadSummary } from '@renderer/utils/electricCalc'
+import { LoadsSummaryBlock } from './LoadsSummaryBlock'
+import { ParameterInputBlock } from './ParamererInputBlock'
+import { ResultsBlock } from './ResultsBlock'
+import { Section } from '@renderer/types'
 
 export type Theme = 'dark' | 'light'
 
 interface HeaderProps {
-  // Actions
   handleSave: () => void
   handleUndo: () => void
   handleRedo: () => void
   handleLoad: () => void
   onCreateNewComputation: () => void
-  // Inputs
   lineName: string
   setLineName: (v: string) => void
   calcDate: string
   setCalcDate: (v: string) => void
   cosPhi: string
   setCosPhi: (v: string) => void
+  dUallowNum: number
+  setDUallow: (v: string) => void
+  useKsim: boolean
+  setUseKsim: (v: boolean) => void
   transformerPower: string
   setTransformerPower: (v: TransformerPower) => void
-  // Results (null = не рассчитано)
   transformerLoad: number | null
   voltageDrop: number | null
   powerReserve: number | null
   lineLength: number | null
-  // Theme
+  loadSummary: LoadSummary
+  poleForCalcReserve: string | null
+  setPoleForCalcReserve: (v: string | null) => void
+  sections: Section[]
   theme: Theme
   onThemeToggle: () => void
 }
@@ -51,19 +57,23 @@ export function Header({
   setCalcDate,
   cosPhi,
   setCosPhi,
+  dUallowNum,
+  setDUallow,
+  useKsim,
+  setUseKsim,
   transformerPower,
   setTransformerPower,
   transformerLoad,
   voltageDrop,
   powerReserve,
+  poleForCalcReserve,
+  setPoleForCalcReserve,
+  lineLength,
+  loadSummary,
+  sections,
   theme,
-  onThemeToggle,
-  lineLength
+  onThemeToggle
 }: HeaderProps) {
-  const loadStatus = getStatusByGreater(transformerLoad, 70, 90)
-  const dropStatus = getStatusByGreater(voltageDrop, 8, 13)
-  const reserveStatus = getStatusByLower(powerReserve, 50, 0)
-
   const onInfoOpen = () => {}
 
   return (
@@ -127,56 +137,34 @@ export function Header({
 
       <VDivider />
 
-      {/* cosPhi + transformer power */}
-      <div className="flex gap-3 items-end">
-        <FieldLabel text="cos φ">
-          <input
-            className={`${inputCls} w-15`}
-            value={cosPhi}
-            onChange={(e) => setCosPhi(e.target.value)}
-            placeholder="0.9"
-          />
-        </FieldLabel>
-        <FieldLabel text="Мощность тр-ра">
-          <select
-            className={`${inputCls} w-25 cursor-pointer`}
-            value={transformerPower}
-            onChange={(e) => setTransformerPower(e.target.value as TransformerPower)}
-          >
-            {TRANSFORMER_POWERS.map((p) => (
-              <option key={p} value={p}>
-                {p} кВА
-              </option>
-            ))}
-          </select>
-        </FieldLabel>
-      </div>
+      <ParameterInputBlock
+        cosPhi={cosPhi}
+        setCosPhi={setCosPhi}
+        dUallowNum={dUallowNum}
+        setDUallow={setDUallow}
+        loadSummary={loadSummary}
+        useKsim={useKsim}
+        setUseKsim={setUseKsim}
+        transformerPower={transformerPower}
+        setTransformerPower={setTransformerPower}
+      />
 
       <VDivider />
 
-      {/* Results */}
-      <div className="flex gap-4 items-center shrink-0">
-        <ResultBadge label="Загрузка тр-ра" value={transformerLoad} unit="%" status={loadStatus} />
-        <ResultBadge
-          label="Потеря напряжения"
-          value={voltageDrop || 0}
-          unit="%"
-          status={dropStatus}
-        />
-        <ResultBadge
-          label="Резерв мощности"
-          value={powerReserve}
-          unit="кВА"
-          status={reserveStatus}
-        />
+      <ResultsBlock
+        dUallowNum={dUallowNum}
+        lineLength={lineLength}
+        powerReserve={powerReserve}
+        transformerLoad={transformerLoad}
+        voltageDrop={voltageDrop}
+        poleForCalcReserve={poleForCalcReserve}
+        setPoleForCalcReserve={setPoleForCalcReserve}
+        sections={sections}
+      />
 
-        <ResultBadge
-          label="Длина линии"
-          value={lineLength}
-          unit="м"
-          status={ResultStatus.DEFAULT}
-        />
-      </div>
+      <LoadsSummaryBlock loadSummary={loadSummary} />
+
+      <VDivider />
 
       {/* Spacer */}
       <div className="flex-1" />

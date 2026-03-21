@@ -41,12 +41,42 @@ function getSimultaneityFactor(count: number, factorList: Record<number, number>
   return Number(factor.toFixed(4)) // Округляем для чистоты результата
 }
 
-function getLoadThroughSection(sectionId: number, sections: Section[]): number {
+export type LoadSummary = {
+  household: {
+    count: number
+    power: number
+    ksim: number
+  }
+  heating: {
+    count: number
+    power: number
+    ksim: number
+  }
+  electricCar: {
+    count: number
+    power: number
+    ksim: number
+  }
+  prom: {
+    count: number
+    power: number
+    ksim: number
+  }
+  totalCount: number
+  totalPower: number
+}
+
+export function getLoadSummary(
+  sectionId: number,
+  sections: Section[],
+  useKsim: boolean
+): LoadSummary {
   const relevantSections = sections.filter((s) => s.idx >= sectionId)
 
   let householdPower = 0
   let householdCount = 0
   let heatingPower = 0
+  let heatingCount = 0
   let electricCarPower = 0
   let electricCarCount = 0
   let promPower = 0
@@ -55,37 +85,81 @@ function getLoadThroughSection(sectionId: number, sections: Section[]): number {
   for (const s of relevantSections) {
     for (const l of s.loads_kw) {
       const power = parseFloat(l.power) || 0
+
       switch (l.type) {
         case LoadType.Household:
           householdPower += power
-          householdCount += 1
+          householdCount++
           break
         case LoadType.Heating:
           heatingPower += power
+          heatingCount++
           break
         case LoadType.ElectricCar:
           electricCarPower += power
-          electricCarCount += 1
+          electricCarCount++
           break
         case LoadType.Prom:
           promPower += power
-          promCount += 1
+          promCount++
           break
       }
     }
   }
 
-  const ksim_house = getSimultaneityFactor(householdCount, RESIDENTIAL_SIMULTANEITY_FACTOR)
-  const ksim_prom = getSimultaneityFactor(promCount, INDUSTRIAL_SIMULTANEITY_FACTOR)
+  const totalCount = householdCount + heatingCount + electricCarCount + promCount
 
-  return householdPower * ksim_house + promPower * ksim_prom + electricCarPower + heatingPower
+  const ksim_house = useKsim
+    ? getSimultaneityFactor(householdCount, RESIDENTIAL_SIMULTANEITY_FACTOR)
+    : 1
+
+  const ksim_prom = useKsim ? getSimultaneityFactor(promCount, INDUSTRIAL_SIMULTANEITY_FACTOR) : 1
+
+  const ksim_heating = 1
+  const ksim_electric = 1
+
+  const totalPower =
+    householdPower * ksim_house +
+    promPower * ksim_prom +
+    heatingPower * ksim_heating +
+    electricCarPower * ksim_electric
+
+  return {
+    household: {
+      count: householdCount,
+      power: householdPower,
+      ksim: ksim_house
+    },
+    heating: {
+      count: heatingCount,
+      power: heatingPower,
+      ksim: ksim_heating
+    },
+    electricCar: {
+      count: electricCarCount,
+      power: electricCarPower,
+      ksim: ksim_electric
+    },
+    prom: {
+      count: promCount,
+      power: promPower,
+      ksim: ksim_prom
+    },
+    totalCount,
+    totalPower
+  }
+}
+
+function getLoadThroughSection(sectionId: number, sections: Section[], useKsim: boolean): number {
+  return getLoadSummary(sectionId, sections, useKsim).totalPower
 }
 
 export function getTransformerLoad(
   transformerPower: TransformerPower,
-  sections: Section[]
+  sections: Section[],
+  useKsim: boolean
 ): number {
-  const load = getLoadThroughSection(0, sections)
+  const load = getLoadThroughSection(0, sections, useKsim)
   return (load * 100) / parseInt(transformerPower)
 }
 
@@ -107,9 +181,13 @@ type DownstreamData = {
   dUsec: number
 }
 
-export function calculateDownstreamPass(sections: Section[], cosPhi: number): DownstreamData[] {
+export function calculateDownstreamPass(
+  sections: Section[],
+  cosPhi: number,
+  useKsim: boolean
+): DownstreamData[] {
   return sections.map((section) => {
-    const Psec = getLoadThroughSection(section.idx, sections)
+    const Psec = getLoadThroughSection(section.idx, sections, useKsim)
     const phases = getEffectivePhases(section.idx, sections)
     const Isec1 = calculateSectionCurrent(Psec * 1000, phases, Unom220, cosPhi)
     const R0_om_km = WIRE_RESISTANCE_OM_KM[section.wire] ?? null

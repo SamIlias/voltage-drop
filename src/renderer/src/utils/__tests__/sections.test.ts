@@ -135,7 +135,7 @@ describe('sections utils', () => {
     it('вызывает downstream и upstream расчёты', () => {
       const sections = [createSection()]
 
-      const result = calculateAllSections(sections, 0.9)
+      const result = calculateAllSections(sections, 0.9, true)
 
       expect(result).toHaveLength(1)
       expect(result[0].Psec_kw).toBe(10)

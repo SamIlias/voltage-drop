@@ -42,7 +42,7 @@ describe('electricCalc integration', () => {
 
     const cosPhi = 0.9
 
-    const downstream = calculateDownstreamPass(sections, cosPhi)
+    const downstream = calculateDownstreamPass(sections, cosPhi, true)
     const upstream = calculateUpstreamPass(sections, downstream)
 
     // --- базовые проверки ---
@@ -80,7 +80,7 @@ describe('electricCalc integration', () => {
   it('корректно работает при отсутствии нагрузок', () => {
     const sections: Section[] = [createSection({ idx: 0 }), createSection({ idx: 1 })]
 
-    const downstream = calculateDownstreamPass(sections, 0.9)
+    const downstream = calculateDownstreamPass(sections, 0.9, true)
     const upstream = calculateUpstreamPass(sections, downstream)
 
     downstream.forEach((d) => {

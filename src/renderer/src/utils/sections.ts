@@ -77,7 +77,11 @@ export function getLineLength(sections: Section[]): number {
   }, 0)
 }
 
-export function calculateAllSections(sections: Section[], cosPhi: number): SectionResults[] {
-  const downstreamData = calculateDownstreamPass(sections, cosPhi)
+export function calculateAllSections(
+  sections: Section[],
+  cosPhi: number,
+  useKsim: boolean
+): SectionResults[] {
+  const downstreamData = calculateDownstreamPass(sections, cosPhi, useKsim)
   return calculateUpstreamPass(sections, downstreamData)
 }

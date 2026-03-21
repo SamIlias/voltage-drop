@@ -5,12 +5,13 @@ import { useEffect, useState } from 'react'
 
 export function useTransformerLoad(
   transformerPower: TransformerPower,
-  computedSections: Section[]
+  computedSections: Section[],
+  useKsim: boolean
 ) {
   const [transformerLoad, setTransformerLoad] = useState<number | null>(null)
 
   useEffect(() => {
-    setTransformerLoad(getTransformerLoad(transformerPower, computedSections))
+    setTransformerLoad(getTransformerLoad(transformerPower, computedSections, useKsim))
   }, [computedSections, transformerPower])
 
   return { transformerLoad }

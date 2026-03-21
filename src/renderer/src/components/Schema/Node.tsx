@@ -1,6 +1,8 @@
 import { LoadType, Section } from '@renderer/types'
 import { countByType, powerByType } from '@renderer/utils'
 import { PhaseLines } from './PhaseLines'
+import { LoadInfo } from './LoadInfo'
+import { LOAD_STYLES } from '@renderer/constants/loadStyles'
 
 interface SchemaNodeProps {
   section: Section | null // null = source node
@@ -18,24 +20,52 @@ export function SchemaNode({ section, nextSection, isActive, onClick }: SchemaNo
   const heatingCount = countByType(loads, LoadType.Heating)
   const heatingLoads = parseFloat(powerByType(loads, LoadType.Heating)).toFixed(1)
 
+  const electricCarCount = countByType(loads, LoadType.ElectricCar)
+  const electricCarLoads = parseFloat(powerByType(loads, LoadType.ElectricCar)).toFixed(1)
+
+  const promCount = countByType(loads, LoadType.Prom)
+  const promLoads = parseFloat(powerByType(loads, LoadType.Prom)).toFixed(1)
+
   return (
     <div className="flex items-end">
       <div className="flex flex-col items-center">
-        <div className="relative flex flex-col items-center mb-1 min-h-[52px] justify-end">
+        <div className="relative flex flex-col items-center mb-1 justify-end">
           {!isSource && (
             <div className="absolute -translate-x-1/2 whitespace-nowrap left-1/2 flex flex-col gap-2 leading-tight mb-2 pointer-events-none">
               {houseHoldCount ? (
-                <div className="flex flex-col text-[10px]">
-                  <span className="text-[#3fb950]">Nбыт: {houseHoldCount}</span>
-                  <span className="text-[#3fb950]">Pб: {houseHoldLoads} кВт</span>
-                </div>
+                <LoadInfo
+                  loadName={LoadType.Household}
+                  loadCount={houseHoldCount}
+                  loadPower={houseHoldLoads}
+                  textColor={LOAD_STYLES[LoadType.Household].text}
+                />
               ) : null}
 
               {heatingCount ? (
-                <div className="flex flex-col text-[9px]">
-                  <span className="text-[#f0883e]">Nн: {heatingCount}</span>
-                  <span className="text-[#f0883e]">Pн: {heatingLoads} кВт</span>
-                </div>
+                <LoadInfo
+                  loadName={LoadType.Heating}
+                  loadCount={heatingCount}
+                  loadPower={heatingLoads}
+                  textColor={LOAD_STYLES[LoadType.Heating].text}
+                />
+              ) : null}
+
+              {electricCarCount ? (
+                <LoadInfo
+                  loadName={LoadType.ElectricCar}
+                  loadCount={electricCarCount}
+                  loadPower={electricCarLoads}
+                  textColor={LOAD_STYLES[LoadType.ElectricCar].text}
+                />
+              ) : null}
+
+              {promCount ? (
+                <LoadInfo
+                  loadName={LoadType.Prom}
+                  loadCount={promCount}
+                  loadPower={promLoads}
+                  textColor={LOAD_STYLES[LoadType.Prom].text}
+                />
               ) : null}
             </div>
           )}

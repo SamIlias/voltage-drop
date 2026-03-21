@@ -5,8 +5,9 @@ import { calculateAllSections, incrementPoleNumber } from '@renderer/utils'
 import { WIRE_MARKS } from '@renderer/constants'
 import { historyReducer } from '@renderer/reducers/historyReducer'
 import { validateLoadPower } from '@renderer/utils/validation'
+import { getLoadSummary } from '@renderer/utils/electricCalc'
 
-export function useSections(cosPhiNum: number) {
+export function useSections(cosPhiNum: number, useKsim: boolean) {
   // const [sections, setSections] = useState<Section[]>([mkSection(0)])
   const [activeIdx, setActiveId] = useState<number>(1)
 
@@ -27,12 +28,14 @@ export function useSections(cosPhiNum: number) {
   const activeRef = useRef<HTMLDivElement>(null)
 
   const computedSections = useMemo(() => {
-    const allResults = calculateAllSections(sections, cosPhiNum)
+    const allResults = calculateAllSections(sections, cosPhiNum, useKsim)
     return sections.map((s, i) => ({
       ...s,
       results: allResults[i]
     }))
-  }, [sections, cosPhiNum])
+  }, [sections, cosPhiNum, useKsim])
+
+  const fullLoadSummary = useMemo(() => getLoadSummary(0, sections, useKsim), [sections, useKsim])
 
   useEffect(() => {
     if (activeRef.current) {
@@ -140,6 +143,7 @@ export function useSections(cosPhiNum: number) {
     updateSection,
     addLoad,
     addSection,
-    handleCreateNewComputing
+    handleCreateNewComputing,
+    fullLoadSummary
   }
 }

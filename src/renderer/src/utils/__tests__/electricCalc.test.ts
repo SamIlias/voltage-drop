@@ -46,7 +46,7 @@ describe('calculations', () => {
         })
       ]
 
-      const result = getTransformerLoad('100', sections)
+      const result = getTransformerLoad('100', sections, true)
 
       expect(result).toBeGreaterThan(0)
       expect(result).toBeLessThanOrEqual(100)
@@ -63,7 +63,7 @@ describe('calculations', () => {
         })
       ]
 
-      const result = calculateDownstreamPass(sections, 0.9)
+      const result = calculateDownstreamPass(sections, 0.9, true)
 
       expect(result).toHaveLength(1)
 
@@ -115,7 +115,7 @@ describe('calculations', () => {
     it('не должен падать при пустых нагрузках', () => {
       const sections = [createSection()]
 
-      const downstream = calculateDownstreamPass(sections, 0.9)
+      const downstream = calculateDownstreamPass(sections, 0.9, true)
       const upstream = calculateUpstreamPass(sections, downstream)
 
       expect(downstream[0].Psec).toBe(0)
@@ -130,7 +130,7 @@ describe('calculations', () => {
         })
       ]
 
-      const result = calculateDownstreamPass(sections, 0.9)
+      const result = calculateDownstreamPass(sections, 0.9, true)
 
       expect(result[0].Rsec).toBe(0)
       expect(result[0].dUsec).toBe(0)

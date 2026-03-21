@@ -1,0 +1,39 @@
+import { LOAD_STYLES } from '@renderer/constants/loadStyles'
+import { FieldLabel } from '../FieldLabel'
+import { LoadType } from '@renderer/types'
+import { LoadSummary } from '@renderer/utils/electricCalc'
+
+export function LoadsSummaryBlock({ loadSummary }: { loadSummary: LoadSummary }) {
+  return (
+    <FieldLabel text="Сводная информация" addClsName="items-center">
+      <div className="grid grid-cols-2 gap-x-1 gap-y-1 min-w-50 my-1 text-[10px] text-gray-300">
+        <span
+          className={LOAD_STYLES[LoadType.Household].text}
+        >{`N${LoadType.Household} = ${loadSummary.household.count}`}</span>
+        <span
+          className={LOAD_STYLES[LoadType.Household].text}
+        >{`P${LoadType.Household} = ${loadSummary.household.power} кВт`}</span>
+        <span
+          className={LOAD_STYLES[LoadType.Heating].text}
+        >{`N${LoadType.Heating} = ${loadSummary.heating.count}`}</span>
+        <span
+          className={LOAD_STYLES[LoadType.Heating].text}
+        >{`P${LoadType.Heating} = ${loadSummary.heating.power} кВт`}</span>
+        <span
+          className={LOAD_STYLES[LoadType.ElectricCar].text}
+        >{`N${LoadType.ElectricCar} = ${loadSummary.electricCar.count}`}</span>
+        <span
+          className={LOAD_STYLES[LoadType.ElectricCar].text}
+        >{`P${LoadType.ElectricCar} = ${loadSummary.electricCar.power} кВт`}</span>
+        <span
+          className={LOAD_STYLES[LoadType.Prom].text}
+        >{`N${LoadType.Prom} = ${loadSummary.prom.count}`}</span>
+        <span
+          className={LOAD_STYLES[LoadType.Prom].text}
+        >{`P${LoadType.Prom} = ${loadSummary.prom.power} кВт`}</span>
+        <span className="font-bold text-xs">{`NΣ = ${loadSummary.totalCount}`}</span>
+        <span className="font-bold text-xs">{`PΣ = ${loadSummary.totalPower} кВт`}</span>
+      </div>
+    </FieldLabel>
+  )
+}
