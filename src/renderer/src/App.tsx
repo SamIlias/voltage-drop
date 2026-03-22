@@ -13,6 +13,7 @@ import { useAppSettings } from '@renderer/hooks/useAppSettings'
 import { useError } from '@renderer/hooks/useError'
 import { useFileHandlers } from '@renderer/hooks/useFileHandlers'
 import { useLineLength } from './hooks/useLineLength'
+import { Unom220 } from './constants'
 
 export default function App() {
   const {
@@ -24,7 +25,7 @@ export default function App() {
     setCalcDate,
     cosPhi,
     setCosPhiStr,
-    dUallowNum,
+    dUallowNumPercent,
     setDUallow,
     useKsim,
     setUseKsim,
@@ -58,7 +59,15 @@ export default function App() {
   } = useSections(cosPhiNum, useKsim)
   const { transformerLoad } = useTransformerLoad(transformerPower, computedSections, useKsim)
   const { fullVoltageDrop } = useFullVoltageDrop(computedSections)
-  const { powerReserve } = usePowerReserve(computedSections, poleForCalcReserve)
+
+  const dUAllow = (Unom220 * dUallowNumPercent) / 100
+  const { powerReserve } = usePowerReserve(
+    computedSections,
+    poleForCalcReserve,
+    dUAllow,
+    cosPhiNum,
+    useKsim
+  )
   const { handleLoad, handleSave } = useFileHandlers(
     computedSections,
     // setSections,
@@ -85,7 +94,7 @@ export default function App() {
           setCalcDate={setCalcDate}
           cosPhi={cosPhi}
           setCosPhi={setCosPhiStr}
-          dUallowNum={dUallowNum}
+          dUallowNum={dUallowNumPercent}
           setDUallow={setDUallow}
           useKsim={useKsim}
           setUseKsim={setUseKsim}

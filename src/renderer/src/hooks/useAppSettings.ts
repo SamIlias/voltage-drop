@@ -7,7 +7,7 @@ export function useAppSettings() {
   const [lineName, setLineName] = useState('')
   const [calcDate, setCalcDate] = useState(() => new Date().toISOString().slice(0, 10))
   const [cosPhi, setCosPhiStr] = useState('0.9')
-  const [dUallow, setDUallow] = useState('13')
+  const [dUallowPercent, setDUallowPercent] = useState('13')
   const [useKsim, setUseKsim] = useState(true)
   const [transformerPower, setTransformerPower] = useState<TransformerPower>('100')
   const [poleForCalcReserve, setPoleForCalcReserve] = useState<string | null>(null)
@@ -21,8 +21,8 @@ export function useAppSettings() {
     setCalcDate,
     cosPhi,
     setCosPhiStr,
-    dUallowNum: Number(dUallow),
-    setDUallow,
+    dUallowNumPercent: Number(dUallowPercent),
+    setDUallow: setDUallowPercent,
     useKsim,
     setUseKsim,
     transformerPower,

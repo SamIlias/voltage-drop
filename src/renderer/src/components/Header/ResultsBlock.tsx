@@ -4,6 +4,7 @@ import { ResultStatus, Section, TransformerPower } from '@renderer/types'
 import { FieldLabel } from '../FieldLabel'
 import { inputCls } from '..'
 import { useEffect } from 'react'
+import { Tooltip } from '../Tooltip'
 
 interface ResultsBlockProps {
   dUallowNum: number
@@ -38,37 +39,39 @@ export function ResultsBlock({
   }, [sections.length])
 
   return (
-    <div className="grid grid-cols-2 gap-4 items-center shrink-0">
+    <div className="grid grid-cols-3 gap-4 items-center shrink-0">
       <ResultBadge label="Загрузка тр-ра" value={transformerLoad} unit="%" status={loadStatus} />
-      <div className="flex">
+      {/* резерв мощности постоянной нагрузки для указанной опоры */}
+      <Tooltip
+        content="Резерв мощности постоянной нагрузки для указанной опоры"
+        className="text-[7px] max-w-60"
+      >
         <ResultBadge
           label="Резерв мощности"
           value={powerReserve}
           unit="кВт"
           status={reserveStatus}
         />
-
-        <FieldLabel text="Выберите опору">
-          <select
-            className={`${inputCls} w-25 cursor-pointer`}
-            value={poleForCalcReserve || sections.at(-1)?.poleNumber}
-            onChange={(e) => setPoleForCalcReserve(e.target.value)}
-          >
-            {sections.map((s) => (
-              <option key={s.poleNumber} value={s.poleNumber}>
-                {s.poleNumber}
-              </option>
-            ))}
-          </select>
-        </FieldLabel>
-      </div>
+      </Tooltip>
+      <FieldLabel text="Выберите опору">
+        <select
+          className={`${inputCls} w-25 cursor-pointer`}
+          value={poleForCalcReserve || sections.at(-1)?.poleNumber}
+          onChange={(e) => setPoleForCalcReserve(e.target.value)}
+        >
+          {sections.map((s) => (
+            <option key={s.poleNumber} value={s.poleNumber}>
+              {s.poleNumber}
+            </option>
+          ))}
+        </select>
+      </FieldLabel>
       <ResultBadge
         label="Потеря напряжения"
         value={voltageDrop || 0}
         unit="%"
         status={dropStatus}
       />
-
       <ResultBadge label="Длина линии" value={lineLength} unit="м" status={ResultStatus.DEFAULT} />
     </div>
   )

@@ -172,7 +172,6 @@ export function getFullDUPercent(sections: Section[]): number {
   // return (getFullDU(sections) * 100) / Usource230
 }
 
-//todo add Type
 type DownstreamData = {
   Psec: number
   phases: PhaseCount
