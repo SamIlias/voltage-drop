@@ -1,5 +1,5 @@
 import { LoadType, Section } from '@renderer/types'
-import { LoadPowerField } from './sectionFields/LoadPowerField'
+import { LoadPowerField } from '../validatedFields/LoadPowerField'
 import { LoadBadge } from './LoadBadge'
 import { FieldLabel } from '../FieldLabel'
 import { LOAD_TYPES } from '@renderer/constants'

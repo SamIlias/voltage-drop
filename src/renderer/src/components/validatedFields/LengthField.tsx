@@ -1,7 +1,7 @@
 import { MouseEvent } from 'react'
-import { validateLength } from '@renderer/utils/validation'
 import { useValidatedField } from '@renderer/hooks/useValidatedField'
 import { FieldLabel } from '@renderer/components/FieldLabel'
+import { validateLength } from '@renderer/utils/validation'
 
 interface LengthFieldProps {
   value: string

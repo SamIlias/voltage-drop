@@ -97,6 +97,40 @@ export function validateLoadPower(value: string): ValidationResult {
   return { valid: true }
 }
 
+export function validateCosPhi(value: string): ValidationResult {
+  if (value.trim() === '') {
+    return { valid: false, error: 'Введите значение' }
+  }
+
+  const n = parsePositiveFloat(value)
+
+  if (n === null) {
+    return { valid: false, error: 'Некорректное число' }
+  }
+  if (n <= 0 || n > 1) {
+    return { valid: false, error: '> 0 и <= 1' }
+  }
+
+  return { valid: true }
+}
+
+export function validateDUPercent(value: string): ValidationResult {
+  if (value.trim() === '') {
+    return { valid: false, error: 'Введите значение' }
+  }
+
+  const n = parsePositiveFloat(value)
+
+  if (n === null) {
+    return { valid: false, error: 'Некорректное число' }
+  }
+  if (n <= 0 || n > 100) {
+    return { valid: false, error: '> 0 и <= 100' }
+  }
+
+  return { valid: true }
+}
+
 export interface SectionValidationErrors {
   length_m?: string
   poleNumber?: string

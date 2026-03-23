@@ -31,6 +31,7 @@ export function useSections(cosPhiNum: number, useKsim: boolean) {
     const allResults = calculateAllSections(sections, cosPhiNum, useKsim)
     return sections.map((s, i) => ({
       ...s,
+      prevPoleNumber: sections[i - 1]?.poleNumber || '0',
       results: allResults[i]
     }))
   }, [sections, cosPhiNum, useKsim])

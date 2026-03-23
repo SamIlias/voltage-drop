@@ -1,6 +1,6 @@
 import { getStatusByGreater, getStatusByLower } from '@renderer/utils'
 import { ResultBadge } from './ResultBadge'
-import { ResultStatus, Section, TransformerPower } from '@renderer/types'
+import { ResultStatus, Section } from '@renderer/types'
 import { FieldLabel } from '../FieldLabel'
 import { inputCls } from '..'
 import { useEffect } from 'react'
@@ -11,6 +11,7 @@ interface ResultsBlockProps {
   transformerLoad: number | null
   voltageDrop: number | null
   powerReserve: number | null
+  fullWorkCurrent: number | null
   lineLength: number | null
   poleForCalcReserve: string | null
   setPoleForCalcReserve: (v: string | null) => void
@@ -22,6 +23,7 @@ export function ResultsBlock({
   transformerLoad,
   voltageDrop,
   powerReserve,
+  fullWorkCurrent,
   lineLength,
   poleForCalcReserve,
   setPoleForCalcReserve,
@@ -32,7 +34,7 @@ export function ResultsBlock({
 
   const loadStatus = getStatusByGreater(transformerLoad, 70, 90)
   const dropStatus = getStatusByGreater(voltageDrop, minDUallow, maxDUallow)
-  const reserveStatus = getStatusByLower(powerReserve, 50, 0)
+  const reserveStatus = getStatusByLower(powerReserve, 20, 0)
 
   useEffect(() => {
     setPoleForCalcReserve(sections.at(-1)?.poleNumber || null)
@@ -41,18 +43,14 @@ export function ResultsBlock({
   return (
     <div className="grid grid-cols-3 gap-4 items-center shrink-0">
       <ResultBadge label="Загрузка тр-ра" value={transformerLoad} unit="%" status={loadStatus} />
-      {/* резерв мощности постоянной нагрузки для указанной опоры */}
-      <Tooltip
-        content="Резерв мощности постоянной нагрузки для указанной опоры"
-        className="text-[7px] max-w-60"
-      >
-        <ResultBadge
-          label="Резерв мощности"
-          value={powerReserve}
-          unit="кВт"
-          status={reserveStatus}
-        />
-      </Tooltip>
+
+      <ResultBadge
+        label="Ток линии (1ф)"
+        value={fullWorkCurrent}
+        unit="A"
+        status={ResultStatus.DEFAULT}
+      />
+
       <FieldLabel text="Выберите опору">
         <select
           className={`${inputCls} w-25 cursor-pointer`}
@@ -66,13 +64,28 @@ export function ResultsBlock({
           ))}
         </select>
       </FieldLabel>
+
       <ResultBadge
         label="Потеря напряжения"
         value={voltageDrop || 0}
         unit="%"
         status={dropStatus}
       />
+
       <ResultBadge label="Длина линии" value={lineLength} unit="м" status={ResultStatus.DEFAULT} />
+
+      {/* резерв мощности постоянной нагрузки для указанной опоры */}
+      <Tooltip
+        content="Резерв мощности постоянной нагрузки для указанной опоры"
+        className="text-[7px] max-w-60"
+      >
+        <ResultBadge
+          label="Резерв мощности"
+          value={powerReserve}
+          unit="кВт"
+          status={reserveStatus}
+        />
+      </Tooltip>
     </div>
   )
 }

@@ -23,7 +23,8 @@ interface HeaderProps {
   setCalcDate: (v: string) => void
   cosPhi: string
   setCosPhi: (v: string) => void
-  dUallowNum: number
+  dUallowNumPercent: number
+  dUallowPercent: string
   setDUallow: (v: string) => void
   useKsim: boolean
   setUseKsim: (v: boolean) => void
@@ -32,6 +33,7 @@ interface HeaderProps {
   transformerLoad: number | null
   voltageDrop: number | null
   powerReserve: number | null
+  fullWorkCurrent: number | null
   lineLength: number | null
   loadSummary: LoadSummary
   poleForCalcReserve: string | null
@@ -57,7 +59,8 @@ export function Header({
   setCalcDate,
   cosPhi,
   setCosPhi,
-  dUallowNum,
+  dUallowPercent,
+  dUallowNumPercent,
   setDUallow,
   useKsim,
   setUseKsim,
@@ -66,6 +69,7 @@ export function Header({
   transformerLoad,
   voltageDrop,
   powerReserve,
+  fullWorkCurrent,
   poleForCalcReserve,
   setPoleForCalcReserve,
   lineLength,
@@ -140,7 +144,7 @@ export function Header({
       <ParameterInputBlock
         cosPhi={cosPhi}
         setCosPhi={setCosPhi}
-        dUallowNum={dUallowNum}
+        dUallow={dUallowPercent}
         setDUallow={setDUallow}
         loadSummary={loadSummary}
         useKsim={useKsim}
@@ -152,9 +156,10 @@ export function Header({
       <VDivider />
 
       <ResultsBlock
-        dUallowNum={dUallowNum}
+        dUallowNum={dUallowNumPercent}
         lineLength={lineLength}
         powerReserve={powerReserve}
+        fullWorkCurrent={fullWorkCurrent}
         transformerLoad={transformerLoad}
         voltageDrop={voltageDrop}
         poleForCalcReserve={poleForCalcReserve}

@@ -21,7 +21,7 @@ export function useAppSettings() {
     setCalcDate,
     cosPhi,
     setCosPhiStr,
-    dUallowNumPercent: Number(dUallowPercent),
+    dUallowPercent: dUallowPercent,
     setDUallow: setDUallowPercent,
     useKsim,
     setUseKsim,

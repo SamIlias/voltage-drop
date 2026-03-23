@@ -2,11 +2,13 @@ import { TRANSFORMER_POWERS, TransformerPower } from '@renderer/constants'
 import { inputCls } from '..'
 import { FieldLabel } from '../FieldLabel'
 import { LoadSummary } from '@renderer/utils/electricCalc'
+import { CosPhiField } from '../validatedFields/CosPhiField'
+import { DUPercentField } from '../validatedFields/DUPercentField'
 
 interface ParameterInputBlock {
   cosPhi: string
   setCosPhi: (v: string) => void
-  dUallowNum: number
+  dUallow: string
   setDUallow: (v: string) => void
   useKsim: boolean
   setUseKsim: (v: boolean) => void
@@ -18,7 +20,7 @@ interface ParameterInputBlock {
 export function ParameterInputBlock({
   cosPhi,
   setCosPhi,
-  dUallowNum,
+  dUallow,
   setDUallow,
   loadSummary,
   useKsim,
@@ -28,25 +30,11 @@ export function ParameterInputBlock({
 }: ParameterInputBlock) {
   return (
     <div className="flex gap-3 items-end">
-      <div className="flex flex-col gap-1">
-        <FieldLabel text="cos φ">
-          <input
-            className={`${inputCls} w-15`}
-            value={cosPhi}
-            onChange={(e) => setCosPhi(e.target.value)}
-            placeholder="0.9"
-          />
-        </FieldLabel>
-
-        <FieldLabel text="dU% доп">
-          <input
-            className={`${inputCls} w-15`}
-            value={dUallowNum || ''}
-            onChange={(e) => setDUallow(e.target.value)}
-            placeholder="13%"
-          />
-        </FieldLabel>
+      <div className="flex flex-col gap-1 w-25">
+        <CosPhiField value={cosPhi} setCosPhi={setCosPhi} />
+        <DUPercentField value={dUallow} setDUAllow={setDUallow} />
       </div>
+
       <div className="flex flex-col gap-2">
         <FieldLabel text="Учитывать Кодн" addClsName="">
           <div className="flex gap-2 items-center">
