@@ -37,7 +37,7 @@ test('removes section', () => {
 
   fireEvent.click(addBtn)
 
-  const removeButtons = screen.getAllByText('✕')
+  const removeButtons = screen.getAllByTestId('remove-section')
 
   fireEvent.click(removeButtons[0])
 

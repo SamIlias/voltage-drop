@@ -1,5 +1,5 @@
 import { FieldLabel } from '../FieldLabel'
-import { TransformerPower } from '@renderer/constants'
+import { TransformerPower, Unom220 } from '@renderer/constants'
 import { VDivider } from '../VerticalDivider'
 import { ActionButton } from '../ActionButton'
 import { Tooltip } from '../Tooltip'
@@ -8,6 +8,8 @@ import { LoadsSummaryBlock } from './LoadsSummaryBlock'
 import { ParameterInputBlock } from './ParamererInputBlock'
 import { ResultsBlock } from './ResultsBlock'
 import { Section } from '@renderer/types'
+import { SectionReport } from '../SectionReport'
+import { ReportMeta } from '../SectionReport/ReportContent'
 
 export type Theme = 'dark' | 'light'
 
@@ -79,6 +81,17 @@ export function Header({
   onThemeToggle
 }: HeaderProps) {
   const onInfoOpen = () => {}
+
+  const meta: ReportMeta = {
+    title: lineName,
+    date: calcDate,
+    transformerPower_kva: transformerPower,
+    totalConsumers: loadSummary.totalCount,
+    totalLoad_kw: loadSummary.totalPower,
+    fullWorkCurrent: fullWorkCurrent || 0,
+    voltageDrop_v: voltageDrop ? (voltageDrop * Unom220) / 100 : 0,
+    voltageDrop_pct: voltageDrop || 0
+  }
 
   return (
     <header className="w-full flex items-center gap-4 px-5 border-b border-[#21262d] bg-[#161b22] min-h-17 overflow-x-auto">
@@ -170,6 +183,8 @@ export function Header({
       <LoadsSummaryBlock loadSummary={loadSummary} />
 
       <VDivider />
+
+      <SectionReport meta={meta} sections={sections} />
 
       {/* Spacer */}
       <div className="flex-1" />

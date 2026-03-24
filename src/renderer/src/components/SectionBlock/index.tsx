@@ -33,6 +33,7 @@ export const SectionBlock = forwardRef<HTMLDivElement, SectionBlockProps>(
         <div className="flex flex-col items-center justify-start gap-1 pt-1">
           <span className="text-[12px] text-[#8b949e]">#{index + 1}</span>
           <button
+            data-testid="remove-section"
             onClick={(e) => {
               stop(e)
               onRemove()

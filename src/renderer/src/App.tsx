@@ -59,7 +59,7 @@ export default function App() {
     fullLoadSummary
   } = useSections(cosPhiNum, useKsim)
   const { transformerLoad } = useTransformerLoad(transformerPower, computedSections, useKsim)
-  const { fullVoltageDrop } = useFullVoltageDrop(computedSections)
+  const { fullVoltageDrop_pct } = useFullVoltageDrop(computedSections)
   const { fullWorkCurrent } = useFullWorkCurrent(computedSections)
 
   const dUallowNumPercent = parseFloat(dUallowPercent)
@@ -105,14 +105,15 @@ export default function App() {
           transformerPower={transformerPower}
           setTransformerPower={setTransformerPower}
           transformerLoad={transformerLoad}
-          voltageDrop={fullVoltageDrop}
+          voltageDrop={fullVoltageDrop_pct}
           powerReserve={powerReserve}
           fullWorkCurrent={fullWorkCurrent}
           lineLength={lineLength}
           loadSummary={fullLoadSummary}
           poleForCalcReserve={poleForCalcReserve}
           setPoleForCalcReserve={setPoleForCalcReserve}
-          sections={sections}
+          // sections={sections}
+          sections={computedSections}
           theme={theme}
           onThemeToggle={() => setTheme((t) => (t === 'dark' ? 'light' : 'dark'))}
         />
