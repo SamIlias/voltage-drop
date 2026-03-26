@@ -6,6 +6,7 @@ import { WIRE_MARKS } from '@renderer/constants'
 import { historyReducer } from '@renderer/reducers/historyReducer'
 import { validateLoadPower } from '@renderer/utils/validation'
 import { getLoadSummary } from '@renderer/utils/electricCalc'
+import { getLineLength, getLineResistance } from '@renderer/utils/sections'
 
 export function useSections(cosPhiNum: number, useKsim: boolean) {
   // const [sections, setSections] = useState<Section[]>([mkSection(0)])
@@ -37,6 +38,7 @@ export function useSections(cosPhiNum: number, useKsim: boolean) {
   }, [sections, cosPhiNum, useKsim])
 
   const fullLoadSummary = useMemo(() => getLoadSummary(0, sections, useKsim), [sections, useKsim])
+  const fullLineResistance = useMemo(() => getLineResistance(sections), [sections])
 
   useEffect(() => {
     if (activeRef.current) {
@@ -145,6 +147,7 @@ export function useSections(cosPhiNum: number, useKsim: boolean) {
     addLoad,
     addSection,
     handleCreateNewComputing,
-    fullLoadSummary
+    fullLoadSummary,
+    fullLineResistance
   }
 }

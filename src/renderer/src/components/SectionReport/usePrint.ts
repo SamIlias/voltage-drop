@@ -4,141 +4,165 @@ export function usePrint() {
   return useCallback(() => {
     const el = document.getElementById('report-printable')
     if (!el) return
-
-    const printWindow = window.open('', '_blank', 'width=1200,height=900')
-    if (!printWindow) return
-
-    printWindow.document.write(`<!DOCTYPE html>
-<html lang="ru">
+    const html = `<html lang="ru">
 <head>
   <meta charset="utf-8"/>
   <title>Отчёт по секциям</title>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Golos+Text:wght@400;500;600&display=swap');
-
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
-      font-family: 'Golos Text', sans-serif;
+      font-family: 'Segoe UI', Arial, sans-serif;
       background: #fff;
       color: #111;
-      padding: 16mm 14mm;
+      padding: 12mm 14mm;
       font-size: 10pt;
     }
 
     #report-printable { width: 100%; }
 
-    /* ── Header ── */
+    /* ── Header card ── */
     .border-2.border-zinc-800.bg-white.mb-6 {
-      border: 2px solid #111;
-      background: #fff;
-      margin-bottom: 14px;
+      border: 2px solid #222;
+      margin-bottom: 12px;
     }
+
     .bg-zinc-800.px-5.py-3 {
-      background: #111;
-      padding: 7px 14px;
+      background: #222;
+      padding: 8px 16px;
     }
+
     h1 {
-      font-family: 'JetBrains Mono', monospace;
+      font-family: 'Courier New', Consolas, monospace;
       font-size: 11pt;
-      letter-spacing: 0.15em;
+      letter-spacing: 0.18em;
       text-transform: uppercase;
-      font-weight: 600;
+      font-weight: 700;
       color: #fff;
     }
+
+    /* ── Meta grid ── */
     .grid {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
-      gap: 1px;
-      background: #ccc;
-      border-top: 1px solid #ccc;
-    }
-    .grid > div {
-      background: #fff;
-      padding: 5px 12px;
-    }
-    p.font-mono.text-\\[9px\\] {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 7pt;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      color: #777;
-      margin-bottom: 2px;
-    }
-    p.font-mono.font-semibold {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 13pt;
-      font-weight: 600;
-    }
-    span.text-\\[10px\\].text-zinc-400 {
-      font-size: 8pt;
-      color: #888;
-      font-weight: 400;
-      margin-left: 3px;
+      border-top: 1px solid #ddd;
     }
 
-    /* ── Table ── */
-    .overflow-x-auto.border-2.border-zinc-800 {
-      border: 2px solid #111;
+    .grid > div {
+      background: #fff;
+      padding: 6px 14px;
+      border-right: 1px solid #eee;
+      border-bottom: 1px solid #eee;
     }
+
+    .grid > div:nth-child(4n) { border-right: none; }
+
+    p.font-mono.text-\\[9px\\] {
+      font-family: 'Courier New', Consolas, monospace;
+      font-size: 6.5pt;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: #999;
+      margin-bottom: 2px;
+    }
+
+    p.font-mono.font-semibold {
+      font-family: 'Courier New', Consolas, monospace;
+      font-size: 12pt;
+      font-weight: 700;
+      color: #111;
+    }
+
+    span.text-\\[10px\\].text-zinc-400 {
+      font-size: 8pt;
+      color: #aaa;
+      font-weight: 400;
+      margin-left: 2px;
+    }
+
+    /* ── Table wrapper ── */
+    .overflow-x-auto.border.border-zinc-800 {
+      border: 2px solid #222;
+    }
+
     table {
       width: 100%;
       border-collapse: collapse;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 9pt;
+      font-family: 'Courier New', Consolas, monospace;
+      font-size: 8.5pt;
     }
-    thead tr { background: #111; color: #fff; }
-    th {
-      padding: 6px 10px;
-      text-align: left;
-      font-size: 8pt;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      white-space: nowrap;
-    }
-    td {
-      padding: 5px 10px;
-      border-bottom: 1px solid #ddd;
-      vertical-align: top;
-    }
-    tr:nth-child(even) td { background: #f8f8f7; }
 
-    /* ── Loads ── */
-    .flex.flex-col.gap-0\\.5 { display: block; }
-    .whitespace-nowrap.font-mono.text-\\[11px\\] {
-      display: block;
-      font-size: 8pt;
-      white-space: nowrap;
+    thead tr {
+      background: #222;
+      color: #fff;
     }
-    sub { font-size: 7pt; }
+
+    th {
+      padding: 7px 10px;
+      text-align: center;
+      font-size: 7.5pt;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      white-space: nowrap;
+      border-right: 1px solid #444;
+    }
+
+    th:last-child { border-right: none; }
+
+    td {
+      padding: 5px 8px;
+      border: 1px solid #e4e4e4;
+      vertical-align: middle;
+      text-align: center;
+    }
+
+    tr:nth-child(even) td { background: #f9f9f8; }
+
+    /* ── Потребители — в строку ── */
+    .flex.flex-wrap.gap-x-1 {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 2px;
+      justify-content: center;
+    }
+
+    .border.border-y-0.border-x-zinc-200.px-2.whitespace-nowrap.font-mono.text-\\[11px\\] {
+      display: inline-block;
+      border-left: 1px solid #ddd;
+      border-right: 1px solid #ddd;
+      padding: 0 5px;
+      white-space: nowrap;
+      font-family: 'Courier New', Consolas, monospace;
+      font-size: 8pt;
+      line-height: 1.6;
+    }
+
+    .text-zinc-400 { color: #bbb; }
+
+    sub { font-size: 6.5pt; }
 
     /* ── Footer ── */
-    .mt-4.flex.justify-between {
+    .mt-4.flex.justify-between.items-center {
       margin-top: 10px;
       display: flex;
       justify-content: space-between;
+      align-items: center;
     }
+
     .font-mono.text-\\[10px\\].text-zinc-400 {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 7.5pt;
-      color: #aaa;
-      letter-spacing: 0.05em;
+      font-family: 'Courier New', Consolas, monospace;
+      font-size: 7pt;
+      color: #bbb;
+      letter-spacing: 0.08em;
       text-transform: uppercase;
     }
 
-    @page { margin: 8mm; }
+    @page { margin: 8mm; size: A4 landscape; }
   </style>
 </head>
 <body>${el.innerHTML}</body>
-</html>`)
-
-    printWindow.document.close()
-    printWindow.focus()
-    // Wait for fonts before opening print dialog
-    setTimeout(() => {
-      printWindow.print()
-      printWindow.close()
-    }, 700)
+</html>`
+    window.api.printHtml(html)
   }, [])
 }

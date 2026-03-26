@@ -77,6 +77,12 @@ export function getLineLength(sections: Section[]): number {
   }, 0)
 }
 
+export function getLineResistance(sections: Section[]): number {
+  return sections.reduce((R, s) => {
+    return R + (s.results.Rsec || 0)
+  }, 0)
+}
+
 export function calculateAllSections(
   sections: Section[],
   cosPhi: number,

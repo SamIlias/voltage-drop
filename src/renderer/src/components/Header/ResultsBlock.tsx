@@ -1,6 +1,6 @@
 import { getStatusByGreater, getStatusByLower } from '@renderer/utils'
 import { ResultBadge } from './ResultBadge'
-import { ResultStatus, Section } from '@renderer/types'
+import { IkzSummary, ResultStatus, Section } from '@renderer/types'
 import { FieldLabel } from '../FieldLabel'
 import { inputCls } from '..'
 import { useEffect } from 'react'
@@ -16,6 +16,7 @@ interface ResultsBlockProps {
   poleForCalcReserve: string | null
   setPoleForCalcReserve: (v: string | null) => void
   sections: Section[]
+  IkzSummary: IkzSummary
 }
 
 export function ResultsBlock({
@@ -27,7 +28,8 @@ export function ResultsBlock({
   lineLength,
   poleForCalcReserve,
   setPoleForCalcReserve,
-  sections
+  sections,
+  IkzSummary
 }: ResultsBlockProps) {
   const maxDUallow = dUallowNum || 13
   const minDUallow = maxDUallow * 0.8
@@ -47,6 +49,27 @@ export function ResultsBlock({
       <ResultBadge
         label="Ток линии (1ф)"
         value={fullWorkCurrent}
+        unit="A"
+        status={ResultStatus.DEFAULT}
+      />
+
+      <ResultBadge
+        label="Ток КЗ 3ф"
+        value={IkzSummary.Ikz3}
+        unit="A"
+        status={ResultStatus.DEFAULT}
+      />
+
+      <ResultBadge
+        label="Ток КЗ 2ф"
+        value={IkzSummary.Ikz2}
+        unit="A"
+        status={ResultStatus.DEFAULT}
+      />
+
+      <ResultBadge
+        label="Ток КЗ 1ф"
+        value={IkzSummary.Ikz1}
         unit="A"
         status={ResultStatus.DEFAULT}
       />

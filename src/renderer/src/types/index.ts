@@ -44,6 +44,12 @@ export interface Section {
   results: SectionResults
 }
 
+export interface IkzSummary {
+  Ikz3: number | null
+  Ikz2: number | null
+  Ikz1: number | null
+}
+
 export function isSectionArray(data: unknown): data is Section[] {
   return (
     Array.isArray(data) &&

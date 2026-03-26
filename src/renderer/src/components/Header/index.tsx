@@ -7,7 +7,7 @@ import { LoadSummary } from '@renderer/utils/electricCalc'
 import { LoadsSummaryBlock } from './LoadsSummaryBlock'
 import { ParameterInputBlock } from './ParamererInputBlock'
 import { ResultsBlock } from './ResultsBlock'
-import { Section } from '@renderer/types'
+import { IkzSummary, Section } from '@renderer/types'
 import { SectionReport } from '../SectionReport'
 import { ReportMeta } from '../SectionReport/ReportContent'
 
@@ -43,6 +43,7 @@ interface HeaderProps {
   sections: Section[]
   theme: Theme
   onThemeToggle: () => void
+  IkzSummary: IkzSummary
 }
 
 const inputCls =
@@ -77,6 +78,7 @@ export function Header({
   lineLength,
   loadSummary,
   sections,
+  IkzSummary,
   theme,
   onThemeToggle
 }: HeaderProps) {
@@ -90,7 +92,8 @@ export function Header({
     totalLoad_kw: loadSummary.totalPower,
     fullWorkCurrent: fullWorkCurrent || 0,
     voltageDrop_v: voltageDrop ? (voltageDrop * Unom220) / 100 : 0,
-    voltageDrop_pct: voltageDrop || 0
+    voltageDrop_pct: voltageDrop || 0,
+    fullLength: lineLength || 0
   }
 
   return (
@@ -178,6 +181,7 @@ export function Header({
         poleForCalcReserve={poleForCalcReserve}
         setPoleForCalcReserve={setPoleForCalcReserve}
         sections={sections}
+        IkzSummary={IkzSummary}
       />
 
       <LoadsSummaryBlock loadSummary={loadSummary} />

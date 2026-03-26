@@ -15,6 +15,7 @@ import { useFileHandlers } from '@renderer/hooks/useFileHandlers'
 import { useLineLength } from './hooks/useLineLength'
 import { Unom220 } from './constants'
 import { useFullWorkCurrent } from './hooks/useFullWorkCurrent'
+import { useShortCircuitCurrent } from './hooks/useShortCircuitCurrent'
 
 export default function App() {
   const {
@@ -56,7 +57,8 @@ export default function App() {
     addLoad,
     addSection,
     handleCreateNewComputing,
-    fullLoadSummary
+    fullLoadSummary,
+    fullLineResistance
   } = useSections(cosPhiNum, useKsim)
   const { transformerLoad } = useTransformerLoad(transformerPower, computedSections, useKsim)
   const { fullVoltageDrop_pct } = useFullVoltageDrop(computedSections)
@@ -79,6 +81,7 @@ export default function App() {
   )
   const { resetError, error } = useError(handleCreateNewComputing)
   const { lineLength } = useLineLength(computedSections)
+  const IkzSummary = useShortCircuitCurrent()
 
   return (
     <ErrorBoundary FallbackComponent={ErrorFallback}>
@@ -114,6 +117,7 @@ export default function App() {
           setPoleForCalcReserve={setPoleForCalcReserve}
           // sections={sections}
           sections={computedSections}
+          IkzSummary={IkzSummary}
           theme={theme}
           onThemeToggle={() => setTheme((t) => (t === 'dark' ? 'light' : 'dark'))}
         />

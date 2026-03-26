@@ -12,27 +12,27 @@ export function LoadsSummaryBlock({ loadSummary }: { loadSummary: LoadSummary })
         >{`N${LoadType.Household} = ${loadSummary.household.count}`}</span>
         <span
           className={LOAD_STYLES[LoadType.Household].text}
-        >{`P${LoadType.Household} = ${loadSummary.household.power} кВт`}</span>
+        >{`P${LoadType.Household} = ${loadSummary.household.power.toFixed(2)} кВт`}</span>
         <span
           className={LOAD_STYLES[LoadType.Heating].text}
         >{`N${LoadType.Heating} = ${loadSummary.heating.count}`}</span>
         <span
           className={LOAD_STYLES[LoadType.Heating].text}
-        >{`P${LoadType.Heating} = ${loadSummary.heating.power} кВт`}</span>
+        >{`P${LoadType.Heating} = ${loadSummary.heating.power.toFixed(2)} кВт`}</span>
         <span
           className={LOAD_STYLES[LoadType.ElectricCar].text}
         >{`N${LoadType.ElectricCar} = ${loadSummary.electricCar.count}`}</span>
         <span
           className={LOAD_STYLES[LoadType.ElectricCar].text}
-        >{`P${LoadType.ElectricCar} = ${loadSummary.electricCar.power} кВт`}</span>
+        >{`P${LoadType.ElectricCar} = ${loadSummary.electricCar.power.toFixed(2)} кВт`}</span>
         <span
           className={LOAD_STYLES[LoadType.Prom].text}
         >{`N${LoadType.Prom} = ${loadSummary.prom.count}`}</span>
         <span
           className={LOAD_STYLES[LoadType.Prom].text}
-        >{`P${LoadType.Prom} = ${loadSummary.prom.power} кВт`}</span>
+        >{`P${LoadType.Prom} = ${loadSummary.prom.power.toFixed(2)} кВт`}</span>
         <span className="font-bold text-xs">{`NΣ = ${loadSummary.totalCount}`}</span>
-        <span className="font-bold text-xs">{`PΣ = ${loadSummary.totalPower} кВт`}</span>
+        <span className="font-bold text-xs">{`PΣ = ${loadSummary.totalPower.toFixed(2)} кВт`}</span>
       </div>
     </FieldLabel>
   )
