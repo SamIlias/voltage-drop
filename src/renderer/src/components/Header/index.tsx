@@ -1,17 +1,22 @@
 import { FieldLabel } from '../FieldLabel'
-import { TransformerPower, Unom220 } from '@renderer/constants'
+import {
+  TRANSFORMER_POWERS,
+  TransformerPower,
+  TransformerScheme,
+  Unom220
+} from '@renderer/constants'
 import { VDivider } from '../VerticalDivider'
 import { ActionButton } from '../ActionButton'
 import { Tooltip } from '../Tooltip'
 import { LoadSummary } from '@renderer/utils/electricCalc'
 import { LoadsSummaryBlock } from './LoadsSummaryBlock'
-import { ParameterInputBlock } from './ParamererInputBlock'
 import { ResultsBlock } from './ResultsBlock'
 import { IkzSummary, Section } from '@renderer/types'
 import { SectionReport } from '../SectionReport'
 import { ReportMeta } from '../SectionReport/ReportContent'
-
-export type Theme = 'dark' | 'light'
+import { ThemeToggle } from '../ThemeToggle'
+import { CosPhiField } from '../validatedFields/CosPhiField'
+import { DUPercentField } from '../validatedFields/DUPercentField'
 
 interface HeaderProps {
   handleSave: () => void
@@ -32,6 +37,8 @@ interface HeaderProps {
   setUseKsim: (v: boolean) => void
   transformerPower: string
   setTransformerPower: (v: TransformerPower) => void
+  transformerScheme: string
+  setTransformerScheme: (v: TransformerScheme) => void
   transformerLoad: number | null
   voltageDrop: number | null
   powerReserve: number | null
@@ -41,13 +48,11 @@ interface HeaderProps {
   poleForCalcReserve: string | null
   setPoleForCalcReserve: (v: string | null) => void
   sections: Section[]
-  theme: Theme
-  onThemeToggle: () => void
   IkzSummary: IkzSummary
 }
 
 const inputCls =
-  'h-7 px-2 text-[12px] font-mono bg-[#010409] border border-[#30363d] rounded text-[#e6edf3] ' +
+  'h-6.5 px-2 text-[12px] font-mono bg-[#010409] border border-[#30363d] rounded text-[#e6edf3] ' +
   'focus:outline-none focus:border-[#58a6ff] transition-colors'
 
 export function Header({
@@ -69,6 +74,8 @@ export function Header({
   setUseKsim,
   transformerPower,
   setTransformerPower,
+  transformerScheme,
+  setTransformerScheme,
   transformerLoad,
   voltageDrop,
   powerReserve,
@@ -78,9 +85,7 @@ export function Header({
   lineLength,
   loadSummary,
   sections,
-  IkzSummary,
-  theme,
-  onThemeToggle
+  IkzSummary
 }: HeaderProps) {
   const onInfoOpen = () => {}
 
@@ -97,13 +102,11 @@ export function Header({
   }
 
   return (
-    <header className="w-full flex items-center gap-4 px-5 border-b border-[#21262d] bg-[#161b22] min-h-17 overflow-x-auto">
-      <span className="text-sm font-mono text-[#e6edf3] max-w-50">
-        Расчёт параметров линии электропередачи
-      </span>
+    <header className="w-full flex items-center gap-4 px-5 border-b border-[#21262d] min-h-17 overflow-x-auto">
+      <span className="text-sm font-mono max-w-50">Расчёт параметров линии электропередачи</span>
 
       {/* Menu */}
-      <div className="grid grid-cols-2 gap-2 min-w-60 my-1">
+      <div className="flex flex-col gap-1 min-w-30 my-1">
         <ActionButton icon="ℹ️" onClick={onInfoOpen}>
           О программе
         </ActionButton>
@@ -119,55 +122,76 @@ export function Header({
         <ActionButton icon="💾" variant="success" onClick={handleSave}>
           Сохранить
         </ActionButton>
+
+        <div className="flex self-center gap-2">
+          <ThemeToggle />
+          <Tooltip content="Отменить">
+            <ActionButton icon="↶" variant="warning" onClick={handleUndo}>
+              {''}
+            </ActionButton>
+          </Tooltip>
+
+          <Tooltip content="Вернуть">
+            <ActionButton icon="↷" variant="warning" onClick={handleRedo}>
+              {''}
+            </ActionButton>
+          </Tooltip>
+        </div>
       </div>
-
-      <Tooltip content="Отменить">
-        <ActionButton icon="↶" variant="warning" onClick={handleUndo}>
-          {''}
-        </ActionButton>
-      </Tooltip>
-
-      <Tooltip content="Вернуть">
-        <ActionButton icon="↷" variant="warning" onClick={handleRedo}>
-          {''}
-        </ActionButton>
-      </Tooltip>
 
       <VDivider />
 
-      {/* Line name + date */}
       <div className="flex flex-col gap-1 items-start my-2 ">
         <FieldLabel text="Название линии">
           <input
-            className={`${inputCls} min-w-50`}
+            className={`${inputCls} min-w-61`}
             value={lineName}
             onChange={(e) => setLineName(e.target.value)}
             placeholder="ВЛ 0,4 кВ от КТП"
           />
         </FieldLabel>
-        <FieldLabel text="Дата расчёта">
-          <input
-            type="date"
-            className={`${inputCls}`}
-            value={calcDate}
-            onChange={(e) => setCalcDate(e.target.value)}
-          />
-        </FieldLabel>
+
+        <div className="flex gap-1 ">
+          <FieldLabel text="Дата расчёта">
+            <input
+              type="date"
+              className={`${inputCls} mr-2 [&::-webkit-calendar-picker-indicator]:invert
+  [&::-webkit-calendar-picker-indicator]:cursor-pointer`}
+              value={calcDate}
+              onChange={(e) => setCalcDate(e.target.value)}
+            />
+          </FieldLabel>
+          <CosPhiField value={cosPhi} setCosPhi={setCosPhi} />
+          <DUPercentField value={dUallowPercent} setDUAllow={setDUallow} />
+        </div>
+
+        <div className="flex gap-1 ">
+          <FieldLabel text="Мощность тр-ра">
+            <select
+              className={`${inputCls} text-xs w-25 cursor-pointer`}
+              value={transformerPower}
+              onChange={(e) => setTransformerPower(e.target.value as TransformerPower)}
+            >
+              {TRANSFORMER_POWERS.map((p) => (
+                <option key={p} value={p}>
+                  {p} кВА
+                </option>
+              ))}
+            </select>
+          </FieldLabel>
+
+          <FieldLabel text="Схема">
+            <select
+              className={`${inputCls} text-xs w-18 cursor-pointer`}
+              value={transformerScheme}
+              onChange={(e) => setTransformerScheme(e.target.value as TransformerScheme)}
+            >
+              <option value={TransformerScheme.SS}>{TransformerScheme.SS}</option>
+              <option value={TransformerScheme.TS}>{TransformerScheme.TS}</option>
+            </select>
+          </FieldLabel>
+        </div>
       </div>
-
-      <VDivider />
-
-      <ParameterInputBlock
-        cosPhi={cosPhi}
-        setCosPhi={setCosPhi}
-        dUallow={dUallowPercent}
-        setDUallow={setDUallow}
-        loadSummary={loadSummary}
-        useKsim={useKsim}
-        setUseKsim={setUseKsim}
-        transformerPower={transformerPower}
-        setTransformerPower={setTransformerPower}
-      />
 
       <VDivider />
 
@@ -180,30 +204,20 @@ export function Header({
         voltageDrop={voltageDrop}
         poleForCalcReserve={poleForCalcReserve}
         setPoleForCalcReserve={setPoleForCalcReserve}
+        loadSummary={loadSummary}
+        setUseKsim={setUseKsim}
+        useKsim={useKsim}
         sections={sections}
         IkzSummary={IkzSummary}
       />
+
+      <VDivider />
 
       <LoadsSummaryBlock loadSummary={loadSummary} />
 
       <VDivider />
 
       <SectionReport meta={meta} sections={sections} />
-
-      {/* Spacer */}
-      <div className="flex-1" />
-
-      {/* Theme toggle */}
-      <div className="flex gap-1.5 items-center shrink-0">
-        <button
-          onClick={onThemeToggle}
-          title={theme === 'dark' ? 'Светлая тема' : 'Тёмная тема'}
-          className="h-7 px-2 text-sm border border-[#30363d] rounded text-[#6e7681]
-            hover:border-[#58a6ff] hover:text-[#58a6ff] transition-all cursor-pointer"
-        >
-          {theme === 'dark' ? '☀️' : '🌙'}
-        </button>
-      </div>
     </header>
   )
 }

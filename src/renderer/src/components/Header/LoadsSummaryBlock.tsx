@@ -6,7 +6,7 @@ import { LoadSummary } from '@renderer/utils/electricCalc'
 export function LoadsSummaryBlock({ loadSummary }: { loadSummary: LoadSummary }) {
   return (
     <FieldLabel text="Сводная информация" addClsName="items-center">
-      <div className="grid grid-cols-2 gap-x-1 gap-y-1 min-w-60 my-1 text-[10px] text-gray-300">
+      <div className="grid grid-cols-[auto_auto] gap-x-5 gap-y-1 my-1 text-xs text-gray-300 whitespace-nowrap">
         <span
           className={LOAD_STYLES[LoadType.Household].text}
         >{`N${LoadType.Household} = ${loadSummary.household.count}`}</span>

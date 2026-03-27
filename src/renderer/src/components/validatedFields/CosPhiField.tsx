@@ -20,7 +20,7 @@ export function CosPhiField({ value, setCosPhi }: CosPhiFieldProps) {
     <FieldLabel text="cos φ" error={field.error}>
       <input
         onClick={stop}
-        className={`${field.inputCls} w-15`}
+        className={`${field.inputCls} w-12`}
         value={value}
         onChange={(e) => {
           field.onChange(e)

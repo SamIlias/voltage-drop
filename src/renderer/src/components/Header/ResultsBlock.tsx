@@ -5,6 +5,8 @@ import { FieldLabel } from '../FieldLabel'
 import { inputCls } from '..'
 import { useEffect } from 'react'
 import { Tooltip } from '../Tooltip'
+import { LoadSummary } from '@renderer/utils/electricCalc'
+import { Unom220 } from '@renderer/constants'
 
 interface ResultsBlockProps {
   dUallowNum: number
@@ -15,6 +17,9 @@ interface ResultsBlockProps {
   lineLength: number | null
   poleForCalcReserve: string | null
   setPoleForCalcReserve: (v: string | null) => void
+  useKsim: boolean
+  setUseKsim: (v: boolean) => void
+  loadSummary: LoadSummary
   sections: Section[]
   IkzSummary: IkzSummary
 }
@@ -28,11 +33,15 @@ export function ResultsBlock({
   lineLength,
   poleForCalcReserve,
   setPoleForCalcReserve,
+  useKsim,
+  setUseKsim,
+  loadSummary,
   sections,
   IkzSummary
 }: ResultsBlockProps) {
   const maxDUallow = dUallowNum || 13
   const minDUallow = maxDUallow * 0.8
+  const voltageDrop_v = voltageDrop ? (Unom220 * voltageDrop) / 100 : null
 
   const loadStatus = getStatusByGreater(transformerLoad, 70, 90)
   const dropStatus = getStatusByGreater(voltageDrop, minDUallow, maxDUallow)
@@ -43,72 +52,107 @@ export function ResultsBlock({
   }, [sections.length])
 
   return (
-    <div className="grid grid-cols-3 gap-4 items-center shrink-0">
-      <ResultBadge label="Загрузка тр-ра" value={transformerLoad} unit="%" status={loadStatus} />
+    <div className="flex gap-4 items-end shrink-0">
+      <div className="flex flex-col gap-2">
+        <FieldLabel text="Учитывать Кодн" addClsName="">
+          <div className="flex gap-2 items-center">
+            <input
+              type="checkbox"
+              className="w-4 h-4 accent-green-500 cursor-pointer"
+              checked={useKsim}
+              onChange={(e) => setUseKsim(e.target.checked)}
+            />
+            <div className="flex flex-col text-[10px] text-gray-300">
+              <span>Kбыт = {loadSummary.household.ksim}</span>
+              <span>Kпром = {loadSummary.prom.ksim}</span>
+            </div>
+          </div>
+        </FieldLabel>
 
-      <ResultBadge
-        label="Ток линии (1ф)"
-        value={fullWorkCurrent}
-        unit="A"
-        status={ResultStatus.DEFAULT}
-      />
+        <FieldLabel text="Выберите опору">
+          <select
+            className={`${inputCls} w-24 cursor-pointer`}
+            value={poleForCalcReserve || sections.at(-1)?.poleNumber}
+            onChange={(e) => setPoleForCalcReserve(e.target.value)}
+          >
+            {sections.map((s) => (
+              <option key={s.poleNumber} value={s.poleNumber}>
+                {s.poleNumber}
+              </option>
+            ))}
+          </select>
+        </FieldLabel>
+      </div>
 
-      <ResultBadge
-        label="Ток КЗ 3ф"
-        value={IkzSummary.Ikz3}
-        unit="A"
-        status={ResultStatus.DEFAULT}
-      />
-
-      <ResultBadge
-        label="Ток КЗ 2ф"
-        value={IkzSummary.Ikz2}
-        unit="A"
-        status={ResultStatus.DEFAULT}
-      />
-
-      <ResultBadge
-        label="Ток КЗ 1ф"
-        value={IkzSummary.Ikz1}
-        unit="A"
-        status={ResultStatus.DEFAULT}
-      />
-
-      <FieldLabel text="Выберите опору">
-        <select
-          className={`${inputCls} w-25 cursor-pointer`}
-          value={poleForCalcReserve || sections.at(-1)?.poleNumber}
-          onChange={(e) => setPoleForCalcReserve(e.target.value)}
-        >
-          {sections.map((s) => (
-            <option key={s.poleNumber} value={s.poleNumber}>
-              {s.poleNumber}
-            </option>
-          ))}
-        </select>
-      </FieldLabel>
-
-      <ResultBadge
-        label="Потеря напряжения"
-        value={voltageDrop || 0}
-        unit="%"
-        status={dropStatus}
-      />
-
-      <ResultBadge label="Длина линии" value={lineLength} unit="м" status={ResultStatus.DEFAULT} />
-
-      {/* резерв мощности постоянной нагрузки для указанной опоры */}
-      <Tooltip
-        content="Резерв мощности постоянной нагрузки для указанной опоры"
-        className="text-[7px] max-w-60"
-      >
+      <div className="flex flex-col gap-2">
         <ResultBadge
-          label="Резерв мощности"
-          value={powerReserve}
-          unit="кВт"
-          status={reserveStatus}
+          label="Ток линии (1ф)"
+          value={fullWorkCurrent}
+          unit="A"
+          status={ResultStatus.DEFAULT}
         />
-      </Tooltip>
+
+        <ResultBadge
+          label="Длина линии"
+          value={lineLength}
+          unit="м"
+          status={ResultStatus.DEFAULT}
+        />
+
+        {/* резерв мощности постоянной нагрузки для указанной опоры */}
+        <Tooltip
+          content="Резерв мощности постоянной нагрузки для указанной опоры"
+          className="text-[7px] max-w-60"
+        >
+          <ResultBadge
+            label="Резерв мощности"
+            value={powerReserve}
+            unit="кВт"
+            status={reserveStatus}
+          />
+        </Tooltip>
+      </div>
+
+      <div className="flex flex-col gap-2">
+        <ResultBadge label="Загрузка тр-ра" value={transformerLoad} unit="%" status={loadStatus} />
+
+        <ResultBadge
+          label="Потеря напряжения"
+          value={voltageDrop_v || 0}
+          unit="В"
+          status={dropStatus}
+        />
+
+        <ResultBadge
+          label="Потеря напряжения"
+          value={voltageDrop || 0}
+          unit="%"
+          status={dropStatus}
+        />
+      </div>
+
+      <div className="flex flex-col gap-2">
+        <ResultBadge
+          label="Ток КЗ 3ф"
+          value={IkzSummary.Ikz3}
+          unit="A"
+          status={ResultStatus.DEFAULT}
+        />
+
+        <ResultBadge
+          label="Ток КЗ 2ф"
+          value={IkzSummary.Ikz2}
+          unit="A"
+          status={ResultStatus.DEFAULT}
+        />
+
+        <ResultBadge
+          label="Ток КЗ 1ф"
+          value={IkzSummary.Ikz1}
+          unit="A"
+          status={ResultStatus.DEFAULT}
+        />
+      </div>
     </div>
   )
 }

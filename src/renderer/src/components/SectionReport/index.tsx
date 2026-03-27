@@ -11,7 +11,6 @@ export function SectionReport({ meta, sections }: SectionReportProps) {
 
   return (
     <>
-      {/* ── Trigger button ── */}
       <button
         onClick={open}
         className="
@@ -23,7 +22,7 @@ export function SectionReport({ meta, sections }: SectionReportProps) {
         "
       >
         <PrinterIcon />
-        Сформировать отчёт
+        {/* Сформировать отчёт */}
       </button>
 
       {/* ── Modal dialog ── */}
@@ -95,7 +94,7 @@ export function SectionReport({ meta, sections }: SectionReportProps) {
 
 // ─── Inline SVG icon ──────────────────────────────────────────────────────────
 
-function PrinterIcon({ className = 'w-4 h-4' }: { className?: string }) {
+function PrinterIcon({ className = 'w-6 h-6' }: { className?: string }) {
   return (
     <svg
       className={`${className} opacity-70`}

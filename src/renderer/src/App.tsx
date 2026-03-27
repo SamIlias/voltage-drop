@@ -19,8 +19,6 @@ import { useShortCircuitCurrent } from './hooks/useShortCircuitCurrent'
 
 export default function App() {
   const {
-    theme,
-    setTheme,
     lineName,
     setLineName,
     calcDate,
@@ -33,11 +31,12 @@ export default function App() {
     setUseKsim,
     transformerPower,
     setTransformerPower,
+    transformerScheme,
+    setTransformerScheme,
     poleForCalcReserve,
     setPoleForCalcReserve
   } = useAppSettings()
 
-  const bgCls = theme === 'dark' ? 'bg-[#0d1117] text-[#cdd9e5]' : 'bg-[#f0f4f8] text-[#1f2328]'
   const cosPhiNum = parseFloat(cosPhi) || 0.9
 
   const {
@@ -85,7 +84,7 @@ export default function App() {
 
   return (
     <ErrorBoundary FallbackComponent={ErrorFallback}>
-      <div className={`h-screen w-screen flex flex-col font-mono min-w-11 overflow-auto ${bgCls}`}>
+      <div className={`h-screen w-screen flex flex-col font-mono min-w-11 overflow-auto`}>
         {error && <ErrorMessage error={error} reset={resetError} />}
 
         <Header
@@ -107,6 +106,8 @@ export default function App() {
           setUseKsim={setUseKsim}
           transformerPower={transformerPower}
           setTransformerPower={setTransformerPower}
+          transformerScheme={transformerScheme}
+          setTransformerScheme={setTransformerScheme}
           transformerLoad={transformerLoad}
           voltageDrop={fullVoltageDrop_pct}
           powerReserve={powerReserve}
@@ -118,8 +119,6 @@ export default function App() {
           // sections={sections}
           sections={computedSections}
           IkzSummary={IkzSummary}
-          theme={theme}
-          onThemeToggle={() => setTheme((t) => (t === 'dark' ? 'light' : 'dark'))}
         />
         <Schema sections={computedSections} activeId={activeIdx} onActivate={setActiveId} />
         <QuickFill onApply={applyQuickFill(sections[sections.length - 1])} />

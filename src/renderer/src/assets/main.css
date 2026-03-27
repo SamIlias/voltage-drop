@@ -1,10 +1,32 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 
-@source "./**/*.{ts,tsx}";
+/* @source ".*.{ts,tsx}"; */
 
-body {
-  font-family: 'Segoe UI', sans-serif;
-  background: #1a1a2e;
-  color: #eee;
-  min-height: 100vh;
+/* @layer base {
+  body {
+    @apply min-h-screen font-sans bg-white text-black dark:bg-[#1a1a2e] dark:text-[#eee];
+  }
+} */
+
+:root {
+  --bg: #ffffff;
+  --text: #000000;
+  --color-active: #362808;
+  --color-secondary: #34383d;
+  --color-success: #0a7024;
+}
+
+.dark {
+  --bg: #1a1a2e;
+  --text: #eeeeee;
+  --color-active: #f5ac0e;
+  --color-secondary: #a7abb1;
+  --color-success: #16a33a;
+}
+
+@layer base {
+  body {
+    background: var(--bg);
+    color: var(--text);
+  }
 }

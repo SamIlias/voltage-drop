@@ -51,6 +51,10 @@ export const WIRE_MARKS = Object.keys(WIRE_RESISTANCE_OM_KM) as Array<
 
 export const TRANSFORMER_POWERS = ['25', '40', '63', '100', '160', '250', '400', '630'] as const
 export type TransformerPower = (typeof TRANSFORMER_POWERS)[number]
+export enum TransformerScheme {
+  SS = 'Y/Yo',
+  TS = '△/Yo'
+}
 
 export const RESIDENTIAL_SIMULTANEITY_FACTOR = {
   1: 1,
