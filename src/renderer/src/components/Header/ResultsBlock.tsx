@@ -2,11 +2,11 @@ import { getStatusByGreater, getStatusByLower } from '@renderer/utils'
 import { ResultBadge } from './ResultBadge'
 import { IkzSummary, ResultStatus, Section } from '@renderer/types'
 import { FieldLabel } from '../FieldLabel'
-import { inputCls } from '..'
 import { useEffect } from 'react'
 import { Tooltip } from '../Tooltip'
 import { LoadSummary } from '@renderer/utils/electricCalc'
 import { Unom220 } from '@renderer/constants'
+import { inputCls } from '@renderer/assets/common'
 
 interface ResultsBlockProps {
   dUallowNum: number
@@ -52,9 +52,9 @@ export function ResultsBlock({
   }, [sections.length])
 
   return (
-    <div className="flex gap-4 items-end shrink-0">
-      <div className="flex flex-col gap-2">
-        <FieldLabel text="Учитывать Кодн" addClsName="">
+    <div className="flex gap-4 shrink-0 items-end">
+      <div className="flex flex-col gap-4">
+        <FieldLabel text="Кодн">
           <div className="flex gap-2 items-center">
             <input
               type="checkbox"
@@ -62,7 +62,7 @@ export function ResultsBlock({
               checked={useKsim}
               onChange={(e) => setUseKsim(e.target.checked)}
             />
-            <div className="flex flex-col text-[10px] text-gray-300">
+            <div className="flex flex-col text-[10px] text-(--color-active)">
               <span>Kбыт = {loadSummary.household.ksim}</span>
               <span>Kпром = {loadSummary.prom.ksim}</span>
             </div>
@@ -71,7 +71,7 @@ export function ResultsBlock({
 
         <FieldLabel text="Выберите опору">
           <select
-            className={`${inputCls} w-24 cursor-pointer`}
+            className={`${inputCls} cursor-pointer`}
             value={poleForCalcReserve || sections.at(-1)?.poleNumber}
             onChange={(e) => setPoleForCalcReserve(e.target.value)}
           >

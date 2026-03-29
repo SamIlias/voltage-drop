@@ -1,7 +1,15 @@
-import { render, screen, fireEvent, waitFor } from '@testing-library/react'
+import { render, screen, fireEvent } from '@testing-library/react'
 import App from './App'
+import { ThemeProvider } from './providers/theme/ThemeProvider'
 
 const loadSectionsMock = jest.fn()
+const AppTest = () => {
+  return (
+    <ThemeProvider>
+      <App />
+    </ThemeProvider>
+  )
+}
 
 beforeEach(() => {
   window.api = {
@@ -12,14 +20,14 @@ beforeEach(() => {
 
 describe('App', () => {
   test('renders add section button', () => {
-    render(<App />)
+    render(<AppTest />)
 
     expect(screen.getByText('+ Добавить участок')).toBeInTheDocument()
   })
 })
 
 test('adds new section', () => {
-  render(<App />)
+  render(<AppTest />)
 
   const button = screen.getByText('+ Добавить участок')
 
@@ -31,7 +39,7 @@ test('adds new section', () => {
 })
 
 test('removes section', () => {
-  render(<App />)
+  render(<AppTest />)
 
   const addBtn = screen.getByText('+ Добавить участок')
 
@@ -47,7 +55,7 @@ test('removes section', () => {
 })
 
 test('calls saveSections API', async () => {
-  render(<App />)
+  render(<AppTest />)
 
   const saveButton = screen.getByText('Сохранить')
 
@@ -61,7 +69,7 @@ test('loads sections from API', async () => {
 
   loadSectionsMock.mockResolvedValue(mockSections)
 
-  render(<App />)
+  render(<AppTest />)
 
   const loadButton = screen.getByText('Загрузить')
 
@@ -71,7 +79,7 @@ test('loads sections from API', async () => {
 })
 
 test('quick fill adds multiple sections', () => {
-  render(<App />)
+  render(<AppTest />)
 
   const addButton = screen.getByRole('button', { name: /добавить/i })
 

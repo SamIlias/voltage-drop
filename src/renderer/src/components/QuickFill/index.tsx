@@ -2,7 +2,7 @@ import { PHASE_OPTIONS, WIRE_MARKS } from '@renderer/constants'
 import { PhaseCount, WireMark } from '@renderer/types'
 import { useState } from 'react'
 import { FieldLabel } from '../FieldLabel'
-import { inputCls } from '..'
+import { inputCls } from '@renderer/assets/common'
 
 interface QuickFillProps {
   onApply: (
@@ -32,13 +32,13 @@ export function QuickFill({ onApply }: QuickFillProps) {
       <div className="flex flex-col">
         <button
           onClick={() => setShow((prev) => !prev)}
-          className="px-4 bg-[#1e2520] cursor-pointer hover:bg-[#213753] hover:text-white text-orange-300 text-xs rounded transition-colors flex-shrink-0"
+          className="px-4 font-bold border border-(--color-border) cursor-pointer hover:bg-amber-400 hover:text-black text-(--color-active) text-xs transition-colors"
         >
           {(show && toggleShowButtonName.onShow) || toggleShowButtonName.onHide}
         </button>
         {show && (
-          <div className="flex items-center gap-3 bg-[#0d1117] border border-[#30363d] rounded-lg px-4 py-2">
-            <span className="text-[10px] uppercase tracking-widest text-[#8b949e] ">
+          <div className="flex w-full items-center gap-3 border border-(--color-border) px-4 py-2">
+            <span className="text-[10px] uppercase tracking-widest text-(--color-secondary)">
               Заполните параметры для быстрого добавления участка
             </span>
             <div className="w-[1px] h-6 bg-[#30363d] shrink-0" />

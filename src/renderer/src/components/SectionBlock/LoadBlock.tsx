@@ -4,9 +4,9 @@ import { LoadBadge } from './LoadBadge'
 import { FieldLabel } from '../FieldLabel'
 import { LOAD_TYPES } from '@renderer/constants'
 import { totalPower } from '@renderer/utils'
-import { inputCls } from '..'
 import { SectionTitle } from './Title'
 import { MouseEvent } from 'react'
+import { inputCls } from '@renderer/assets/common'
 
 interface LoadBlockProps {
   section: Section
@@ -18,19 +18,15 @@ interface LoadBlockProps {
 export function LoadBlock({ section: s, onRemoveLoad, onChange, onAddLoad }: LoadBlockProps) {
   const stop = (e: MouseEvent) => e.stopPropagation()
   return (
-    <div className="flex flex-col gap-2 flex-1 border-r border-[#30363d] pr-3">
+    <div className="flex flex-col gap-2 flex-1 border-r border-(--color-border) pr-3">
       <SectionTitle text={'Нагрузки'} />
 
-      <div className="flex gap-4 text-xs text-[#8b949e]">
+      <div className="flex gap-6 text-xs text-(--color-secondary)">
         <span>
-          Σ: <span className="text-[#cdd9e5]">{totalPower(s.loads_kw)} кВт</span>
+          PΣ: <span className="text-(--color-active) font-bold">{totalPower(s.loads_kw)} кВт</span>
         </span>
         <span>
-          Абонентов: <span className="text-[#cdd9e5]">{s.loads_kw.length}</span>
-        </span>
-        //todo
-        <span>
-          В т.ч. нагревов: <span className="text-[#cdd9e5]">{s.loads_kw.length}</span>
+          Потребителей: <span className="text-(--color-active) font-bold">{s.loads_kw.length}</span>
         </span>
       </div>
 

@@ -13,8 +13,7 @@ function getInitialTheme(): Theme {
   const saved = localStorage.getItem(STORAGE_KEY) as Theme | null
   if (saved) return saved
 
-  const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
-  return prefersDark ? Theme.DARK : Theme.LIGHT
+  return Theme.DARK
 }
 
 export function ThemeProvider({ children }: { children: ReactNode }) {

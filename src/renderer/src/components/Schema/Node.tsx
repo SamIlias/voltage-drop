@@ -75,10 +75,10 @@ export function SchemaNode({ section, nextSection, isActive, onClick }: SchemaNo
           className={`w-9 h-9 rounded-full border-2 flex items-center justify-center text-[10px] font-bold transition-all
           ${
             isSource
-              ? 'border-[#58a6ff] text-[#58a6ff] cursor-default'
+              ? 'border-(--color-secondary) text-(--color-active) cursor-default'
               : isActive
-                ? 'border-[#58a6ff] bg-[#58a6ff22] text-[#c59120] cursor-pointer scale-110'
-                : 'border-[#30363d] text-[#8b949e] hover:border-[#58a6ff44] cursor-pointer'
+                ? 'border-(--color-active) bg-[#dfbc2422] text-(--color-active) cursor-pointer scale-110'
+                : 'border-[#30363d] text-(--text) hover:border-(--status-default) cursor-pointer'
           }`}
         >
           {isSource ? '⚡' : section!.poleNumber}
@@ -86,7 +86,7 @@ export function SchemaNode({ section, nextSection, isActive, onClick }: SchemaNo
       </div>
       {nextSection && (
         <div className="flex flex-col items-center mx-1 mb-3">
-          <span className="text-[12px] text-[#8b949e] mb-1">{nextSection.wire}</span>
+          <span className="text-[12px] text-(--text) mb-1">{nextSection.wire}</span>
           <PhaseLines phases={nextSection.phases} />
         </div>
       )}

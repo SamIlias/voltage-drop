@@ -17,6 +17,9 @@ import { ReportMeta } from '../SectionReport/ReportContent'
 import { ThemeToggle } from '../ThemeToggle'
 import { CosPhiField } from '../validatedFields/CosPhiField'
 import { DUPercentField } from '../validatedFields/DUPercentField'
+import { inputCls } from '@renderer/assets/common'
+import { useTheme } from '@renderer/providers/theme/useTheme'
+import { Theme } from '@renderer/providers/theme/types'
 
 interface HeaderProps {
   handleSave: () => void
@@ -50,10 +53,6 @@ interface HeaderProps {
   sections: Section[]
   IkzSummary: IkzSummary
 }
-
-const inputCls =
-  'h-6.5 px-2 text-[12px] font-mono bg-[#010409] border border-[#30363d] rounded text-[#e6edf3] ' +
-  'focus:outline-none focus:border-[#58a6ff] transition-colors'
 
 export function Header({
   handleSave,
@@ -101,8 +100,10 @@ export function Header({
     fullLength: lineLength || 0
   }
 
+  const { theme } = useTheme()
+
   return (
-    <header className="w-full flex items-center gap-4 px-5 border-b border-[#21262d] min-h-17 overflow-x-auto">
+    <header className="w-full flex gap-2 items-center px-5 border-b border-(--color-border) min-h-17 justify-around overflow-x-auto">
       <span className="text-sm font-mono max-w-50">Расчёт параметров линии электропередачи</span>
 
       {/* Menu */}
@@ -155,8 +156,7 @@ export function Header({
           <FieldLabel text="Дата расчёта">
             <input
               type="date"
-              className={`${inputCls} mr-2 [&::-webkit-calendar-picker-indicator]:invert
-  [&::-webkit-calendar-picker-indicator]:cursor-pointer`}
+              className={`${inputCls} mr-2 ${theme === Theme.DARK && `[&::-webkit-calendar-picker-indicator]:invert`} [&::-webkit-calendar-picker-indicator]:cursor-pointer`}
               value={calcDate}
               onChange={(e) => setCalcDate(e.target.value)}
             />
@@ -180,7 +180,7 @@ export function Header({
             </select>
           </FieldLabel>
 
-          <FieldLabel text="Схема">
+          <FieldLabel text="Схема обм.">
             <select
               className={`${inputCls} text-xs w-18 cursor-pointer`}
               value={transformerScheme}

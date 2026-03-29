@@ -74,7 +74,6 @@ export default function App() {
   )
   const { handleLoad, handleSave } = useFileHandlers(
     computedSections,
-    // setSections,
     pushHistory,
     lineName || `Новый расчёт`
   )
@@ -116,7 +115,6 @@ export default function App() {
           loadSummary={fullLoadSummary}
           poleForCalcReserve={poleForCalcReserve}
           setPoleForCalcReserve={setPoleForCalcReserve}
-          // sections={sections}
           sections={computedSections}
           IkzSummary={IkzSummary}
         />
@@ -141,17 +139,17 @@ export default function App() {
             ))}
             <button
               onClick={addSection}
-              className="w-full py-2 border border-dashed border-[#30363d] rounded-lg text-[#8b949e] hover:border-[#58a6ff] hover:text-[#58a6ff] text-sm transition-colors"
+              className="w-full py-2 cursor-pointer border border-dashed border-[#30363d] rounded-lg text-(--text) hover:border-[#58a6ff] hover:text-(--status-default) text-sm transition-colors"
             >
               + Добавить участок
             </button>
           </div>
         </main>
         <footer className="flex justify-between px-6 py-1">
-          <span className="text-xs text-[#8b949e] mb-1">
+          <span className="text-xs text-(--color-secondary) mb-1">
             Version 1.0.0. Support: Samovichilias@gmail.com
           </span>
-          <span className="text-xs text-[#8b949e] mb-1">© 2026 All rights reserved.</span>
+          <span className="text-xs text-(--color-secondary) mb-1">© 2026 All rights reserved.</span>
         </footer>
       </div>
     </ErrorBoundary>

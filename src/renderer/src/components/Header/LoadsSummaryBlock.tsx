@@ -5,8 +5,12 @@ import { LoadSummary } from '@renderer/utils/electricCalc'
 
 export function LoadsSummaryBlock({ loadSummary }: { loadSummary: LoadSummary }) {
   return (
-    <FieldLabel text="Сводная информация" addClsName="items-center">
-      <div className="grid grid-cols-[auto_auto] gap-x-5 gap-y-1 my-1 text-xs text-gray-300 whitespace-nowrap">
+    <div>
+      <p className="text-center text-sm border-b border-(--color-secondary)">
+        Информация о потребителях
+      </p>
+
+      <div className="grid grid-cols-[auto_auto] gap-x-5 gap-y-1 my-1 text-xs text-(--text) whitespace-nowrap">
         <span
           className={LOAD_STYLES[LoadType.Household].text}
         >{`N${LoadType.Household} = ${loadSummary.household.count}`}</span>
@@ -34,6 +38,6 @@ export function LoadsSummaryBlock({ loadSummary }: { loadSummary: LoadSummary })
         <span className="font-bold text-xs">{`NΣ = ${loadSummary.totalCount}`}</span>
         <span className="font-bold text-xs">{`PΣ = ${loadSummary.totalPower.toFixed(2)} кВт`}</span>
       </div>
-    </FieldLabel>
+    </div>
   )
 }

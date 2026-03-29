@@ -19,11 +19,11 @@ export function ResultsBlock({ section: s }: ResultBlockProps) {
         return (
           <div
             key={key}
-            className="flex justify-between items-center bg-[#0d1117] rounded px-2 py-1"
+            className="flex gap-4 justify-between items-center bg-(--bg-section-results) rounded px-2 py-1"
           >
-            <span className="text-[10px] text-[#8b949e]">{label}</span>
-            <span className="text-xs font-bold text-[#58a6ff]">
-              {value} <span className="text-[#8b949e] font-normal">{unit}</span>
+            <span className="text-xs text-(--text)">{label}</span>
+            <span className="text-xs font-bold text-(--status-default)">
+              {value} <span className="text-(--color-secondary) font-normal">{unit}</span>
             </span>
           </div>
         )

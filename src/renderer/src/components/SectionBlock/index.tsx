@@ -26,19 +26,19 @@ export const SectionBlock = forwardRef<HTMLDivElement, SectionBlockProps>(
         data-testid="section-block"
         className={`flex gap-3 rounded-lg p-3 border cursor-pointer transition-all ${
           isActive
-            ? 'bg-[#161b22] border-[#58a6ff] shadow-[0_0_12px_#58a6ff22]'
-            : 'bg-[#161b22] border-[#30363d] hover:border-[#30363d88]'
+            ? 'border-(--color-active) bg-(--bg-active) shadow-[0_0_12px_#58a6ff22]'
+            : 'border-[#30363d] bg-(--bg-section) hover:border-[#30363d88]'
         }`}
       >
         <div className="flex flex-col items-center justify-start gap-1 pt-1">
-          <span className="text-[12px] text-[#8b949e]">#{index + 1}</span>
+          <span className="text-[12px] text-(--color-secondary)">#{index + 1}</span>
           <button
             data-testid="remove-section"
             onClick={(e) => {
               stop(e)
               onRemove()
             }}
-            className="text-[#8b949e] hover:text-[#f85149] text-xs transition-colors"
+            className="text-(--color-secondary) hover:text-red-500 hover:font-bold text-xs transition-colors"
           >
             ✕
           </button>

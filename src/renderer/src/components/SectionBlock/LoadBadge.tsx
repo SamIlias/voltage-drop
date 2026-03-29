@@ -5,7 +5,7 @@ export function LoadBadge({ load, onRemove }: { load: Load; onRemove: () => void
   const { border, text, bg } = LOAD_STYLES[load.type]
   return (
     <span
-      className={`group relative text-[10px] px-2 py-0.5 rounded-full border ${border} ${text} ${bg}`}
+      className={`group relative font-bold text-[11px] px-2 py-0.5 rounded-full border ${border} ${text} ${bg}`}
     >
       {load.power} кВт · {load.type}
       <button

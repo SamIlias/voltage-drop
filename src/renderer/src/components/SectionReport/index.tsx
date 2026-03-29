@@ -13,16 +13,17 @@ export function SectionReport({ meta, sections }: SectionReportProps) {
     <>
       <button
         onClick={open}
+        title={'Сформировать отчёт'}
         className="
           inline-flex items-center gap-2.5 px-5 py-2.5
-          bg-zinc-900 hover:bg-zinc-700 active:scale-[0.98]
-          text-white font-mono text-[13px] tracking-[0.05em] uppercase
+          hover:bg-(--color-hover) active:scale-[0.98]
+          text-(--text) font-mono text-[13px] tracking-[0.05em] uppercase
           border border-zinc-700 hover:border-zinc-500
-          transition-all duration-150 select-none
+          transition-all duration-150 select-none cursor-pointer
         "
       >
         <PrinterIcon />
-        {/* Сформировать отчёт */}
+        Сформировать отчёт
       </button>
 
       {/* ── Modal dialog ── */}
@@ -31,48 +32,36 @@ export function SectionReport({ meta, sections }: SectionReportProps) {
         onClick={(e) => e.target === dialogRef.current && close()}
         className="
           p-0 border-0 bg-transparent
-          max-w-[96vw] w-[1100px] max-h-[92vh]
-          backdrop:bg-black/60 backdrop:backdrop-blur-sm
+          min-w-screen backdrop:bg-black/60 backdrop:backdrop-blur-sm
         "
       >
-        <div className="flex flex-col h-[90vh] bg-zinc-50 border-2 border-zinc-800 shadow-2xl">
-          {/* Toolbar */}
-          <div className="flex items-center justify-between px-5 py-3 bg-zinc-900 flex-shrink-0">
-            <div className="flex items-center gap-3">
-              {/* macOS-style dots */}
-              <div className="flex gap-1.5">
-                <div className="w-3 h-3 rounded-full bg-red-500/80" />
-                <div className="w-3 h-3 rounded-full bg-yellow-400/80" />
-                <div className="w-3 h-3 rounded-full bg-green-500/80" />
-              </div>
-              <span className="font-mono text-[10px] tracking-[0.18em] uppercase text-zinc-400">
-                Отчёт · Результаты расчёта
-              </span>
-            </div>
+        <div className="flex flex-col min-h-[90vh] bg-zinc-50 border-2 border-zinc-800 shadow-2xl">
+          <div className="flex items-center justify-between px-5 py-3 bg-zinc-900 shrink-0">
+            <span className="font-mono text-[10px] tracking-[0.18em] uppercase text-zinc-300">
+              Отчёт · Результаты расчёта
+            </span>
 
             <div className="flex items-center gap-2">
-              {/* Print button */}
               <button
                 onClick={handlePrint}
                 className="
                   inline-flex items-center gap-2 px-4 py-1.5
                   border border-zinc-600 hover:border-zinc-300
-                  text-zinc-300 hover:text-white
+                  text-zinc-200 hover:text-white
                   font-mono text-[11px] tracking-wider uppercase
-                  transition-colors duration-150
+                  transition-colors duration-150 cursor-pointer
                 "
               >
                 <PrinterIcon className="w-3.5 h-3.5" />
                 Печать
               </button>
 
-              {/* Close button */}
               <button
                 onClick={close}
                 className="
                   inline-flex items-center justify-center w-7 h-7
                   border border-red-800/50 hover:border-red-500 hover:bg-red-500/20
-                  text-zinc-400 hover:text-red-400
+                  text-zinc-300 hover:text-red-400
                   font-mono text-sm
                   transition-colors duration-150
                 "

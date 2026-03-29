@@ -2,9 +2,9 @@ import { PhaseCount, Section, WireMark } from '@renderer/types'
 import { SectionTitle } from './Title'
 import { PoleNumberField } from '../validatedFields/PoleNumberField'
 import { FieldLabel } from '../FieldLabel'
-import { inputCls } from '..'
 import { PHASE_OPTIONS, WIRE_MARKS } from '@renderer/constants'
 import { LengthField } from '../validatedFields/LengthField'
+import { inputCls } from '@renderer/assets/common'
 
 interface ParamsBlockProps {
   section: Section
@@ -12,7 +12,7 @@ interface ParamsBlockProps {
 }
 export function ParamsBlock({ section: s, onChange }: ParamsBlockProps) {
   return (
-    <div className="flex flex-col gap-2 w-50 border-r border-[#30363d] pr-3">
+    <div className="flex flex-col gap-2 w-50 border-r border-(--color-border) pr-3">
       <SectionTitle text={`Участок ${s.prevPoleNumber} - ${s.poleNumber}`} />
 
       <PoleNumberField value={s.poleNumber} prevPoleNumber={s.prevPoleNumber} onChange={onChange} />
