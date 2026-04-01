@@ -176,8 +176,8 @@ type DownstreamData = {
   Psec: number
   phases: PhaseCount
   Isec1: number
-  Rsec: number
-  dUsec: number
+  Rsec: number | null
+  dUsec: number | null
 }
 
 export function calculateDownstreamPass(
@@ -190,8 +190,9 @@ export function calculateDownstreamPass(
     const phases = getEffectivePhases(section.idx, sections)
     const Isec1 = calculateSectionCurrent(Psec * 1000, phases, Unom220, cosPhi)
     const R0_om_km = WIRE_RESISTANCE_OM_KM[section.wire] ?? null
-    const Rsec = (R0_om_km * parseFloat(section.length_m)) / 1000
-    const dUsec = phases === PhaseCount.three ? Isec1 * Rsec : 2 * Isec1 * Rsec
+    const Rsec = (R0_om_km * parseFloat(section.length_m)) / 1000 || null
+    const dUsec =
+      phases === PhaseCount.three ? (Rsec ? Isec1 * Rsec : null) : Rsec ? 2 * Isec1 * Rsec : null
 
     return { Psec, phases, Isec1, Rsec, dUsec }
   })
@@ -206,16 +207,16 @@ export function calculateUpstreamPass(
 
   for (let i = 0; i < sections.length; i++) {
     const d = downstreamData[i]
-    dUsumFromStart += d.dUsec
+    dUsumFromStart += d.dUsec ? d.dUsec : 0
 
     const Uend = Math.max(0, Usource230 - dUsumFromStart)
 
     results.push({
       Psec_kw: +d.Psec.toFixed(2),
       Isec1: +d.Isec1.toFixed(2),
-      Rsec: +d.Rsec.toFixed(4),
-      dUsec: +d.dUsec.toFixed(2),
-      dUsecPercent: +((d.dUsec * 100) / Unom220).toFixed(2),
+      Rsec: d.Rsec ? +d.Rsec.toFixed(4) : null,
+      dUsec: d.dUsec ? +d.dUsec.toFixed(2) : null,
+      dUsecPercent: d.dUsec ? +((d.dUsec * 100) / Unom220).toFixed(2) : null,
       Uend: +Uend.toFixed(1),
       effectivePhaseCount: d.phases
     })

@@ -9,7 +9,7 @@ interface SchemaProps {
 
 export function Schema({ sections, activeId, onActivate }: SchemaProps) {
   return (
-    <section className="shrink-0 overflow-x-auto border-b border-(--color-secondary) bg-(--bg-scheme) flex items-end px-8 pb-3 pt-32">
+    <section className="shrink-0 overflow-x-auto border-b border-(--color-border) bg-(--bg-scheme) flex items-end px-8 pb-3 pt-32">
       <div className="flex items-end min-w-max">
         <SchemaNode section={null} nextSection={sections[0]} isActive={false} />
         {sections.map((s, i) => (

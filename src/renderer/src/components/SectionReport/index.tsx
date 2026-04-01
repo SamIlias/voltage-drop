@@ -1,6 +1,6 @@
 import { useRef } from 'react'
 import { ReportContent, SectionReportProps } from './ReportContent'
-import { usePrint } from './usePrint'
+import { usePrint } from './hooks/usePrint'
 
 export function SectionReport({ meta, sections }: SectionReportProps) {
   const dialogRef = useRef<HTMLDialogElement>(null)
@@ -26,7 +26,6 @@ export function SectionReport({ meta, sections }: SectionReportProps) {
         Сформировать отчёт
       </button>
 
-      {/* ── Modal dialog ── */}
       <dialog
         ref={dialogRef}
         onClick={(e) => e.target === dialogRef.current && close()}
@@ -43,7 +42,7 @@ export function SectionReport({ meta, sections }: SectionReportProps) {
 
             <div className="flex items-center gap-2">
               <button
-                onClick={handlePrint}
+                onClick={() => handlePrint(meta, sections)}
                 className="
                   inline-flex items-center gap-2 px-4 py-1.5
                   border border-zinc-600 hover:border-zinc-300
@@ -71,7 +70,6 @@ export function SectionReport({ meta, sections }: SectionReportProps) {
             </div>
           </div>
 
-          {/* Scrollable body */}
           <div className="flex-1 overflow-y-auto p-6">
             <ReportContent meta={meta} sections={sections} />
           </div>

@@ -7,7 +7,7 @@ const LOAD_LABELS: Record<LoadType, string> = {
   [LoadType.Prom]: '(ПР)'
 }
 
-export function LoadSummary({ section }: { section: Section }) {
+export function LoadCell({ section }: { section: Section }) {
   if (section.loads_kw.length === 0) return <span className="text-zinc-400">—</span>
   return (
     <div className="flex flex-wrap gap-x-1 ">

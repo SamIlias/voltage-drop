@@ -22,10 +22,12 @@ import { useTheme } from '@renderer/providers/theme/useTheme'
 import { Theme } from '@renderer/providers/theme/types'
 
 interface HeaderProps {
-  handleSave: () => void
   handleUndo: () => void
   handleRedo: () => void
+  canRedo: boolean
+  canUndo: boolean
   handleLoad: () => void
+  handleSave: () => void
   onCreateNewComputation: () => void
   lineName: string
   setLineName: (v: string) => void
@@ -55,10 +57,12 @@ interface HeaderProps {
 }
 
 export function Header({
-  handleSave,
   handleUndo,
   handleRedo,
+  canRedo,
+  canUndo,
   handleLoad,
+  handleSave,
   onCreateNewComputation,
   lineName,
   setLineName,
@@ -91,13 +95,18 @@ export function Header({
   const meta: ReportMeta = {
     title: lineName,
     date: calcDate,
+
     transformerPower_kva: transformerPower,
-    totalConsumers: loadSummary.totalCount,
-    totalLoad_kw: loadSummary.totalPower,
-    fullWorkCurrent: fullWorkCurrent || 0,
-    voltageDrop_v: voltageDrop ? (voltageDrop * Unom220) / 100 : 0,
-    voltageDrop_pct: voltageDrop || 0,
-    fullLength: lineLength || 0
+    transformerScheme: transformerScheme,
+    transformerLoad: transformerLoad,
+
+    fullWorkCurrent: fullWorkCurrent,
+    voltageDrop_v: voltageDrop ? (voltageDrop * Unom220) / 100 : null,
+    fullLength: lineLength || null,
+    cosPhi: cosPhi,
+
+    IkzSummary: IkzSummary,
+    loadSummary: loadSummary
   }
 
   const { theme } = useTheme()
@@ -106,7 +115,6 @@ export function Header({
     <header className="w-full flex gap-2 items-center px-5 border-b border-(--color-border) min-h-17 justify-around overflow-x-auto">
       <span className="text-sm font-mono max-w-50">Расчёт параметров линии электропередачи</span>
 
-      {/* Menu */}
       <div className="flex flex-col gap-1 min-w-30 my-1">
         <ActionButton icon="ℹ️" onClick={onInfoOpen}>
           О программе
@@ -127,13 +135,13 @@ export function Header({
         <div className="flex self-center gap-2">
           <ThemeToggle />
           <Tooltip content="Отменить">
-            <ActionButton icon="↶" variant="warning" onClick={handleUndo}>
+            <ActionButton icon="↶" variant="warning" onClick={handleUndo} disabled={!canUndo}>
               {''}
             </ActionButton>
           </Tooltip>
 
           <Tooltip content="Вернуть">
-            <ActionButton icon="↷" variant="warning" onClick={handleRedo}>
+            <ActionButton icon="↷" variant="warning" onClick={handleRedo} disabled={!canRedo}>
               {''}
             </ActionButton>
           </Tooltip>

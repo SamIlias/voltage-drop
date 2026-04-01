@@ -6,10 +6,9 @@ import { WIRE_MARKS } from '@renderer/constants'
 import { historyReducer } from '@renderer/reducers/historyReducer'
 import { validateLoadPower } from '@renderer/utils/validation'
 import { getLoadSummary } from '@renderer/utils/electricCalc'
-import { getLineLength, getLineResistance } from '@renderer/utils/sections'
+import { getLineResistance } from '@renderer/utils/sections'
 
 export function useSections(cosPhiNum: number, useKsim: boolean) {
-  // const [sections, setSections] = useState<Section[]>([mkSection(0)])
   const [activeIdx, setActiveId] = useState<number>(1)
 
   const [historyState, dispatch] = useReducer(historyReducer, {
@@ -66,7 +65,6 @@ export function useSections(cosPhiNum: number, useKsim: boolean) {
         lastPole = newSection.poleNumber
       }
 
-      // setSections((prev) => [...prev, ...next])
       pushHistory((prev) => [...prev, ...next])
       setActiveId(next[0].idx)
     }
@@ -78,7 +76,6 @@ export function useSections(cosPhiNum: number, useKsim: boolean) {
       ? mkSection(sections.length, last.poleNumber, last.wire, last.phases, last.length_m)
       : mkSection(sections.length, '0', WIRE_MARKS[0], PhaseCount.three, '0')
 
-    // setSections((prev) => [...prev, newSection])
     pushHistory((prev) => [...prev, newSection])
     setActiveId(newSection.idx)
   }
@@ -126,17 +123,17 @@ export function useSections(cosPhiNum: number, useKsim: boolean) {
     })
 
   const handleCreateNewComputing = () => {
-    // setSections([mkSection(0)])
     pushHistory([mkSection(0)])
   }
 
   return {
     computedSections,
     sections,
-    // setSections,
     pushHistory,
     undo,
     redo,
+    canRedo,
+    canUndo,
     activeIdx,
     setActiveId,
     applyQuickFill,

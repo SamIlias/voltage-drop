@@ -1,18 +1,23 @@
-import { Section } from '@renderer/types'
+import { IkzSummary, Section } from '@renderer/types'
 import { fmt } from './utils'
-import { LoadSummary } from './LoadSummaryCell'
-import { MetaItem } from './MetaItem'
+import { LoadCell } from './LoadSummaryCell'
+import { LoadSummary } from '@renderer/utils/electricCalc'
+import { ReportHeader } from './ReportHeader'
 
 export interface ReportMeta {
   title: string
   date: string
   transformerPower_kva: string
-  totalConsumers: number
-  totalLoad_kw: number
-  fullWorkCurrent: number
-  voltageDrop_v: number
-  voltageDrop_pct: number
-  fullLength: number
+  transformerScheme: string
+  transformerLoad: number | null
+
+  fullWorkCurrent: number | null
+  loadSummary: LoadSummary
+  IkzSummary: IkzSummary
+
+  voltageDrop_v: number | null
+  fullLength: number | null
+  cosPhi: string
 }
 
 export interface SectionReportProps {
@@ -23,35 +28,25 @@ export interface SectionReportProps {
 export function ReportContent({ meta, sections }: SectionReportProps) {
   return (
     <div id="report-printable">
-      {/* Header card */}
       <div className="border-2 border-zinc-800 bg-white mb-6">
-        {/* Title bar */}
-        <div className="bg-zinc-800 px-5 py-3">
-          <h1 className="font-mono text-sm tracking-[0.18em] uppercase text-white font-semibold">
-            {meta.title}
-          </h1>
+        <div className="bg-zinc-800 px-5 py-3 flex justify-between">
+          <span className="text-sm tracking-[0.18em] uppercase text-white font-semibold">
+            {meta.title || 'Параметры ВЛ'}
+          </span>
+          <span className="text-sm tracking-[0.18em] uppercase text-white font-semibold">
+            {meta.date}
+          </span>
         </div>
 
-        {/* Meta grid */}
-        <div className="grid grid-cols-4 gap-px bg-zinc-200 border-t border-zinc-300">
-          <MetaItem label="Дата" value={meta.date} />
-          <MetaItem label="Мощность тр-ра" value={meta.transformerPower_kva} unit="кВА" />
-          <MetaItem label="Потребителей" value={meta.totalConsumers} unit="шт" />
-          <MetaItem label="Суммарная нагрузка" value={fmt(meta.totalLoad_kw)} unit="кВт" />
-          <MetaItem label="Длина линии" value={fmt(meta.fullLength)} unit="м" />
-          <MetaItem label="Рабочий ток одной фазы" value={fmt(meta.fullWorkCurrent)} unit="А" />
-          <MetaItem label="Потери напряжения, ΔU" value={fmt(meta.voltageDrop_v)} unit="В" />
-          <MetaItem label="Потери напряжения, ΔU%" value={fmt(meta.voltageDrop_pct)} unit="%" />
-        </div>
+        <ReportHeader meta={meta} />
       </div>
 
-      {/* Table */}
       <div className="overflow-x-auto border border-zinc-800">
-        <table className="w-full border-collapse text-[11.5px] font-mono text-center align-middle">
+        <table className="w-full border-collapse text-[11.5px] font text-center align-middle">
           <thead>
             <tr className="bg-zinc-800 text-white">
               {[
-                '#',
+                '№',
                 'Участок',
                 'Провод',
                 'R, Ом',
@@ -62,7 +57,7 @@ export function ReportContent({ meta, sections }: SectionReportProps) {
                 'Потребители',
                 'Фаз'
               ].map((h) => (
-                <th key={h} className="px-3 py-2.5  font-semibold text-[10px] tracking-[0.08em]  ">
+                <th key={h} className="px-3 py-2.5  font-normal text-[12px] ">
                   {h}
                 </th>
               ))}
@@ -78,7 +73,7 @@ export function ReportContent({ meta, sections }: SectionReportProps) {
                   'hover:bg-blue-50 transition-colors'
                 ].join(' ')}
               >
-                <td className="px-3 py-2 text-zinc-400 w-8 border border-zinc-400">{s.idx}</td>
+                <td className="px-3 py-2 text-zinc-400 w-8 border border-zinc-400">{s.idx + 1}</td>
                 <td className="px-3 py-2 border border-zinc-400 font-semibold whitespace-nowrap text-zinc-900">
                   {s.prevPoleNumber} — {s.poleNumber}
                 </td>
@@ -97,7 +92,7 @@ export function ReportContent({ meta, sections }: SectionReportProps) {
                   {fmt(s.results.dUsec)}
                 </td>
                 <td className="px-3 py-2 font-bold border border-zinc-400 max-w-100">
-                  <LoadSummary section={s} />
+                  <LoadCell section={s} />
                 </td>
                 <td className="px-3 py-2 border border-zinc-400 text-zinc-700">
                   {s.results.effectivePhaseCount ?? s.phases}
@@ -108,11 +103,7 @@ export function ReportContent({ meta, sections }: SectionReportProps) {
         </table>
       </div>
 
-      {/* Footer */}
       <div className="mt-4 flex justify-between items-center">
-        {/* <p className="font-mono text-[10px] text-zinc-400 tracking-widest uppercase">
-          Сформировано: {new Date().toLocaleString('ru-RU')}
-        </p> */}
         <p className="font-mono text-[10px] text-zinc-400">Участков: {sections.length}</p>
       </div>
     </div>

@@ -42,10 +42,11 @@ export default function App() {
   const {
     computedSections,
     sections,
-    // setSections,
     pushHistory,
     undo,
     redo,
+    canRedo,
+    canUndo,
     activeIdx,
     setActiveId,
     applyQuickFill,
@@ -89,6 +90,8 @@ export default function App() {
         <Header
           handleUndo={undo}
           handleRedo={redo}
+          canRedo={canRedo}
+          canUndo={canUndo}
           handleSave={handleSave}
           handleLoad={handleLoad}
           onCreateNewComputation={handleCreateNewComputing}
