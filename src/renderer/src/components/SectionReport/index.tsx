@@ -1,6 +1,7 @@
 import { useRef } from 'react'
 import { ReportContent, SectionReportProps } from './ReportContent'
 import { usePrint } from './hooks/usePrint'
+import logo from '@renderer/assets/logo.png'
 
 export function SectionReport({ meta, sections }: SectionReportProps) {
   const dialogRef = useRef<HTMLDialogElement>(null)
@@ -36,9 +37,16 @@ export function SectionReport({ meta, sections }: SectionReportProps) {
       >
         <div className="flex flex-col min-h-[90vh] bg-zinc-50 border-2 border-zinc-800 shadow-2xl">
           <div className="flex items-center justify-between px-5 py-3 bg-zinc-900 shrink-0">
-            <span className="font-mono text-[10px] tracking-[0.18em] uppercase text-zinc-300">
-              Отчёт · Результаты расчёта
-            </span>
+            <div className="flex items-center gap-2">
+              <img
+                src={logo}
+                alt="Logo"
+                className="w-13 h-13 object-contain hover:scale-110 transition-transform"
+              />
+              <span className="font-mono text-[10px] tracking-[0.18em] uppercase text-zinc-300">
+                Отчёт · Результаты расчёта
+              </span>
+            </div>
 
             <div className="flex items-center gap-2">
               <button

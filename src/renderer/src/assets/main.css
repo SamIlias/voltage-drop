@@ -15,9 +15,11 @@
   --bg-section: #e7e7e48a;
   --bg-active: #bdbba56c;
   --bg-section-results: #87c09842;
-  /* --bg-section-results: #ffffffc5; */
+  --bg-tips: #f0d6a0;
+  --bg-error: #ee1919;
 
   --text: #000000;
+  --text-error: #ffffff;
   --color-active: #a85609;
   --color-secondary: #34383d;
   --color-success: #0a7024;
@@ -43,8 +45,11 @@
   --bg-section: #222423;
   --bg-active: #201f13;
   --bg-section-results: #4868523b;
+  --bg-tips: #42351f;
+  --bg-error: #2b1d1d;
 
   --text: #eeeeee;
+  --text-error: #f52828;
   --color-active: #f5ac0e;
   --color-secondary: #a7abb1;
   --color-success: #16a33a;

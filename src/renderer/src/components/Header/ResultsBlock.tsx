@@ -56,12 +56,14 @@ export function ResultsBlock({
       <div className="flex flex-col gap-4">
         <FieldLabel text="Кодн">
           <div className="flex gap-2 items-center">
-            <input
-              type="checkbox"
-              className="w-4 h-4 accent-green-500 cursor-pointer"
-              checked={useKsim}
-              onChange={(e) => setUseKsim(e.target.checked)}
-            />
+            <Tooltip content="Применять Коэфф. одновременности">
+              <input
+                type="checkbox"
+                className="w-4 h-4 accent-green-500 cursor-pointer"
+                checked={useKsim}
+                onChange={(e) => setUseKsim(e.target.checked)}
+              />
+            </Tooltip>
             <div className="flex flex-col text-[10px] text-(--color-active)">
               <span>Kбыт = {loadSummary.household.ksim}</span>
               <span>Kпром = {loadSummary.prom.ksim}</span>
@@ -69,28 +71,32 @@ export function ResultsBlock({
           </div>
         </FieldLabel>
 
-        <FieldLabel text="Выберите опору">
-          <select
-            className={`${inputCls} cursor-pointer`}
-            value={poleForCalcReserve || sections.at(-1)?.poleNumber}
-            onChange={(e) => setPoleForCalcReserve(e.target.value)}
-          >
-            {sections.map((s) => (
-              <option key={s.poleNumber} value={s.poleNumber}>
-                {s.poleNumber}
-              </option>
-            ))}
-          </select>
-        </FieldLabel>
+        <Tooltip content="Выбрать опору для определения резерва мощности">
+          <FieldLabel text="Выберите опору">
+            <select
+              className={`${inputCls} cursor-pointer`}
+              value={poleForCalcReserve || sections.at(-1)?.poleNumber}
+              onChange={(e) => setPoleForCalcReserve(e.target.value)}
+            >
+              {sections.map((s) => (
+                <option key={s.poleNumber} value={s.poleNumber}>
+                  {s.poleNumber}
+                </option>
+              ))}
+            </select>
+          </FieldLabel>
+        </Tooltip>
       </div>
 
       <div className="flex flex-col gap-2">
-        <ResultBadge
-          label="Ток линии (1ф)"
-          value={fullWorkCurrent}
-          unit="A"
-          status={ResultStatus.DEFAULT}
-        />
+        <Tooltip content="Рабочий ток одной фазы">
+          <ResultBadge
+            label="Ток линии (1ф)"
+            value={fullWorkCurrent}
+            unit="A"
+            status={ResultStatus.DEFAULT}
+          />
+        </Tooltip>
 
         <ResultBadge
           label="Длина линии"
@@ -99,7 +105,6 @@ export function ResultsBlock({
           status={ResultStatus.DEFAULT}
         />
 
-        {/* резерв мощности постоянной нагрузки для указанной опоры */}
         <Tooltip
           content="Резерв мощности постоянной нагрузки для указанной опоры"
           className="text-[7px] max-w-60"
@@ -123,12 +128,14 @@ export function ResultsBlock({
           status={dropStatus}
         />
 
-        <ResultBadge
-          label="Потеря напряжения"
-          value={voltageDrop || 0}
-          unit="%"
-          status={dropStatus}
-        />
+        <Tooltip content="Потери в конце линии">
+          <ResultBadge
+            label="Потеря напряжения"
+            value={voltageDrop || 0}
+            unit="%"
+            status={dropStatus}
+          />
+        </Tooltip>
       </div>
 
       <div className="flex flex-col gap-2">

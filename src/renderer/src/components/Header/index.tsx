@@ -21,6 +21,8 @@ import { inputCls } from '@renderer/assets/common'
 import { useTheme } from '@renderer/providers/theme/useTheme'
 import { Theme } from '@renderer/providers/theme/types'
 
+import myLogo from '@renderer/assets/logo.png'
+
 interface HeaderProps {
   handleUndo: () => void
   handleRedo: () => void
@@ -113,7 +115,12 @@ export function Header({
 
   return (
     <header className="w-full flex gap-2 items-center px-5 border-b border-(--color-border) min-h-17 justify-around overflow-x-auto">
-      <span className="text-sm font-mono max-w-50">Расчёт параметров линии электропередачи</span>
+      {/* <span className="text-sm font-mono max-w-50">Расчёт параметров линии электропередачи</span> */}
+      <img
+        src={myLogo}
+        alt="Logo"
+        className="w-30 h-30 object-contain hover:scale-110 transition-transform"
+      />
 
       <div className="flex flex-col gap-1 min-w-30 my-1">
         <ActionButton icon="ℹ️" onClick={onInfoOpen}>
