@@ -1,10 +1,4 @@
-import { FieldLabel } from '../FieldLabel'
-import {
-  TRANSFORMER_POWERS,
-  TransformerPower,
-  TransformerScheme,
-  Unom220
-} from '@renderer/constants'
+import { TransformerPower, TransformerScheme, Unom220 } from '@renderer/constants'
 import { VDivider } from '../VerticalDivider'
 import { ActionButton } from '../ActionButton'
 import { Tooltip } from '../Tooltip'
@@ -15,13 +9,9 @@ import { IkzSummary, Section } from '@renderer/types'
 import { SectionReport } from '../SectionReport'
 import { ReportMeta } from '../SectionReport/ReportContent'
 import { ThemeToggle } from '../ThemeToggle'
-import { CosPhiField } from '../validatedFields/CosPhiField'
-import { DUPercentField } from '../validatedFields/DUPercentField'
-import { inputCls } from '@renderer/assets/common'
-import { useTheme } from '@renderer/providers/theme/useTheme'
-import { Theme } from '@renderer/providers/theme/types'
 
 import myLogo from '@renderer/assets/logo.png'
+import { LineParameters } from './LineParameters'
 
 interface HeaderProps {
   handleUndo: () => void
@@ -111,8 +101,6 @@ export function Header({
     loadSummary: loadSummary
   }
 
-  const { theme } = useTheme()
-
   return (
     <header className="w-full flex gap-2 items-center px-5 border-b border-(--color-border) min-h-17 justify-around overflow-x-auto">
       {/* <span className="text-sm font-mono max-w-50">Расчёт параметров линии электропередачи</span> */}
@@ -138,75 +126,24 @@ export function Header({
         <ActionButton icon="💾" variant="success" onClick={handleSave}>
           Сохранить
         </ActionButton>
-
-        <div className="flex self-center gap-2">
-          <ThemeToggle />
-          <Tooltip content="Отменить">
-            <ActionButton icon="↶" variant="warning" onClick={handleUndo} disabled={!canUndo}>
-              {''}
-            </ActionButton>
-          </Tooltip>
-
-          <Tooltip content="Вернуть">
-            <ActionButton icon="↷" variant="warning" onClick={handleRedo} disabled={!canRedo}>
-              {''}
-            </ActionButton>
-          </Tooltip>
-        </div>
       </div>
 
       <VDivider />
 
-      <div className="flex flex-col gap-1 items-start my-2 ">
-        <FieldLabel text="Название линии">
-          <input
-            className={`${inputCls} min-w-61`}
-            value={lineName}
-            onChange={(e) => setLineName(e.target.value)}
-            placeholder="ВЛ 0,4 кВ от КТП"
-          />
-        </FieldLabel>
-
-        <div className="flex gap-1 ">
-          <FieldLabel text="Дата расчёта">
-            <input
-              type="date"
-              className={`${inputCls} mr-2 ${theme === Theme.DARK && `[&::-webkit-calendar-picker-indicator]:invert`} [&::-webkit-calendar-picker-indicator]:cursor-pointer`}
-              value={calcDate}
-              onChange={(e) => setCalcDate(e.target.value)}
-            />
-          </FieldLabel>
-          <CosPhiField value={cosPhi} setCosPhi={setCosPhi} />
-          <DUPercentField value={dUallowPercent} setDUAllow={setDUallow} />
-        </div>
-
-        <div className="flex gap-1 ">
-          <FieldLabel text="Мощность тр-ра">
-            <select
-              className={`${inputCls} text-xs w-25 cursor-pointer`}
-              value={transformerPower}
-              onChange={(e) => setTransformerPower(e.target.value as TransformerPower)}
-            >
-              {TRANSFORMER_POWERS.map((p) => (
-                <option key={p} value={p}>
-                  {p} кВА
-                </option>
-              ))}
-            </select>
-          </FieldLabel>
-
-          <FieldLabel text="Схема обм.">
-            <select
-              className={`${inputCls} text-xs w-18 cursor-pointer`}
-              value={transformerScheme}
-              onChange={(e) => setTransformerScheme(e.target.value as TransformerScheme)}
-            >
-              <option value={TransformerScheme.SS}>{TransformerScheme.SS}</option>
-              <option value={TransformerScheme.TS}>{TransformerScheme.TS}</option>
-            </select>
-          </FieldLabel>
-        </div>
-      </div>
+      <LineParameters
+        lineName={lineName}
+        setLineName={setLineName}
+        calcDate={calcDate}
+        setCalcDate={setCalcDate}
+        cosPhi={cosPhi}
+        setCosPhi={setCosPhi}
+        dUallowPercent={dUallowPercent}
+        setDUallow={setDUallow}
+        transformerPower={transformerPower}
+        setTransformerPower={setTransformerPower}
+        transformerScheme={transformerScheme}
+        setTransformerScheme={setTransformerScheme}
+      />
 
       <VDivider />
 
@@ -232,7 +169,24 @@ export function Header({
 
       <VDivider />
 
-      <SectionReport meta={meta} sections={sections} />
+      <div className="flex flex-col gap-4">
+        <SectionReport meta={meta} sections={sections} />
+        <div className="flex self-center gap-2">
+          <Tooltip content="Отменить">
+            <ActionButton icon="↶" variant="warning" onClick={handleUndo} disabled={!canUndo}>
+              {''}
+            </ActionButton>
+          </Tooltip>
+
+          <Tooltip content="Вернуть">
+            <ActionButton icon="↷" variant="warning" onClick={handleRedo} disabled={!canRedo}>
+              {''}
+            </ActionButton>
+          </Tooltip>
+
+          <ThemeToggle />
+        </div>
+      </div>
     </header>
   )
 }

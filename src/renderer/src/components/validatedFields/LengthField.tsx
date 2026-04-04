@@ -2,6 +2,7 @@ import { MouseEvent } from 'react'
 import { useValidatedField } from '@renderer/hooks/useValidatedField'
 import { FieldLabel } from '@renderer/components/FieldLabel'
 import { validateLength } from '@renderer/utils/validation'
+import { removeLeadingZeros } from '@renderer/utils'
 
 interface LengthFieldProps {
   value: string
@@ -24,7 +25,7 @@ export function LengthField({ value, onChange }: LengthFieldProps) {
         placeholder="0"
         onChange={(e) => {
           field.onChange(e)
-          onChange({ length_m: e.target.value })
+          onChange({ length_m: removeLeadingZeros(e.target.value) })
         }}
         onBlur={field.onBlur}
         className={`${field.inputCls} w-full`}

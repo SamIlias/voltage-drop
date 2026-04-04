@@ -190,9 +190,16 @@ export function calculateDownstreamPass(
     const phases = getEffectivePhases(section.idx, sections)
     const Isec1 = calculateSectionCurrent(Psec * 1000, phases, Unom220, cosPhi)
     const R0_om_km = WIRE_RESISTANCE_OM_KM[section.wire] ?? null
-    const Rsec = (R0_om_km * parseFloat(section.length_m)) / 1000 || null
+    const Rsec =
+      section.length_m === '0' ? 0 : (R0_om_km * parseFloat(section.length_m)) / 1000 || null
     const dUsec =
-      phases === PhaseCount.three ? (Rsec ? Isec1 * Rsec : null) : Rsec ? 2 * Isec1 * Rsec : null
+      phases === PhaseCount.three
+        ? Rsec !== null
+          ? Isec1 * Rsec
+          : null
+        : Rsec !== null
+          ? 2 * Isec1 * Rsec
+          : null
 
     return { Psec, phases, Isec1, Rsec, dUsec }
   })

@@ -9,7 +9,7 @@ interface ResultBlockProps {
 
 export function ResultsBlock({ section: s }: ResultBlockProps) {
   return (
-    <div className="flex flex-col gap-2 min-w-50">
+    <div className="flex flex-col gap-2 min-w-60">
       <SectionTitle text={'Результаты'} />
 
       {Object.keys(s.results).map((key) => {

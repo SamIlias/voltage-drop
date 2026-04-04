@@ -33,7 +33,7 @@
   --status-warn: #d29922;
 
   --load-heating: #ee7621;
-  --load-household: #3fb950;
+  --load-household: #5f7426;
   --load-electric-car: #2c8dfc;
   --load-prom: #812cf8;
 }
@@ -63,7 +63,7 @@
   --status-warn: #d29922;
 
   --load-heating: #f0883e;
-  --load-household: #3fb950;
+  --load-household: #9dc938;
   --load-electric-car: #58a6ff;
   --load-prom: #bc8cff;
 }

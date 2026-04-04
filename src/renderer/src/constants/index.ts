@@ -1,4 +1,4 @@
-import { LoadType, PhaseCount } from '@renderer/types'
+import { LoadType, PhaseCount, ResultStatus } from '@renderer/types'
 
 export const Unom220 = 220
 export const Usource230 = 230
@@ -152,3 +152,14 @@ export const SECTION_RESULT_LABEL = {
     description: 'Кол-во используемых для передачи электроэнергии фаз'
   }
 } as const
+
+export function statusCls(status: ResultStatus | undefined): string {
+  if (status === ResultStatus.DANGER) return 'text-(--status-danger) border-(--status-danger)'
+  if (status === ResultStatus.WARN) return 'text-(--status-warn) border-(--status-warn)'
+  if (status === ResultStatus.OK) return 'text-(--status-ok) border-(--status-ok)'
+  if (status === ResultStatus.DEFAULT) return 'text-(--status-default) border-(--status-default)'
+  return 'text-[#6e7681] border-[#30363d]'
+}
+
+export const UminAllow = 198
+export const UmaxAllow = 242
