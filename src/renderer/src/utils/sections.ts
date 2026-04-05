@@ -86,8 +86,9 @@ export function getLineResistance(sections: Section[]): number {
 export function calculateAllSections(
   sections: Section[],
   cosPhi: number,
-  useKsim: boolean
+  useKsim: boolean,
+  k_heatDec: number
 ): SectionResults[] {
-  const downstreamData = calculateDownstreamPass(sections, cosPhi, useKsim)
+  const downstreamData = calculateDownstreamPass(sections, cosPhi, useKsim, k_heatDec)
   return calculateUpstreamPass(sections, downstreamData)
 }

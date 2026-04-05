@@ -8,7 +8,7 @@ import { validateLoadPower } from '@renderer/utils/validation'
 import { getLoadSummary } from '@renderer/utils/electricCalc'
 import { getLineResistance } from '@renderer/utils/sections'
 
-export function useSections(cosPhiNum: number, useKsim: boolean) {
+export function useSections(cosPhiNum: number, useKsim: boolean, k_heatDecNum: number) {
   const [activeIdx, setActiveId] = useState<number>(1)
 
   const [historyState, dispatch] = useReducer(historyReducer, {
@@ -28,15 +28,18 @@ export function useSections(cosPhiNum: number, useKsim: boolean) {
   const activeRef = useRef<HTMLDivElement>(null)
 
   const computedSections = useMemo(() => {
-    const allResults = calculateAllSections(sections, cosPhiNum, useKsim)
+    const allResults = calculateAllSections(sections, cosPhiNum, useKsim, k_heatDecNum)
     return sections.map((s, i) => ({
       ...s,
       prevPoleNumber: sections[i - 1]?.poleNumber || '0',
       results: allResults[i]
     }))
-  }, [sections, cosPhiNum, useKsim])
+  }, [sections, cosPhiNum, useKsim, k_heatDecNum])
 
-  const fullLoadSummary = useMemo(() => getLoadSummary(0, sections, useKsim), [sections, useKsim])
+  const fullLoadSummary = useMemo(
+    () => getLoadSummary(0, sections, useKsim, k_heatDecNum),
+    [sections, useKsim, k_heatDecNum]
+  )
   const fullLineResistance = useMemo(() => getLineResistance(sections), [sections])
 
   useEffect(() => {

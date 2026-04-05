@@ -6,12 +6,13 @@ import { useEffect, useState } from 'react'
 export function useTransformerLoad(
   transformerPower: TransformerPower,
   computedSections: Section[],
-  useKsim: boolean
+  useKsim: boolean,
+  k_heatDec: number
 ) {
   const [transformerLoad, setTransformerLoad] = useState<number | null>(null)
 
   useEffect(() => {
-    setTransformerLoad(getTransformerLoad(transformerPower, computedSections, useKsim))
+    setTransformerLoad(getTransformerLoad(transformerPower, computedSections, useKsim, k_heatDec))
   }, [computedSections, transformerPower])
 
   return { transformerLoad }

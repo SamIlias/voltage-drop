@@ -12,7 +12,7 @@ export const Tooltip: FC<TooltipProps> = ({ content, children, className = '' })
       {children}
 
       <div
-        className={`text-xs 
+        className={`text-xs z-20
           absolute bottom-full left-1/2 -translate-x-1/2 mb-1
           px-2 py-1 text-(--text) bg-(--bg-tips) rounded
           whitespace-nowrap

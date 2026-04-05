@@ -32,6 +32,8 @@ interface HeaderProps {
   setDUallow: (v: string) => void
   useKsim: boolean
   setUseKsim: (v: boolean) => void
+  k_heatDec: string
+  setK_heatDec: (v: string) => void
   transformerPower: string
   setTransformerPower: (v: TransformerPower) => void
   transformerScheme: string
@@ -67,6 +69,8 @@ export function Header({
   setDUallow,
   useKsim,
   setUseKsim,
+  k_heatDec,
+  setK_heatDec,
   transformerPower,
   setTransformerPower,
   transformerScheme,
@@ -161,6 +165,8 @@ export function Header({
         useKsim={useKsim}
         sections={sections}
         IkzSummary={IkzSummary}
+        k_heatDec={k_heatDec}
+        setK_heatDec={setK_heatDec}
       />
 
       <VDivider />

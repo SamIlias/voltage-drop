@@ -97,7 +97,7 @@ export function validateLoadPower(value: string): ValidationResult {
   return { valid: true }
 }
 
-export function validateCosPhi(value: string): ValidationResult {
+export function validateKFromZeroToOne(value: string): ValidationResult {
   if (value.trim() === '') {
     return { valid: false, error: 'Введите значение' }
   }

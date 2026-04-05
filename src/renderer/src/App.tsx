@@ -34,10 +34,13 @@ export default function App() {
     transformerScheme,
     setTransformerScheme,
     poleForCalcReserve,
-    setPoleForCalcReserve
+    setPoleForCalcReserve,
+    k_heatDec,
+    setK_heatDec
   } = useAppSettings()
 
   const cosPhiNum = parseFloat(cosPhi) || 0.9
+  const k_heatDecNum = parseFloat(k_heatDec) || 1
 
   const {
     computedSections,
@@ -59,8 +62,13 @@ export default function App() {
     handleCreateNewComputing,
     fullLoadSummary,
     fullLineResistance
-  } = useSections(cosPhiNum, useKsim)
-  const { transformerLoad } = useTransformerLoad(transformerPower, computedSections, useKsim)
+  } = useSections(cosPhiNum, useKsim, k_heatDecNum)
+  const { transformerLoad } = useTransformerLoad(
+    transformerPower,
+    computedSections,
+    useKsim,
+    k_heatDecNum
+  )
   const { fullVoltageDrop_pct } = useFullVoltageDrop(computedSections)
   const { fullWorkCurrent } = useFullWorkCurrent(computedSections)
 
@@ -106,6 +114,8 @@ export default function App() {
           setDUallow={setDUallow}
           useKsim={useKsim}
           setUseKsim={setUseKsim}
+          k_heatDec={k_heatDec}
+          setK_heatDec={setK_heatDec}
           transformerPower={transformerPower}
           setTransformerPower={setTransformerPower}
           transformerScheme={transformerScheme}

@@ -69,7 +69,8 @@ export type LoadSummary = {
 export function getLoadSummary(
   sectionId: number,
   sections: Section[],
-  useKsim: boolean
+  useKsim: boolean,
+  k_heatDec: number
 ): LoadSummary {
   const relevantSections = sections.filter((s) => s.idx >= sectionId)
 
@@ -121,7 +122,7 @@ export function getLoadSummary(
   const totalPower =
     householdPower * ksim_house +
     promPower * ksim_prom +
-    heatingPower * ksim_heating +
+    heatingPower * ksim_heating * k_heatDec +
     electricCarPower * ksim_electric
 
   return {
@@ -150,16 +151,22 @@ export function getLoadSummary(
   }
 }
 
-function getLoadThroughSection(sectionId: number, sections: Section[], useKsim: boolean): number {
-  return getLoadSummary(sectionId, sections, useKsim).totalPower
+function getLoadThroughSection(
+  sectionId: number,
+  sections: Section[],
+  useKsim: boolean,
+  k_heatDec: number
+): number {
+  return getLoadSummary(sectionId, sections, useKsim, k_heatDec).totalPower
 }
 
 export function getTransformerLoad(
   transformerPower: TransformerPower,
   sections: Section[],
-  useKsim: boolean
+  useKsim: boolean,
+  k_heatDec: number
 ): number {
-  const load = getLoadThroughSection(0, sections, useKsim)
+  const load = getLoadThroughSection(0, sections, useKsim, k_heatDec)
   return (load * 100) / parseInt(transformerPower)
 }
 
@@ -183,10 +190,11 @@ type DownstreamData = {
 export function calculateDownstreamPass(
   sections: Section[],
   cosPhi: number,
-  useKsim: boolean
+  useKsim: boolean,
+  k_heatDec: number
 ): DownstreamData[] {
   return sections.map((section) => {
-    const Psec = getLoadThroughSection(section.idx, sections, useKsim)
+    const Psec = getLoadThroughSection(section.idx, sections, useKsim, k_heatDec)
     const phases = getEffectivePhases(section.idx, sections)
     const Isec1 = calculateSectionCurrent(Psec * 1000, phases, Unom220, cosPhi)
     const R0_om_km = WIRE_RESISTANCE_OM_KM[section.wire] ?? null

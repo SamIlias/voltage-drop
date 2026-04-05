@@ -7,6 +7,7 @@ export function useAppSettings() {
   const [cosPhi, setCosPhiStr] = useState('0.9')
   const [dUallowPercent, setDUallowPercent] = useState('13')
   const [useKsim, setUseKsim] = useState(true)
+  const [k_heatDec, setK_heatDec] = useState('1')
   const [transformerPower, setTransformerPower] = useState<TransformerPower>('100')
   const [transformerScheme, setTransformerScheme] = useState<TransformerScheme>(
     TransformerScheme.SS
@@ -29,6 +30,8 @@ export function useAppSettings() {
     transformerScheme,
     setTransformerScheme,
     poleForCalcReserve,
-    setPoleForCalcReserve
+    setPoleForCalcReserve,
+    k_heatDec,
+    setK_heatDec
   }
 }

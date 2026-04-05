@@ -7,6 +7,7 @@ import { Tooltip } from '../Tooltip'
 import { LoadSummary } from '@renderer/utils/electricCalc'
 import { Unom220 } from '@renderer/constants'
 import { inputCls } from '@renderer/assets/common'
+import { KHeatDecField } from '../validatedFields/KHeatDecField'
 
 interface ResultsBlockProps {
   dUallowNum: number
@@ -19,6 +20,8 @@ interface ResultsBlockProps {
   setPoleForCalcReserve: (v: string | null) => void
   useKsim: boolean
   setUseKsim: (v: boolean) => void
+  k_heatDec: string
+  setK_heatDec: (v: string) => void
   loadSummary: LoadSummary
   sections: Section[]
   IkzSummary: IkzSummary
@@ -35,6 +38,8 @@ export function ResultsBlock({
   setPoleForCalcReserve,
   useKsim,
   setUseKsim,
+  k_heatDec,
+  setK_heatDec,
   loadSummary,
   sections,
   IkzSummary
@@ -53,7 +58,7 @@ export function ResultsBlock({
 
   return (
     <div className="flex gap-4 shrink-0 items-end">
-      <div className="flex flex-col gap-4">
+      <div className="flex flex-col gap-1">
         <FieldLabel text="Кодн">
           <div className="flex gap-2 items-center">
             <Tooltip content="Применять Коэфф. одновременности">
@@ -70,6 +75,10 @@ export function ResultsBlock({
             </div>
           </div>
         </FieldLabel>
+
+        <Tooltip content="Понижающий коэфф. для мощности нагрева">
+          <KHeatDecField value={k_heatDec} setK_heatDec={setK_heatDec} />
+        </Tooltip>
 
         <Tooltip content="Выбрать опору для определения резерва мощности">
           <FieldLabel text="Выберите опору">

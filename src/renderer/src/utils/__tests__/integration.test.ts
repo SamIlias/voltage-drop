@@ -42,7 +42,7 @@ describe('electricCalc integration', () => {
 
     const cosPhi = 0.9
 
-    const downstream = calculateDownstreamPass(sections, cosPhi, true)
+    const downstream = calculateDownstreamPass(sections, cosPhi, true, 1)
     const upstream = calculateUpstreamPass(sections, downstream)
 
     // --- базовые проверки ---
@@ -73,14 +73,17 @@ describe('electricCalc integration', () => {
     expect(downstream[2].phases).toBe(PhaseCount.one)
 
     // --- проверка, что сопротивление зависит от длины ---
-    expect(downstream[0].Rsec).toBeGreaterThan(downstream[1].Rsec)
-    expect(downstream[1].Rsec).toBeGreaterThan(downstream[2].Rsec)
+    expect(downstream[1].Rsec).not.toBeNull()
+    expect(downstream[2].Rsec).not.toBeNull()
+
+    expect(downstream[0].Rsec).toBeGreaterThan(downstream[1].Rsec!)
+    expect(downstream[1].Rsec).toBeGreaterThan(downstream[2].Rsec!)
   })
 
   it('корректно работает при отсутствии нагрузок', () => {
     const sections: Section[] = [createSection({ idx: 0 }), createSection({ idx: 1 })]
 
-    const downstream = calculateDownstreamPass(sections, 0.9, true)
+    const downstream = calculateDownstreamPass(sections, 0.9, true, 1)
     const upstream = calculateUpstreamPass(sections, downstream)
 
     downstream.forEach((d) => {
