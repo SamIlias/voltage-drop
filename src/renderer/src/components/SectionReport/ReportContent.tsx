@@ -27,7 +27,7 @@ export interface SectionReportProps {
 
 export function ReportContent({ meta, sections }: SectionReportProps) {
   return (
-    <div id="report-printable">
+    <div className="flex-1 overflow-y-auto p-6" id="report-printable">
       <div className="border-2 border-zinc-800 bg-white mb-6">
         <div className="bg-zinc-800 px-5 py-3 flex justify-between">
           <span className="text-sm tracking-[0.18em] uppercase text-white font-semibold">

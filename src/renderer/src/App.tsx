@@ -16,6 +16,8 @@ import { useLineLength } from './hooks/useLineLength'
 import { Unom220 } from './constants'
 import { useFullWorkCurrent } from './hooks/useFullWorkCurrent'
 import { useShortCircuitCurrent } from './hooks/useShortCircuitCurrent'
+import AboutDialog from './components/AboutDialog'
+import { useAboutDialog } from './hooks/useAboutDialog'
 
 export default function App() {
   const {
@@ -38,6 +40,8 @@ export default function App() {
     k_heatDec,
     setK_heatDec
   } = useAppSettings()
+
+  const { isAboutOpen, setIsAboutOpen } = useAboutDialog()
 
   const cosPhiNum = parseFloat(cosPhi) || 0.9
   const k_heatDecNum = parseFloat(k_heatDec) || 1
@@ -95,6 +99,8 @@ export default function App() {
       <div className={`h-screen w-screen flex flex-col font-mono min-w-11 overflow-auto`}>
         {error && <ErrorMessage error={error} reset={resetError} />}
 
+        <AboutDialog isOpen={isAboutOpen} onClose={() => setIsAboutOpen(false)} />
+
         <Header
           handleUndo={undo}
           handleRedo={redo}
@@ -130,6 +136,7 @@ export default function App() {
           setPoleForCalcReserve={setPoleForCalcReserve}
           sections={computedSections}
           IkzSummary={IkzSummary}
+          setIsAboutOpen={setIsAboutOpen}
         />
         <Schema sections={computedSections} activeId={activeIdx} onActivate={setActiveId} />
         <QuickFill onApply={applyQuickFill(sections[sections.length - 1])} />

@@ -9,7 +9,7 @@ export function getPrintStyles() {
 
   /* ── Report Card ── */
   .report-card {
-    border: 2px solid #27272a; /* zinc-800 */
+    border: 1px solid #27272a; /* zinc-800 */
     background: white;
     margin-bottom: 24px;
   }

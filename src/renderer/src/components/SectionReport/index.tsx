@@ -78,9 +78,7 @@ export function SectionReport({ meta, sections }: SectionReportProps) {
             </div>
           </div>
 
-          <div className="flex-1 overflow-y-auto p-6">
-            <ReportContent meta={meta} sections={sections} />
-          </div>
+          <ReportContent meta={meta} sections={sections} />
         </div>
       </dialog>
     </>

@@ -12,6 +12,7 @@ import { ThemeToggle } from '../ThemeToggle'
 
 import myLogo from '@renderer/assets/logo.png'
 import { LineParameters } from './LineParameters'
+import { useAboutDialog } from '@renderer/hooks/useAboutDialog'
 
 interface HeaderProps {
   handleUndo: () => void
@@ -48,6 +49,7 @@ interface HeaderProps {
   setPoleForCalcReserve: (v: string | null) => void
   sections: Section[]
   IkzSummary: IkzSummary
+  setIsAboutOpen: (v: boolean) => void
 }
 
 export function Header({
@@ -84,9 +86,10 @@ export function Header({
   lineLength,
   loadSummary,
   sections,
-  IkzSummary
+  IkzSummary,
+  setIsAboutOpen
 }: HeaderProps) {
-  const onInfoOpen = () => {}
+  const openAboutDialog = () => setIsAboutOpen(true)
 
   const meta: ReportMeta = {
     title: lineName,
@@ -115,7 +118,7 @@ export function Header({
       />
 
       <div className="flex flex-col gap-1 min-w-30 my-1">
-        <ActionButton icon="ℹ️" onClick={onInfoOpen}>
+        <ActionButton icon="ℹ️" onClick={openAboutDialog}>
           О программе
         </ActionButton>
 
