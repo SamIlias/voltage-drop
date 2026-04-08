@@ -6,7 +6,8 @@ const api = {
   saveSections: (sections: unknown, fileName: string) =>
     ipcRenderer.invoke('sections:save', sections, fileName),
   loadSections: () => ipcRenderer.invoke('sections:load'),
-  printHtml: (html: string) => ipcRenderer.invoke('print:html', html)
+  printHtml: (html: string) => ipcRenderer.invoke('print:html', html),
+  savePdf: (html: string, fileName: string) => ipcRenderer.invoke('save:pdf', html, fileName)
 }
 
 // Use `contextBridge` APIs to expose Electron APIs to

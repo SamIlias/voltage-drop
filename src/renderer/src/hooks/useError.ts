@@ -8,5 +8,5 @@ export function useError(callback: () => void) {
     setError(null)
   }
 
-  return { resetError, error }
+  return { resetError, error, setError }
 }

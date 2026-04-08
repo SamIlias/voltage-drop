@@ -58,6 +58,34 @@ app.whenReady().then(() => {
     }
   })
 
+  ipcMain.handle('save:pdf', async (_, html: string, fileName = 'Новый расчёт') => {
+    const win = new BrowserWindow({
+      show: false,
+      webPreferences: {
+        offscreen: true
+      }
+    })
+
+    await win.loadURL(`data:text/html;charset=utf-8,${encodeURIComponent(html)}`)
+
+    const pdfBuffer = await win.webContents.printToPDF({
+      printBackground: true,
+      preferCSSPageSize: true
+    })
+
+    const { filePath } = await dialog.showSaveDialog({
+      title: 'Сохранить PDF',
+      defaultPath: `${fileName}.pdf`,
+      filters: [{ name: 'PDF', extensions: ['pdf'] }]
+    })
+
+    if (filePath) {
+      fs.writeFileSync(filePath, pdfBuffer)
+    }
+
+    win.close()
+  })
+
   ipcMain.handle('sections:save', async (_event, sections, fileName = 'Новый расчёт') => {
     const { filePath, canceled } = await dialog.showSaveDialog({
       title: 'Сохранить расчёт',

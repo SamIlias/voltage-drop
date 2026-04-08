@@ -2,10 +2,12 @@ import { useRef } from 'react'
 import { ReportContent, SectionReportProps } from './ReportContent'
 import { usePrint } from './hooks/usePrint'
 import logo from '@renderer/assets/logo.png'
+import { usePDF } from './hooks/usePDF'
 
 export function SectionReport({ meta, sections }: SectionReportProps) {
   const dialogRef = useRef<HTMLDialogElement>(null)
   const handlePrint = usePrint()
+  const handleSavePDF = usePDF(meta.title || `Новый расчёт ${meta.date}`)
 
   const open = () => dialogRef.current?.showModal()
   const close = () => dialogRef.current?.close()
@@ -61,6 +63,19 @@ export function SectionReport({ meta, sections }: SectionReportProps) {
               >
                 <PrinterIcon className="w-3.5 h-3.5" />
                 Печать
+              </button>
+
+              <button
+                onClick={() => handleSavePDF(meta, sections)}
+                className="
+                  inline-flex items-center gap-2 px-4 py-1.5
+                  border border-zinc-600 hover:border-zinc-300
+                  text-zinc-200 hover:text-white
+                  font-mono text-[11px] tracking-wider uppercase
+                  transition-colors duration-150 cursor-pointer
+                "
+              >
+                💾 сохранить PDF
               </button>
 
               <button

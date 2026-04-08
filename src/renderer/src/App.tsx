@@ -85,12 +85,15 @@ export default function App() {
     cosPhiNum,
     useKsim
   )
+
+  const { resetError, error, setError } = useError(handleCreateNewComputing)
+
   const { handleLoad, handleSave } = useFileHandlers(
     computedSections,
     pushHistory,
-    lineName || `Новый расчёт`
+    lineName || `Новый расчёт`,
+    setError
   )
-  const { resetError, error } = useError(handleCreateNewComputing)
   const { lineLength } = useLineLength(computedSections)
   const IkzSummary = useShortCircuitCurrent()
 

@@ -4,6 +4,7 @@ interface api {
   saveSections: (sections: unknown, fileName: string) => Promise<void>
   loadSections: () => Promise<unknown>
   printHtml: (html: string) => Promise<void>
+  savePdf: (html: string, fileName: string) => Promise<void>
 }
 
 declare global {
