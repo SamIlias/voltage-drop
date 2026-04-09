@@ -108,10 +108,8 @@ export function Header({
     loadSummary: loadSummary
   }
 
-  // throw new Error()
   return (
     <header className="w-full flex gap-2 items-center px-5 border-b border-(--color-border) min-h-17 justify-around overflow-x-auto">
-      {/* <span className="text-sm font-mono max-w-50">Расчёт параметров линии электропередачи</span> */}
       <img
         src={myLogo}
         alt="Logo"

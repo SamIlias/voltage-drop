@@ -3,6 +3,7 @@ import { join } from 'path'
 import * as fs from 'fs'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
+import { printHtml, savePdf } from './utils'
 
 function createWindow(): void {
   // Create the browser window.
@@ -51,40 +52,16 @@ app.whenReady().then(() => {
 
   ipcMain.handle('print:html', async (_event, html: string) => {
     try {
-      printHtml(html)
+      await printHtml(html)
       return { success: true }
     } catch (err) {
       return { success: false, error: String(err) }
     }
   })
 
-  ipcMain.handle('save:pdf', async (_, html: string, fileName = 'Новый расчёт') => {
-    const win = new BrowserWindow({
-      show: false,
-      webPreferences: {
-        offscreen: true
-      }
-    })
-
-    await win.loadURL(`data:text/html;charset=utf-8,${encodeURIComponent(html)}`)
-
-    const pdfBuffer = await win.webContents.printToPDF({
-      printBackground: true,
-      preferCSSPageSize: true
-    })
-
-    const { filePath } = await dialog.showSaveDialog({
-      title: 'Сохранить PDF',
-      defaultPath: `${fileName}.pdf`,
-      filters: [{ name: 'PDF', extensions: ['pdf'] }]
-    })
-
-    if (filePath) {
-      fs.writeFileSync(filePath, pdfBuffer)
-    }
-
-    win.close()
-  })
+  ipcMain.handle('save:pdf', async (_, html: string, fileName = 'Новый расчёт') =>
+    savePdf(html, fileName)
+  )
 
   ipcMain.handle('sections:save', async (_event, sections, fileName = 'Новый расчёт') => {
     const { filePath, canceled } = await dialog.showSaveDialog({
@@ -133,32 +110,3 @@ app.on('window-all-closed', () => {
     app.quit()
   }
 })
-
-export function printHtml(html: string) {
-  const printWindow = new BrowserWindow({
-    show: false,
-    webPreferences: {
-      offscreen: false,
-      sandbox: false
-    }
-  })
-
-  printWindow.loadURL(`data:text/html;charset=utf-8,${encodeURIComponent(html)}`)
-
-  printWindow.webContents.on('did-finish-load', async () => {
-    try {
-      printWindow.webContents.print(
-        { silent: false, printBackground: true },
-        (success, failureReason) => {
-          if (!success) console.error('Print failed:', failureReason)
-          setTimeout(() => {
-            if (!printWindow.isDestroyed()) printWindow.close()
-          }, 300)
-        }
-      )
-    } catch (e) {
-      console.error('Print error:', e)
-      if (!printWindow.isDestroyed()) printWindow.close()
-    }
-  })
-}

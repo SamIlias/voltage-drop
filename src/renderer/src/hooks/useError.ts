@@ -1,10 +1,10 @@
 import { useState } from 'react'
 
-export function useError(callback: () => void) {
+export function useError(callback?: () => void) {
   const [error, setError] = useState<Error | null>(null)
 
   const resetError = () => {
-    callback()
+    if (callback) callback()
     setError(null)
   }
 

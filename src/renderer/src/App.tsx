@@ -18,6 +18,9 @@ import { useFullWorkCurrent } from './hooks/useFullWorkCurrent'
 import { useShortCircuitCurrent } from './hooks/useShortCircuitCurrent'
 import AboutDialog from './components/AboutDialog'
 import { useAboutDialog } from './hooks/useAboutDialog'
+import { LoaderOverlay } from './components/LoaderOverlay'
+import { useLoader } from './hooks/useLoader'
+import { useEffect } from 'react'
 
 export default function App() {
   const {
@@ -75,6 +78,7 @@ export default function App() {
   )
   const { fullVoltageDrop_pct } = useFullVoltageDrop(computedSections)
   const { fullWorkCurrent } = useFullWorkCurrent(computedSections)
+  const { isLoading, setIsLoading } = useLoader()
 
   const dUallowNumPercent = parseFloat(dUallowPercent)
   const dUAllowNum = (Unom220 * dUallowNumPercent) / 100
@@ -83,16 +87,18 @@ export default function App() {
     poleForCalcReserve,
     dUAllowNum,
     cosPhiNum,
-    useKsim
+    useKsim,
+    k_heatDecNum
   )
 
-  const { resetError, error, setError } = useError(handleCreateNewComputing)
+  const { resetError, error, setError } = useError()
 
   const { handleLoad, handleSave } = useFileHandlers(
     computedSections,
     pushHistory,
     lineName || `Новый расчёт`,
-    setError
+    setError,
+    setIsLoading
   )
   const { lineLength } = useLineLength(computedSections)
   const IkzSummary = useShortCircuitCurrent()
@@ -101,6 +107,8 @@ export default function App() {
     <ErrorBoundary FallbackComponent={ErrorFallback}>
       <div className={`h-screen w-screen flex flex-col font-mono min-w-11 overflow-auto`}>
         {error && <ErrorMessage error={error} reset={resetError} />}
+
+        <LoaderOverlay isLoading={isLoading} />
 
         <AboutDialog isOpen={isAboutOpen} onClose={() => setIsAboutOpen(false)} />
 

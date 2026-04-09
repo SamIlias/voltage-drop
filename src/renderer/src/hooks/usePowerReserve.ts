@@ -8,7 +8,8 @@ export function usePowerReserve(
   poleForCalcReserve: string | null,
   dUAllow: number,
   cosPhi: number,
-  useKsim: boolean
+  useKsim: boolean,
+  k_heatDec: number
 ) {
   const powerReserve = useMemo(() => {
     if (!poleForCalcReserve) return null
@@ -41,7 +42,7 @@ export function usePowerReserve(
       const mid = (left + right) / 2
 
       const testSections = withAddedLoad(mid)
-      const results = calculateAllSections(testSections, cosPhi, useKsim)
+      const results = calculateAllSections(testSections, cosPhi, useKsim, k_heatDec)
 
       const dU = getTotalVoltageDrop(results)
 

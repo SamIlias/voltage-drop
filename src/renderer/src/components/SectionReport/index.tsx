@@ -3,11 +3,15 @@ import { ReportContent, SectionReportProps } from './ReportContent'
 import { usePrint } from './hooks/usePrint'
 import logo from '@renderer/assets/logo.png'
 import { usePDF } from './hooks/usePDF'
+import { useLoader } from '@renderer/hooks/useLoader'
+import { LoaderOverlay } from '../LoaderOverlay'
 
 export function SectionReport({ meta, sections }: SectionReportProps) {
+  const { isLoading, setIsLoading } = useLoader()
+
   const dialogRef = useRef<HTMLDialogElement>(null)
-  const handlePrint = usePrint()
-  const handleSavePDF = usePDF(meta.title || `Новый расчёт ${meta.date}`)
+  const handlePrint = usePrint(setIsLoading)
+  const handleSavePDF = usePDF(setIsLoading)
 
   const open = () => dialogRef.current?.showModal()
   const close = () => dialogRef.current?.close()
@@ -37,6 +41,8 @@ export function SectionReport({ meta, sections }: SectionReportProps) {
           min-w-screen backdrop:bg-black/60 backdrop:backdrop-blur-sm
         "
       >
+        <LoaderOverlay isLoading={isLoading} />
+
         <div className="flex flex-col min-h-[90vh] bg-zinc-50 border-2 border-zinc-800 shadow-2xl">
           <div className="flex items-center justify-between px-5 py-3 bg-zinc-900 shrink-0">
             <div className="flex items-center gap-2">
