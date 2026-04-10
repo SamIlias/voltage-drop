@@ -24,7 +24,7 @@ interface ResultsBlockProps {
   setK_heatDec: (v: string) => void
   loadSummary: LoadSummary
   sections: Section[]
-  IkzSummary: IkzSummary
+  IkzSummary: IkzSummary | null
 }
 
 export function ResultsBlock({
@@ -150,21 +150,21 @@ export function ResultsBlock({
       <div className="flex flex-col gap-2">
         <ResultBadge
           label="Ток КЗ 3ф"
-          value={IkzSummary.Ikz3}
+          value={IkzSummary?.Ikz3 || null}
           unit="A"
           status={ResultStatus.DEFAULT}
         />
 
         <ResultBadge
           label="Ток КЗ 2ф"
-          value={IkzSummary.Ikz2}
+          value={IkzSummary?.Ikz2 || null}
           unit="A"
           status={ResultStatus.DEFAULT}
         />
 
         <ResultBadge
           label="Ток КЗ 1ф"
-          value={IkzSummary.Ikz1}
+          value={IkzSummary?.Ikz1 || null}
           unit="A"
           status={ResultStatus.DEFAULT}
         />

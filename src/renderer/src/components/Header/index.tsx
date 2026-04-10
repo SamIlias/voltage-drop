@@ -12,7 +12,6 @@ import { ThemeToggle } from '../ThemeToggle'
 
 import myLogo from '@renderer/assets/logo.png'
 import { LineParameters } from './LineParameters'
-import { useAboutDialog } from '@renderer/hooks/useAboutDialog'
 
 interface HeaderProps {
   handleUndo: () => void
@@ -37,7 +36,7 @@ interface HeaderProps {
   setK_heatDec: (v: string) => void
   transformerPower: string
   setTransformerPower: (v: TransformerPower) => void
-  transformerScheme: string
+  transformerScheme: TransformerScheme
   setTransformerScheme: (v: TransformerScheme) => void
   transformerLoad: number | null
   voltageDrop: number | null
@@ -48,7 +47,7 @@ interface HeaderProps {
   poleForCalcReserve: string | null
   setPoleForCalcReserve: (v: string | null) => void
   sections: Section[]
-  IkzSummary: IkzSummary
+  IkzSummary: IkzSummary | null
   setIsAboutOpen: (v: boolean) => void
 }
 

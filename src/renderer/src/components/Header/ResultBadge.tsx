@@ -1,4 +1,4 @@
-import { statusCls } from '@renderer/constants'
+import { statusCls } from '@renderer/assets/common'
 import { ResultStatus } from '@renderer/types'
 
 interface ResultBadgeProps {

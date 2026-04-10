@@ -4,6 +4,7 @@ import {
   TransformerPower,
   Unom220,
   Usource230,
+  Usource400,
   WIRE_RESISTANCE_OM_KM
 } from '@renderer/constants'
 import { LoadType, PhaseCount, Section, SectionResults } from '@renderer/types'
@@ -238,4 +239,16 @@ export function calculateUpstreamPass(
   }
 
   return results
+}
+
+export function calcIkz3(Rl: number, Xl: number, zt: number): number {
+  return Usource400 / (Math.sqrt(3) * (Math.sqrt(Rl ** 2 + Xl ** 2) + zt))
+}
+
+export function calcIkz2(Ikz3: number): number {
+  return Ikz3 * 0.866
+}
+
+export function calcIkz1(Rl: number, Xl: number, zt0: number): number {
+  return Usource230 / (Math.sqrt((2 * Rl) ** 2 + Xl ** 2) + zt0 / 3)
 }

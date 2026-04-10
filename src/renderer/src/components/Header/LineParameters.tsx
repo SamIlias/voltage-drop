@@ -5,6 +5,8 @@ import { DUPercentField } from '../validatedFields/DUPercentField'
 import { TRANSFORMER_POWERS, TransformerPower, TransformerScheme } from '@renderer/constants'
 import { useTheme } from '@renderer/providers/theme/useTheme'
 import { Theme } from '@renderer/providers/theme/types'
+import { POWER_SCHEMES } from '@renderer/constants/transformers'
+import { ChangeEvent } from 'react'
 
 interface LineParamsProps {
   lineName: string
@@ -17,7 +19,7 @@ interface LineParamsProps {
   setDUallow: (v: string) => void
   transformerPower: string
   setTransformerPower: (v: TransformerPower) => void
-  transformerScheme: string
+  transformerScheme: TransformerScheme
   setTransformerScheme: (v: TransformerScheme) => void
 }
 
@@ -36,6 +38,17 @@ export function LineParameters({
   setTransformerScheme
 }: LineParamsProps) {
   const { theme } = useTheme()
+
+  const availableSchemes = POWER_SCHEMES[transformerPower]
+
+  const handlePowerChange = (e: ChangeEvent<HTMLSelectElement>) => {
+    const newPower = e.target.value as TransformerPower
+    setTransformerPower(newPower)
+
+    if (!POWER_SCHEMES[newPower].includes(transformerScheme)) {
+      setTransformerScheme(POWER_SCHEMES[newPower][0])
+    }
+  }
 
   return (
     <div className="flex flex-col gap-1 items-start my-2 ">
@@ -66,7 +79,7 @@ export function LineParameters({
           <select
             className={`${inputCls} text-xs w-25 cursor-pointer`}
             value={transformerPower}
-            onChange={(e) => setTransformerPower(e.target.value as TransformerPower)}
+            onChange={handlePowerChange}
           >
             {TRANSFORMER_POWERS.map((p) => (
               <option key={p} value={p}>
@@ -82,8 +95,11 @@ export function LineParameters({
             value={transformerScheme}
             onChange={(e) => setTransformerScheme(e.target.value as TransformerScheme)}
           >
-            <option value={TransformerScheme.SS}>{TransformerScheme.SS}</option>
-            <option value={TransformerScheme.TS}>{TransformerScheme.TS}</option>
+            {availableSchemes.map((s) => (
+              <option key={s} value={s}>
+                {s}
+              </option>
+            ))}
           </select>
         </FieldLabel>
       </div>

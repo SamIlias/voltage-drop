@@ -3,7 +3,8 @@ import { countByType, getStatusByGreater, getStatusByLower, powerByType } from '
 import { PhaseLines } from './PhaseLines'
 import { LoadInfo } from './LoadInfo'
 import { LOAD_STYLES } from '@renderer/constants/loadStyles'
-import { statusCls, UmaxAllow, UminAllow } from '@renderer/constants'
+import { UmaxAllow, UminAllow } from '@renderer/constants'
+import { statusCls } from '@renderer/assets/common'
 
 interface SchemaNodeProps {
   section: Section | null // null = source node

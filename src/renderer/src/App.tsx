@@ -20,7 +20,6 @@ import AboutDialog from './components/AboutDialog'
 import { useAboutDialog } from './hooks/useAboutDialog'
 import { LoaderOverlay } from './components/LoaderOverlay'
 import { useLoader } from './hooks/useLoader'
-import { useEffect } from 'react'
 
 export default function App() {
   const {
@@ -100,8 +99,13 @@ export default function App() {
     setError,
     setIsLoading
   )
-  const { lineLength } = useLineLength(computedSections)
-  const IkzSummary = useShortCircuitCurrent()
+  const { lineLength_m } = useLineLength(computedSections)
+  const IkzSummary = useShortCircuitCurrent(
+    transformerPower,
+    transformerScheme,
+    fullLineResistance,
+    lineLength_m
+  )
 
   return (
     <ErrorBoundary FallbackComponent={ErrorFallback}>
@@ -141,7 +145,7 @@ export default function App() {
           voltageDrop={fullVoltageDrop_pct}
           powerReserve={powerReserve}
           fullWorkCurrent={fullWorkCurrent}
-          lineLength={lineLength}
+          lineLength={lineLength_m}
           loadSummary={fullLoadSummary}
           poleForCalcReserve={poleForCalcReserve}
           setPoleForCalcReserve={setPoleForCalcReserve}
