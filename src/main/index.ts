@@ -63,22 +63,24 @@ app.whenReady().then(() => {
     savePdf(html, fileName)
   )
 
-  ipcMain.handle('sections:save', async (_event, sections, fileName = 'Новый расчёт') => {
+  ipcMain.handle('data:save', async (_event, data, fileName = 'Новый расчёт') => {
     const { filePath, canceled } = await dialog.showSaveDialog({
       title: 'Сохранить расчёт',
       defaultPath: `${fileName}.json`,
       filters: [{ name: 'JSON', extensions: ['json'] }]
     })
+
     if (canceled || !filePath) return { success: false }
+
     try {
-      fs.writeFileSync(filePath, JSON.stringify(sections, null, 2), 'utf-8')
+      fs.writeFileSync(filePath, JSON.stringify(data, null, 2), 'utf-8')
       return { success: true }
     } catch (err) {
       return { success: false, error: String(err) }
     }
   })
 
-  ipcMain.handle('sections:load', async () => {
+  ipcMain.handle('data:load', async () => {
     const { filePaths, canceled } = await dialog.showOpenDialog({
       title: 'Загрузить расчёт',
       filters: [{ name: 'JSON', extensions: ['json'] }],

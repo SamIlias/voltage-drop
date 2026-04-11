@@ -2,7 +2,7 @@ import { render, screen, fireEvent } from '@testing-library/react'
 import App from './App'
 import { ThemeProvider } from './providers/theme/ThemeProvider'
 
-const loadSectionsMock = jest.fn()
+const loadDataMock = jest.fn()
 const AppTest = () => {
   return (
     <ThemeProvider>
@@ -13,8 +13,8 @@ const AppTest = () => {
 
 beforeEach(() => {
   window.api = {
-    saveSections: jest.fn(),
-    loadSections: loadSectionsMock
+    saveData: jest.fn(),
+    loadData: loadDataMock
   } as any
 })
 
@@ -54,20 +54,20 @@ test('removes section', () => {
   expect(sections.length).toBe(1)
 })
 
-test('calls saveSections API', async () => {
+test('calls saveData API', async () => {
   render(<AppTest />)
 
   const saveButton = screen.getByText('Сохранить')
 
   fireEvent.click(saveButton)
 
-  expect(window.api.saveSections).toHaveBeenCalled()
+  expect(window.api.saveData).toHaveBeenCalled()
 })
 
 test('loads sections from API', async () => {
   const mockSections = [{ id: 1, loads_kw: [] }]
 
-  loadSectionsMock.mockResolvedValue(mockSections)
+  loadDataMock.mockResolvedValue(mockSections)
 
   render(<AppTest />)
 
@@ -75,7 +75,7 @@ test('loads sections from API', async () => {
 
   fireEvent.click(loadButton)
 
-  expect(window.api.loadSections).toHaveBeenCalled()
+  expect(window.api.loadData).toHaveBeenCalled()
 })
 
 test('quick fill adds multiple sections', () => {

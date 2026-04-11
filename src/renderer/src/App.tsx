@@ -22,31 +22,33 @@ import { LoaderOverlay } from './components/LoaderOverlay'
 import { useLoader } from './hooks/useLoader'
 
 export default function App() {
-  const {
-    lineName,
-    setLineName,
-    calcDate,
-    setCalcDate,
-    cosPhi,
-    setCosPhiStr,
-    dUallowPercent,
-    setDUallow,
-    useKsim,
-    setUseKsim,
-    transformerPower,
-    setTransformerPower,
-    transformerScheme,
-    setTransformerScheme,
-    poleForCalcReserve,
-    setPoleForCalcReserve,
-    k_heatDec,
-    setK_heatDec
-  } = useAppSettings()
+  // const {
+  //   lineName,
+  //   setLineName,
+  //   calcDate,
+  //   setCalcDate,
+  //   cosPhi,
+  //   setCosPhiStr,
+  //   dUallowPercent,
+  //   setDUallow,
+  //   useKsim,
+  //   setUseKsim,
+  //   transformerPower,
+  //   setTransformerPower,
+  //   transformerScheme,
+  //   setTransformerScheme,
+  //   poleForCalcReserve,
+  //   setPoleForCalcReserve,
+  //   k_heatDec,
+  //   setK_heatDec
+  // } = useAppSettings()
+
+  const appSettings = useAppSettings()
 
   const { isAboutOpen, setIsAboutOpen } = useAboutDialog()
 
-  const cosPhiNum = parseFloat(cosPhi) || 0.9
-  const k_heatDecNum = parseFloat(k_heatDec) || 1
+  const cosPhiNum = parseFloat(appSettings.cosPhi) || 0.9
+  const k_heatDecNum = parseFloat(appSettings.k_heatDec) || 1
 
   const {
     computedSections,
@@ -68,25 +70,25 @@ export default function App() {
     handleCreateNewComputing,
     fullLoadSummary,
     fullLineResistance
-  } = useSections(cosPhiNum, useKsim, k_heatDecNum)
+  } = useSections(cosPhiNum, appSettings.useKsim, k_heatDecNum)
   const { transformerLoad } = useTransformerLoad(
-    transformerPower,
+    appSettings.transformerPower,
     computedSections,
-    useKsim,
+    appSettings.useKsim,
     k_heatDecNum
   )
   const { fullVoltageDrop_pct } = useFullVoltageDrop(computedSections)
   const { fullWorkCurrent } = useFullWorkCurrent(computedSections)
   const { isLoading, setIsLoading } = useLoader()
 
-  const dUallowNumPercent = parseFloat(dUallowPercent)
+  const dUallowNumPercent = parseFloat(appSettings.dUallowPercent)
   const dUAllowNum = (Unom220 * dUallowNumPercent) / 100
   const { powerReserve } = usePowerReserve(
     computedSections,
-    poleForCalcReserve,
+    appSettings.poleForCalcReserve,
     dUAllowNum,
     cosPhiNum,
-    useKsim,
+    appSettings.useKsim,
     k_heatDecNum
   )
 
@@ -95,14 +97,14 @@ export default function App() {
   const { handleLoad, handleSave } = useFileHandlers(
     computedSections,
     pushHistory,
-    lineName || `Новый расчёт`,
     setError,
-    setIsLoading
+    setIsLoading,
+    appSettings
   )
   const { lineLength_m } = useLineLength(computedSections)
   const IkzSummary = useShortCircuitCurrent(
-    transformerPower,
-    transformerScheme,
+    appSettings.transformerPower,
+    appSettings.transformerScheme,
     fullLineResistance,
     lineLength_m
   )
@@ -124,31 +126,31 @@ export default function App() {
           handleSave={handleSave}
           handleLoad={handleLoad}
           onCreateNewComputation={handleCreateNewComputing}
-          lineName={lineName}
-          setLineName={setLineName}
-          calcDate={calcDate}
-          setCalcDate={setCalcDate}
-          cosPhi={cosPhi}
-          setCosPhi={setCosPhiStr}
+          lineName={appSettings.lineName}
+          setLineName={appSettings.setLineName}
+          calcDate={appSettings.calcDate}
+          setCalcDate={appSettings.setCalcDate}
+          cosPhi={appSettings.cosPhi}
+          setCosPhi={appSettings.setCosPhiStr}
           dUallowNumPercent={dUallowNumPercent}
-          dUallowPercent={dUallowPercent}
-          setDUallow={setDUallow}
-          useKsim={useKsim}
-          setUseKsim={setUseKsim}
-          k_heatDec={k_heatDec}
-          setK_heatDec={setK_heatDec}
-          transformerPower={transformerPower}
-          setTransformerPower={setTransformerPower}
-          transformerScheme={transformerScheme}
-          setTransformerScheme={setTransformerScheme}
+          dUallowPercent={appSettings.dUallowPercent}
+          setDUallow={appSettings.setDUallow}
+          useKsim={appSettings.useKsim}
+          setUseKsim={appSettings.setUseKsim}
+          k_heatDec={appSettings.k_heatDec}
+          setK_heatDec={appSettings.setK_heatDec}
+          transformerPower={appSettings.transformerPower}
+          setTransformerPower={appSettings.setTransformerPower}
+          transformerScheme={appSettings.transformerScheme}
+          setTransformerScheme={appSettings.setTransformerScheme}
           transformerLoad={transformerLoad}
           voltageDrop={fullVoltageDrop_pct}
           powerReserve={powerReserve}
           fullWorkCurrent={fullWorkCurrent}
           lineLength={lineLength_m}
           loadSummary={fullLoadSummary}
-          poleForCalcReserve={poleForCalcReserve}
-          setPoleForCalcReserve={setPoleForCalcReserve}
+          poleForCalcReserve={appSettings.poleForCalcReserve}
+          setPoleForCalcReserve={appSettings.setPoleForCalcReserve}
           sections={computedSections}
           IkzSummary={IkzSummary}
           setIsAboutOpen={setIsAboutOpen}

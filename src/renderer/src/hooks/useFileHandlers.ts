@@ -1,16 +1,34 @@
-import { isSectionArray, Section } from '@renderer/types'
+import { isSavedData, SavedData, Section } from '@renderer/types'
+import { AppSettings } from './useAppSettings'
 
 export function useFileHandlers(
   computedSections: Section[],
   pushHistory,
-  lineName: string,
   setError: (v: Error | null) => void,
-  setIsLoading: (v: boolean) => void
+  setIsLoading: (v: boolean) => void,
+  appSettings: AppSettings
 ) {
   const handleSave = async () => {
     try {
       setIsLoading(true)
-      await window.api.saveSections(computedSections, lineName)
+
+      const payload: SavedData = {
+        version: 1,
+        sections: computedSections,
+        meta: {
+          lineName: appSettings.lineName,
+          calcDate: appSettings.calcDate,
+          cosPhi: appSettings.cosPhi,
+          dUallowPercent: appSettings.dUallowPercent,
+          useKsim: appSettings.useKsim,
+          transformerPower: appSettings.transformerPower,
+          transformerScheme: appSettings.transformerScheme,
+          poleForCalcReserve: appSettings.poleForCalcReserve,
+          k_heatDec: appSettings.k_heatDec
+        }
+      }
+
+      await window.api.saveData(payload, appSettings.lineName || 'Новый расчёт')
     } finally {
       setIsLoading(false)
     }
@@ -20,22 +38,33 @@ export function useFileHandlers(
     setIsLoading(true)
 
     try {
-      const data = await window.api.loadSections()
+      const data = await window.api.loadData()
 
-      if (data === null) {
+      if (isSavedData(data)) {
+        pushHistory(data.sections)
+
+        const m = data.meta
+
+        appSettings.setLineName(m.lineName)
+        appSettings.setCalcDate(m.calcDate)
+        appSettings.setCosPhiStr(m.cosPhi)
+        appSettings.setDUallow(m.dUallowPercent)
+        appSettings.setUseKsim(m.useKsim)
+        appSettings.setTransformerPower(m.transformerPower)
+        appSettings.setTransformerScheme(m.transformerScheme)
+        appSettings.setPoleForCalcReserve(m.poleForCalcReserve)
+        appSettings.setK_heatDec(m.k_heatDec)
+
         return
       }
 
-      if (isSectionArray(data)) {
-        pushHistory(data)
-      } else {
-        setError(new Error('Файл повреждён или имеет неверный формат'))
-      }
-    } catch (e) {
+      setError(new Error('Файл повреждён или имеет неверный формат'))
+    } catch {
       setError(new Error('Ошибка при загрузке файла'))
     } finally {
       setIsLoading(false)
     }
   }
+
   return { handleLoad, handleSave }
 }

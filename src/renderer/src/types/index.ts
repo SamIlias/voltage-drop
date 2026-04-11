@@ -1,4 +1,9 @@
-import { SECTION_RESULT_LABEL, WIRE_MARKS } from '@renderer/constants'
+import {
+  SECTION_RESULT_LABEL,
+  TransformerPower,
+  TransformerScheme,
+  WIRE_MARKS
+} from '@renderer/constants'
 export type { TransformerPower } from '@renderer/constants'
 
 export enum LoadType {
@@ -50,6 +55,22 @@ export interface IkzSummary {
   Ikz1: number | null
 }
 
+export interface SavedData {
+  version: 1
+  sections: Section[]
+  meta: {
+    lineName: string
+    calcDate: string
+    cosPhi: string
+    dUallowPercent: string
+    useKsim: boolean
+    transformerPower: TransformerPower
+    transformerScheme: TransformerScheme
+    poleForCalcReserve: string | null
+    k_heatDec: string
+  }
+}
+
 export function isSectionArray(data: unknown): data is Section[] {
   return (
     Array.isArray(data) &&
@@ -68,5 +89,15 @@ export function isSectionArray(data: unknown): data is Section[] {
         typeof (item as any).results === 'object' &&
         (item as any).results !== null
     )
+  )
+}
+
+export function isSavedData(data: unknown): data is SavedData {
+  return (
+    typeof data === 'object' &&
+    data !== null &&
+    'sections' in data &&
+    'meta' in data &&
+    isSectionArray((data as any).sections)
   )
 }

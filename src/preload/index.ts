@@ -3,9 +3,8 @@ import { electronAPI } from '@electron-toolkit/preload'
 
 // Custom APIs for renderer
 const api = {
-  saveSections: (sections: unknown, fileName: string) =>
-    ipcRenderer.invoke('sections:save', sections, fileName),
-  loadSections: () => ipcRenderer.invoke('sections:load'),
+  saveData: (data: unknown, fileName?: string) => ipcRenderer.invoke('data:save', data, fileName),
+  loadData: () => ipcRenderer.invoke('data:load'),
   printHtml: (html: string) => ipcRenderer.invoke('print:html', html),
   savePdf: (html: string, fileName: string) => ipcRenderer.invoke('save:pdf', html, fileName)
 }

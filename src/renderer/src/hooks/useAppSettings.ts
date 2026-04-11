@@ -1,6 +1,27 @@
 import { TransformerPower, TransformerScheme } from '@renderer/constants'
 import { useState } from 'react'
 
+export interface AppSettings {
+  lineName: string
+  setLineName: (v: string) => void
+  calcDate: string
+  setCalcDate: (v: string) => void
+  cosPhi: string
+  setCosPhiStr: (v: string) => void
+  dUallowPercent: string
+  setDUallow: (v: string) => void
+  useKsim: boolean
+  setUseKsim: (v: boolean) => void
+  transformerPower: TransformerPower
+  setTransformerPower: (v: TransformerPower) => void
+  transformerScheme: TransformerScheme
+  setTransformerScheme: (v: TransformerScheme) => void
+  poleForCalcReserve: string | null
+  setPoleForCalcReserve: (v: string | null) => void
+  k_heatDec: string
+  setK_heatDec: (v: string) => void
+}
+
 export function useAppSettings() {
   const [lineName, setLineName] = useState('')
   const [calcDate, setCalcDate] = useState(() => new Date().toISOString().slice(0, 10))
