@@ -98,7 +98,7 @@ export default function App() {
 
         <AboutDialog isOpen={isAboutOpen} onClose={() => setIsAboutOpen(false)} />
 
-        <Header
+        {/* <Header
           handleUndo={undo}
           handleRedo={redo}
           canRedo={canRedo}
@@ -134,6 +134,47 @@ export default function App() {
           sections={computedSections}
           IkzSummary={IkzSummary}
           setIsAboutOpen={setIsAboutOpen}
+        /> */}
+        <Header
+          history={{
+            undo,
+            redo,
+            canUndo,
+            canRedo
+          }}
+          file={{
+            handleSave,
+            handleLoad,
+            onCreateNew: handleCreateNewComputing
+          }}
+          settings={appSettings}
+          electrical={{
+            cosPhiNum,
+            dUallowNumPercent,
+            useKsim: appSettings.useKsim,
+            k_heatDec: appSettings.k_heatDec
+          }}
+          transformer={{
+            power: appSettings.transformerPower,
+            scheme: appSettings.transformerScheme,
+            load: transformerLoad
+          }}
+          metrics={{
+            voltageDrop: fullVoltageDrop_pct,
+            powerReserve,
+            fullWorkCurrent,
+            lineLength: lineLength_m,
+            loadSummary: fullLoadSummary,
+            IkzSummary
+          }}
+          sections={{
+            data: computedSections,
+            poleForCalcReserve: appSettings.poleForCalcReserve,
+            setPoleForCalcReserve: appSettings.setPoleForCalcReserve
+          }}
+          ui={{
+            setIsAboutOpen
+          }}
         />
         <Schema sections={computedSections} activeId={activeIdx} onActivate={setActiveId} />
         <QuickFill onApply={applyQuickFill(sections[sections.length - 1])} />

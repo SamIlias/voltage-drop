@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useReducer, useRef, useState } from 'react'
-import { LoadType, PhaseCount, Section, WireMark } from '@renderer/types'
+import { LoadType, PhaseCount, Section } from '@renderer/types'
 import { mkSection } from '@renderer/utils'
 import { calculateAllSections, incrementPoleNumber } from '@renderer/utils'
 import { WIRE_MARKS } from '@renderer/constants'
@@ -7,6 +7,7 @@ import { historyReducer } from '@renderer/reducers/historyReducer'
 import { validateLoadPower } from '@renderer/utils/validation'
 import { getLoadSummary } from '@renderer/utils/electricCalc'
 import { getLineResistance } from '@renderer/utils/sections'
+import { WireMark } from '@renderer/constants/wires'
 
 export function useSections(cosPhiNum: number, useKsim: boolean, k_heatDecNum: number) {
   const [activeIdx, setActiveId] = useState<number>(1)

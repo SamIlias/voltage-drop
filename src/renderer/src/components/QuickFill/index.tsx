@@ -1,8 +1,9 @@
 import { PHASE_OPTIONS, WIRE_MARKS } from '@renderer/constants'
-import { PhaseCount, WireMark } from '@renderer/types'
+import { PhaseCount } from '@renderer/types'
 import { useState } from 'react'
 import { FieldLabel } from '../FieldLabel'
 import { inputCls } from '@renderer/assets/common'
+import { WireMark } from '@renderer/constants/wires'
 
 interface QuickFillProps {
   onApply: (

@@ -12,99 +12,157 @@ import { ThemeToggle } from '../ThemeToggle'
 
 import myLogo from '@renderer/assets/logo.png'
 import { LineParameters } from './LineParameters'
+import { AppSettings } from '@renderer/hooks/useAppSettings'
 
-interface HeaderProps {
-  handleUndo: () => void
-  handleRedo: () => void
-  canRedo: boolean
-  canUndo: boolean
-  handleLoad: () => void
-  handleSave: () => void
-  onCreateNewComputation: () => void
-  lineName: string
-  setLineName: (v: string) => void
-  calcDate: string
-  setCalcDate: (v: string) => void
-  cosPhi: string
-  setCosPhi: (v: string) => void
-  dUallowNumPercent: number
-  dUallowPercent: string
-  setDUallow: (v: string) => void
-  useKsim: boolean
-  setUseKsim: (v: boolean) => void
-  k_heatDec: string
-  setK_heatDec: (v: string) => void
-  transformerPower: string
-  setTransformerPower: (v: TransformerPower) => void
-  transformerScheme: TransformerScheme
-  setTransformerScheme: (v: TransformerScheme) => void
-  transformerLoad: number | null
-  voltageDrop: number | null
-  powerReserve: number | null
-  fullWorkCurrent: number | null
-  lineLength: number | null
-  loadSummary: LoadSummary
-  poleForCalcReserve: string | null
-  setPoleForCalcReserve: (v: string | null) => void
-  sections: Section[]
-  IkzSummary: IkzSummary | null
-  setIsAboutOpen: (v: boolean) => void
+// interface HeaderProps {
+//   handleUndo: () => void
+//   handleRedo: () => void
+//   canRedo: boolean
+//   canUndo: boolean
+//   handleLoad: () => void
+//   handleSave: () => void
+//   onCreateNewComputation: () => void
+//   lineName: string
+//   setLineName: (v: string) => void
+//   calcDate: string
+//   setCalcDate: (v: string) => void
+//   cosPhi: string
+//   setCosPhi: (v: string) => void
+//   dUallowNumPercent: number
+//   dUallowPercent: string
+//   setDUallow: (v: string) => void
+//   useKsim: boolean
+//   setUseKsim: (v: boolean) => void
+//   k_heatDec: string
+//   setK_heatDec: (v: string) => void
+//   transformerPower: string
+//   setTransformerPower: (v: TransformerPower) => void
+//   transformerScheme: TransformerScheme
+//   setTransformerScheme: (v: TransformerScheme) => void
+//   transformerLoad: number | null
+//   voltageDrop: number | null
+//   powerReserve: number | null
+//   fullWorkCurrent: number | null
+//   lineLength: number | null
+//   loadSummary: LoadSummary
+//   poleForCalcReserve: string | null
+//   setPoleForCalcReserve: (v: string | null) => void
+//   sections: Section[]
+//   IkzSummary: IkzSummary | null
+//   setIsAboutOpen: (v: boolean) => void
+// }
+
+type HeaderProps = {
+  history: {
+    undo: () => void
+    redo: () => void
+    canUndo: boolean
+    canRedo: boolean
+  }
+
+  file: {
+    handleSave: () => void
+    handleLoad: () => void
+    onCreateNew: () => void
+  }
+
+  settings: AppSettings
+
+  electrical: {
+    cosPhiNum: number
+    dUallowNumPercent: number
+    useKsim: boolean
+    k_heatDec: string
+  }
+
+  transformer: {
+    power: TransformerPower
+    scheme: TransformerScheme
+    load: number | null
+  }
+
+  metrics: {
+    voltageDrop: number | null
+    powerReserve: number | null
+    fullWorkCurrent: number | null
+    lineLength: number
+    loadSummary: any
+    IkzSummary: any
+  }
+
+  sections: {
+    data: Section[]
+    poleForCalcReserve: string | null
+    setPoleForCalcReserve: (v: string | null) => void
+  }
+
+  ui: {
+    setIsAboutOpen: (v: boolean) => void
+  }
 }
 
 export function Header({
-  handleUndo,
-  handleRedo,
-  canRedo,
-  canUndo,
-  handleLoad,
-  handleSave,
-  onCreateNewComputation,
-  lineName,
-  setLineName,
-  calcDate,
-  setCalcDate,
-  cosPhi,
-  setCosPhi,
-  dUallowPercent,
-  dUallowNumPercent,
-  setDUallow,
-  useKsim,
-  setUseKsim,
-  k_heatDec,
-  setK_heatDec,
-  transformerPower,
-  setTransformerPower,
-  transformerScheme,
-  setTransformerScheme,
-  transformerLoad,
-  voltageDrop,
-  powerReserve,
-  fullWorkCurrent,
-  poleForCalcReserve,
-  setPoleForCalcReserve,
-  lineLength,
-  loadSummary,
+  // handleUndo,
+  // handleRedo,
+  // canRedo,
+  // canUndo,
+  // handleLoad,
+  // handleSave,
+  // onCreateNewComputation,
+  // lineName,
+  // setLineName,
+  // calcDate,
+  // setCalcDate,
+  // cosPhi,
+  // setCosPhi,
+  // dUallowPercent,
+  // dUallowNumPercent,
+  // setDUallow,
+  // useKsim,
+  // setUseKsim,
+  // k_heatDec,
+  // setK_heatDec,
+  // transformerPower,
+  // setTransformerPower,
+  // transformerScheme,
+  // setTransformerScheme,
+  // transformerLoad,
+  // voltageDrop,
+  // powerReserve,
+  // fullWorkCurrent,
+  // poleForCalcReserve,
+  // setPoleForCalcReserve,
+  // lineLength,
+  // loadSummary,
+  // sections,
+  // IkzSummary,
+  // setIsAboutOpen
+  history,
+  metrics,
+  electrical,
+  file,
   sections,
-  IkzSummary,
-  setIsAboutOpen
+  settings,
+  transformer,
+  ui
 }: HeaderProps) {
-  const openAboutDialog = () => setIsAboutOpen(true)
+  const openAboutDialog = () => ui.setIsAboutOpen(true)
 
   const meta: ReportMeta = {
-    title: lineName,
-    date: calcDate,
+    title: settings.lineName,
+    date: settings.calcDate,
 
-    transformerPower_kva: transformerPower,
-    transformerScheme: transformerScheme,
-    transformerLoad: transformerLoad,
+    transformerPower_kva: transformer.power,
+    transformerScheme: transformer.scheme,
+    transformerLoad: transformer.load,
 
-    fullWorkCurrent: fullWorkCurrent,
-    voltageDrop_v: voltageDrop ? (voltageDrop * Unom220) / 100 : null,
-    fullLength: lineLength || null,
-    cosPhi: cosPhi,
+    fullWorkCurrent: metrics.fullWorkCurrent,
+    voltageDrop_v: metrics.voltageDrop ? (metrics.voltageDrop * Unom220) / 100 : null,
+    fullLength: metrics.lineLength || null,
+    cosPhi: settings.cosPhi,
 
-    IkzSummary: IkzSummary,
-    loadSummary: loadSummary
+    IkzSummary: metrics.IkzSummary,
+    loadSummary: metrics.loadSummary
   }
 
   return (
@@ -120,15 +178,15 @@ export function Header({
           О программе
         </ActionButton>
 
-        <ActionButton icon="📂" onClick={handleLoad}>
+        <ActionButton icon="📂" onClick={file.handleLoad}>
           Загрузить
         </ActionButton>
 
-        <ActionButton icon="️📝" onClick={onCreateNewComputation}>
+        <ActionButton icon="️📝" onClick={file.onCreateNew}>
           Новый расчёт
         </ActionButton>
 
-        <ActionButton icon="💾" variant="success" onClick={handleSave}>
+        <ActionButton icon="💾" variant="success" onClick={file.handleSave}>
           Сохранить
         </ActionButton>
       </div>
@@ -136,57 +194,67 @@ export function Header({
       <VDivider />
 
       <LineParameters
-        lineName={lineName}
-        setLineName={setLineName}
-        calcDate={calcDate}
-        setCalcDate={setCalcDate}
-        cosPhi={cosPhi}
-        setCosPhi={setCosPhi}
-        dUallowPercent={dUallowPercent}
-        setDUallow={setDUallow}
-        transformerPower={transformerPower}
-        setTransformerPower={setTransformerPower}
-        transformerScheme={transformerScheme}
-        setTransformerScheme={setTransformerScheme}
+        lineName={settings.lineName}
+        setLineName={settings.setLineName}
+        calcDate={settings.calcDate}
+        setCalcDate={settings.setCalcDate}
+        cosPhi={settings.cosPhi}
+        setCosPhi={settings.setCosPhiStr}
+        dUallowPercent={settings.dUallowPercent}
+        setDUallow={settings.setDUallow}
+        transformerPower={settings.transformerPower}
+        setTransformerPower={settings.setTransformerPower}
+        transformerScheme={settings.transformerScheme}
+        setTransformerScheme={settings.setTransformerScheme}
       />
 
       <VDivider />
 
       <ResultsBlock
-        dUallowNum={dUallowNumPercent}
-        lineLength={lineLength}
-        powerReserve={powerReserve}
-        fullWorkCurrent={fullWorkCurrent}
-        transformerLoad={transformerLoad}
-        voltageDrop={voltageDrop}
-        poleForCalcReserve={poleForCalcReserve}
-        setPoleForCalcReserve={setPoleForCalcReserve}
-        loadSummary={loadSummary}
-        setUseKsim={setUseKsim}
-        useKsim={useKsim}
-        sections={sections}
-        IkzSummary={IkzSummary}
-        k_heatDec={k_heatDec}
-        setK_heatDec={setK_heatDec}
+        dUallowNum={electrical.dUallowNumPercent}
+        lineLength={metrics.lineLength}
+        powerReserve={metrics.powerReserve}
+        fullWorkCurrent={metrics.fullWorkCurrent}
+        transformerLoad={transformer.load}
+        voltageDrop={metrics.voltageDrop}
+        poleForCalcReserve={sections.poleForCalcReserve}
+        setPoleForCalcReserve={sections.setPoleForCalcReserve}
+        loadSummary={metrics.loadSummary}
+        setUseKsim={settings.setUseKsim}
+        useKsim={electrical.useKsim}
+        sections={sections.data}
+        IkzSummary={metrics.IkzSummary}
+        k_heatDec={electrical.k_heatDec}
+        setK_heatDec={settings.setK_heatDec}
       />
 
       <VDivider />
 
-      <LoadsSummaryBlock loadSummary={loadSummary} />
+      <LoadsSummaryBlock loadSummary={metrics.loadSummary} />
 
       <VDivider />
 
       <div className="flex flex-col gap-4">
-        <SectionReport meta={meta} sections={sections} />
+        <SectionReport meta={meta} sections={sections.data} />
         <div className="flex self-center gap-2">
           <Tooltip content="Отменить">
-            <ActionButton icon="↶" variant="warning" onClick={handleUndo} disabled={!canUndo}>
+            <ActionButton
+              icon="↶"
+              variant="warning"
+              onClick={history.undo}
+              disabled={!history.canUndo}
+            >
               {''}
             </ActionButton>
           </Tooltip>
 
           <Tooltip content="Вернуть">
-            <ActionButton icon="↷" variant="warning" onClick={handleRedo} disabled={!canRedo}>
+            <ActionButton
+              icon="↷"
+              variant="warning"
+              onClick={history.redo}
+              disabled={!history.canRedo}
+            >
               {''}
             </ActionButton>
           </Tooltip>

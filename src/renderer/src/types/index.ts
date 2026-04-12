@@ -1,9 +1,5 @@
-import {
-  SECTION_RESULT_LABEL,
-  TransformerPower,
-  TransformerScheme,
-  WIRE_MARKS
-} from '@renderer/constants'
+import { SECTION_RESULT_LABEL, TransformerPower, TransformerScheme } from '@renderer/constants'
+import { WireMark } from '@renderer/constants/wires'
 export type { TransformerPower } from '@renderer/constants'
 
 export enum LoadType {
@@ -18,8 +14,6 @@ export enum PhaseCount {
   two = 2,
   three = 3
 }
-
-export type WireMark = (typeof WIRE_MARKS)[number]
 
 export interface Load {
   power: string

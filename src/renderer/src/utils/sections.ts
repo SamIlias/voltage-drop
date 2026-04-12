@@ -1,6 +1,7 @@
 import { WIRE_MARKS } from '@renderer/constants'
-import { Load, LoadType, PhaseCount, Section, SectionResults, WireMark } from '@renderer/types'
+import { Load, LoadType, PhaseCount, Section, SectionResults } from '@renderer/types'
 import { calculateDownstreamPass, calculateUpstreamPass } from './electricCalc'
+import { WireMark } from '@renderer/constants/wires'
 
 export function mkSection(
   idx: number,

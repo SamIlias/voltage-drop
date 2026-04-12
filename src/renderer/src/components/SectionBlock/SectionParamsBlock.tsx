@@ -1,10 +1,11 @@
-import { PhaseCount, Section, WireMark } from '@renderer/types'
+import { PhaseCount, Section } from '@renderer/types'
 import { SectionTitle } from './Title'
 import { PoleNumberField } from '../validatedFields/PoleNumberField'
 import { FieldLabel } from '../FieldLabel'
 import { PHASE_OPTIONS, WIRE_MARKS } from '@renderer/constants'
 import { LengthField } from '../validatedFields/LengthField'
 import { inputCls } from '@renderer/assets/common'
+import { WireMark } from '@renderer/constants/wires'
 
 interface ParamsBlockProps {
   section: Section

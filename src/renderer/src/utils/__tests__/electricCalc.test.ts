@@ -7,16 +7,18 @@ import {
 
 import { LoadType, PhaseCount, Section } from '@renderer/types'
 
-jest.mock('@renderer/constants', () => ({
-  INDUSTRIAL_SIMULTANEITY_FACTOR: { 1: 1, 5: 0.8 },
-  RESIDENTIAL_SIMULTANEITY_FACTOR: { 1: 1, 5: 0.7 },
-  TransformerPower: {},
-  Unom220: 220,
-  Usource230: 230,
-  WIRE_RESISTANCE_OM_KM: {
-    'А-16': 1.84
+jest.mock('@renderer/constants', () => {
+  const actual = jest.requireActual('@renderer/constants')
+
+  return {
+    ...actual,
+    INDUSTRIAL_SIMULTANEITY_FACTOR: { 1: 1, 5: 0.8 },
+    RESIDENTIAL_SIMULTANEITY_FACTOR: { 1: 1, 5: 0.7 },
+    TransformerPower: {},
+    Unom220: 220,
+    Usource230: 230
   }
-}))
+})
 
 jest.mock('../sections', () => ({
   getEffectivePhases: jest.fn(() => PhaseCount.three)
