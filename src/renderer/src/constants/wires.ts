@@ -1,4 +1,6 @@
-export const WIRE_RESISTANCE_OM_KM = {
+import { WireMark } from '@renderer/types'
+
+const WIRE_RESISTANCE_OM_KM = {
   'А-16': 1.84,
   'А-25': 1.165,
   'А-35': 0.85,
@@ -38,8 +40,12 @@ export const WIRE_RESISTANCE_OM_KM = {
   'СИП-70': 0.443,
   'СИП-95': 0.32,
   'СИП-120': 0.253
-}
+} as const
 
 export const WIRE_MARKS = Object.keys(WIRE_RESISTANCE_OM_KM) as Array<
   keyof typeof WIRE_RESISTANCE_OM_KM
 >
+
+export function getWireResistance_om_km(wire: WireMark) {
+  return WIRE_RESISTANCE_OM_KM[wire] ?? null
+}

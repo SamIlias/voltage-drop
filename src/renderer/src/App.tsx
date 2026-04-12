@@ -22,27 +22,6 @@ import { LoaderOverlay } from './components/LoaderOverlay'
 import { useLoader } from './hooks/useLoader'
 
 export default function App() {
-  // const {
-  //   lineName,
-  //   setLineName,
-  //   calcDate,
-  //   setCalcDate,
-  //   cosPhi,
-  //   setCosPhiStr,
-  //   dUallowPercent,
-  //   setDUallow,
-  //   useKsim,
-  //   setUseKsim,
-  //   transformerPower,
-  //   setTransformerPower,
-  //   transformerScheme,
-  //   setTransformerScheme,
-  //   poleForCalcReserve,
-  //   setPoleForCalcReserve,
-  //   k_heatDec,
-  //   setK_heatDec
-  // } = useAppSettings()
-
   const appSettings = useAppSettings()
 
   const { isAboutOpen, setIsAboutOpen } = useAboutDialog()
@@ -75,7 +54,8 @@ export default function App() {
     appSettings.transformerPower,
     computedSections,
     appSettings.useKsim,
-    k_heatDecNum
+    k_heatDecNum,
+    cosPhiNum
   )
   const { fullVoltageDrop_pct } = useFullVoltageDrop(computedSections)
   const { fullWorkCurrent } = useFullWorkCurrent(computedSections)

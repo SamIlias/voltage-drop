@@ -128,7 +128,14 @@ export function ResultsBlock({
       </div>
 
       <div className="flex flex-col gap-2">
-        <ResultBadge label="Загрузка тр-ра" value={transformerLoad} unit="%" status={loadStatus} />
+        <Tooltip content="K = Pр / (Sном * cos φ)">
+          <ResultBadge
+            label="Загрузка тр-ра"
+            value={transformerLoad}
+            unit="%"
+            status={loadStatus}
+          />
+        </Tooltip>
 
         <ResultBadge
           label="Потеря напряжения"

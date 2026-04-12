@@ -46,7 +46,7 @@ describe('calculations', () => {
         })
       ]
 
-      const result = getTransformerLoad('100', sections, true, 1)
+      const result = getTransformerLoad('100', sections, true, 1, 0.9)
 
       expect(result).toBeGreaterThan(0)
       expect(result).toBeLessThanOrEqual(100)

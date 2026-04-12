@@ -4,11 +4,11 @@ import {
   TransformerPower,
   Unom220,
   Usource230,
-  Usource400,
-  WIRE_RESISTANCE_OM_KM
+  Usource400
 } from '@renderer/constants'
 import { LoadType, PhaseCount, Section, SectionResults } from '@renderer/types'
 import { getEffectivePhases } from './sections'
+import { getWireResistance_om_km } from '@renderer/constants'
 
 const calculateSectionCurrent = (Psec, phaseCount, U1, cosPhi) => {
   return Psec / (phaseCount * U1 * cosPhi)
@@ -165,10 +165,11 @@ export function getTransformerLoad(
   transformerPower: TransformerPower,
   sections: Section[],
   useKsim: boolean,
-  k_heatDec: number
+  k_heatDec: number,
+  cosPhi: number
 ): number {
   const load = getLoadThroughSection(0, sections, useKsim, k_heatDec)
-  return (load * 100) / parseInt(transformerPower)
+  return (load * 100) / (parseInt(transformerPower) * cosPhi)
 }
 
 function getFullDU(sections: Section[]): number {
@@ -198,7 +199,7 @@ export function calculateDownstreamPass(
     const Psec = getLoadThroughSection(section.idx, sections, useKsim, k_heatDec)
     const phases = getEffectivePhases(section.idx, sections)
     const Isec1 = calculateSectionCurrent(Psec * 1000, phases, Unom220, cosPhi)
-    const R0_om_km = WIRE_RESISTANCE_OM_KM[section.wire] ?? null
+    const R0_om_km = getWireResistance_om_km(section.wire)
     const Rsec =
       section.length_m === '0' ? 0 : (R0_om_km * parseFloat(section.length_m)) / 1000 || null
     const dUsec =
