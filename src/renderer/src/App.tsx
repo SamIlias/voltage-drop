@@ -98,43 +98,6 @@ export default function App() {
 
         <AboutDialog isOpen={isAboutOpen} onClose={() => setIsAboutOpen(false)} />
 
-        {/* <Header
-          handleUndo={undo}
-          handleRedo={redo}
-          canRedo={canRedo}
-          canUndo={canUndo}
-          handleSave={handleSave}
-          handleLoad={handleLoad}
-          onCreateNewComputation={handleCreateNewComputing}
-          lineName={appSettings.lineName}
-          setLineName={appSettings.setLineName}
-          calcDate={appSettings.calcDate}
-          setCalcDate={appSettings.setCalcDate}
-          cosPhi={appSettings.cosPhi}
-          setCosPhi={appSettings.setCosPhiStr}
-          dUallowNumPercent={dUallowNumPercent}
-          dUallowPercent={appSettings.dUallowPercent}
-          setDUallow={appSettings.setDUallow}
-          useKsim={appSettings.useKsim}
-          setUseKsim={appSettings.setUseKsim}
-          k_heatDec={appSettings.k_heatDec}
-          setK_heatDec={appSettings.setK_heatDec}
-          transformerPower={appSettings.transformerPower}
-          setTransformerPower={appSettings.setTransformerPower}
-          transformerScheme={appSettings.transformerScheme}
-          setTransformerScheme={appSettings.setTransformerScheme}
-          transformerLoad={transformerLoad}
-          voltageDrop={fullVoltageDrop_pct}
-          powerReserve={powerReserve}
-          fullWorkCurrent={fullWorkCurrent}
-          lineLength={lineLength_m}
-          loadSummary={fullLoadSummary}
-          poleForCalcReserve={appSettings.poleForCalcReserve}
-          setPoleForCalcReserve={appSettings.setPoleForCalcReserve}
-          sections={computedSections}
-          IkzSummary={IkzSummary}
-          setIsAboutOpen={setIsAboutOpen}
-        /> */}
         <Header
           history={{
             undo,

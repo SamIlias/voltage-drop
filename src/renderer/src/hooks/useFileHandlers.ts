@@ -40,6 +40,8 @@ export function useFileHandlers(
     try {
       const data = await window.api.loadData()
 
+      if (!data) return
+
       if (isSavedData(data)) {
         pushHistory(data.sections)
 

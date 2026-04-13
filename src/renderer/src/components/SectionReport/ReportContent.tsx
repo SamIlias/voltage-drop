@@ -13,7 +13,7 @@ export interface ReportMeta {
 
   fullWorkCurrent: number | null
   loadSummary: LoadSummary
-  IkzSummary: IkzSummary | null
+  IkzSummary: IkzSummary
 
   voltageDrop_v: number | null
   fullLength: number | null

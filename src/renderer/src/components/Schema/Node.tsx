@@ -1,9 +1,9 @@
 import { LoadType, Section } from '@renderer/types'
-import { countByType, getStatusByGreater, getStatusByLower, powerByType } from '@renderer/utils'
+import { countByType, getStatusByLower, powerByType } from '@renderer/utils'
 import { PhaseLines } from './PhaseLines'
 import { LoadInfo } from './LoadInfo'
 import { LOAD_STYLES } from '@renderer/constants/loadStyles'
-import { UmaxAllow, UminAllow } from '@renderer/constants'
+import { UminAllow } from '@renderer/constants'
 import { statusCls } from '@renderer/assets/common'
 
 interface SchemaNodeProps {

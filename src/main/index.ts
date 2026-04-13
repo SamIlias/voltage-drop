@@ -10,6 +10,7 @@ function createWindow(): void {
   const mainWindow = new BrowserWindow({
     width: 1500,
     height: 800,
+    icon: join(__dirname, 'assets/icon.ico'),
     show: false,
     autoHideMenuBar: true,
     ...(process.platform === 'linux' ? { icon } : {}),
