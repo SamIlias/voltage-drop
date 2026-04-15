@@ -3,8 +3,16 @@ import { calculateDownstreamPass, calculateUpstreamPass } from '../electricCalc'
 import { getEffectivePhases } from '../sections'
 import { LoadType, PhaseCount, Section } from '@renderer/types'
 
+let id = 0
+jest.mock('uuid', () => ({
+  v4: () => {
+    id += 1
+    return `${id + 1}`
+  }
+}))
+
 const createSection = (overrides: Partial<Section>): Section => ({
-  idx: 0,
+  id: '0',
   poleNumber: '1',
   prevPoleNumber: '0',
   wire: 'А-16' as any,
@@ -21,19 +29,19 @@ describe('electricCalc integration', () => {
   it('корректно рассчитывает цепочку из нескольких секций', () => {
     const sections: Section[] = [
       createSection({
-        idx: 0,
+        id: '0',
         length_m: '100',
         phases: PhaseCount.three,
         loads_kw: [{ type: LoadType.Household, power: '10' }]
       }),
       createSection({
-        idx: 1,
+        id: '1',
         length_m: '50',
         phases: PhaseCount.three,
         loads_kw: [{ type: LoadType.Prom, power: '20' }]
       }),
       createSection({
-        idx: 2,
+        id: '2',
         length_m: '25',
         phases: PhaseCount.one,
         loads_kw: [{ type: LoadType.Household, power: '5' }]
@@ -49,9 +57,9 @@ describe('electricCalc integration', () => {
     expect(downstream).toHaveLength(3)
     expect(upstream).toHaveLength(3)
 
-    expect(getEffectivePhases(0, sections)).toBe(PhaseCount.three)
-    expect(getEffectivePhases(1, sections)).toBe(PhaseCount.three)
-    expect(getEffectivePhases(2, sections)).toBe(PhaseCount.one)
+    expect(getEffectivePhases('0', sections)).toBe(PhaseCount.three)
+    expect(getEffectivePhases('1', sections)).toBe(PhaseCount.three)
+    expect(getEffectivePhases('2', sections)).toBe(PhaseCount.one)
 
     expect(upstream[2].effectivePhaseCount).toBe(PhaseCount.one)
 
@@ -81,7 +89,7 @@ describe('electricCalc integration', () => {
   })
 
   it('корректно работает при отсутствии нагрузок', () => {
-    const sections: Section[] = [createSection({ idx: 0 }), createSection({ idx: 1 })]
+    const sections: Section[] = [createSection({ id: '0' }), createSection({ id: '1' })]
 
     const downstream = calculateDownstreamPass(sections, 0.9, true, 1)
     const upstream = calculateUpstreamPass(sections, downstream)

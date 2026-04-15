@@ -4,8 +4,8 @@ import { getMaxUniqueLoadTypes } from '@renderer/utils'
 
 interface SchemaProps {
   sections: Section[]
-  activeId: number
-  onActivate: (id: number) => void
+  activeId: string | null
+  onActivate: (id: string) => void
 }
 
 export function Schema({ sections, activeId, onActivate }: SchemaProps) {
@@ -34,11 +34,11 @@ export function Schema({ sections, activeId, onActivate }: SchemaProps) {
       <SchemaNode section={null} nextSection={sections[0]} isActive={false} />
       {sections.map((s, i) => (
         <SchemaNode
-          key={s.idx}
+          key={s.id}
           section={s}
           nextSection={sections[i + 1]}
-          isActive={s.idx === activeId}
-          onClick={() => onActivate(s.idx)}
+          isActive={s.id === activeId}
+          onClick={() => onActivate(s.id)}
         />
       ))}
     </section>

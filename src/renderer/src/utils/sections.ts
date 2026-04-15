@@ -2,9 +2,9 @@ import { WIRE_MARKS } from '@renderer/constants'
 import { Load, LoadType, PhaseCount, Section, SectionResults } from '@renderer/types'
 import { calculateDownstreamPass, calculateUpstreamPass } from './electricCalc'
 import { WireMark } from '@renderer/constants/wires'
+import { v4 as uuidv4 } from 'uuid'
 
 export function mkSection(
-  idx: number,
   prevPole = '0',
   wire: WireMark = WIRE_MARKS[0],
   phases: PhaseCount = PhaseCount.three,
@@ -21,7 +21,7 @@ export function mkSection(
   }
 
   return {
-    idx,
+    id: uuidv4(),
     poleNumber: incrementPoleNumber(prevPole),
     prevPoleNumber: prevPole,
     wire,
@@ -57,8 +57,8 @@ export const powerByType = (loads: Load[], t: LoadType) =>
     .reduce((s, l) => s + (parseFloat(l.power) || 0), 0)
     .toFixed(2)
 
-export function getEffectivePhases(sectionId: number, sections: Section[]): PhaseCount {
-  const currentIndex = sections.findIndex((s) => s.idx === sectionId)
+export function getEffectivePhases(sectionId: string, sections: Section[]): PhaseCount {
+  const currentIndex = sections.findIndex((s) => s.id === sectionId)
   const precedingSections = sections.slice(0, currentIndex + 1)
 
   const minPhases = Math.min(...precedingSections.map((s) => s.phases))

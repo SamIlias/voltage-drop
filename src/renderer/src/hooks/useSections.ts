@@ -10,11 +10,11 @@ import { getLineResistance } from '@renderer/utils/sections'
 import { WireMark } from '@renderer/constants/wires'
 
 export function useSections(cosPhiNum: number, useKsim: boolean, k_heatDecNum: number) {
-  const [activeIdx, setActiveId] = useState<number>(1)
+  const [activeId, setActiveId] = useState<string | null>(null)
 
   const [historyState, dispatch] = useReducer(historyReducer, {
     past: [],
-    present: [mkSection(0)],
+    present: [mkSection()],
     future: []
   })
 
@@ -38,30 +38,31 @@ export function useSections(cosPhiNum: number, useKsim: boolean, k_heatDecNum: n
   }, [sections, cosPhiNum, useKsim, k_heatDecNum])
 
   const fullLoadSummary = useMemo(
-    () => getLoadSummary(0, sections, useKsim, k_heatDecNum),
+    () =>
+      sections.length > 0 ? getLoadSummary(sections[0].id, sections, useKsim, k_heatDecNum) : null,
     [sections, useKsim, k_heatDecNum]
   )
-  const fullLineResistance = useMemo(() => getLineResistance(sections), [sections])
+
+  const fullLineResistance = useMemo(() => getLineResistance(computedSections), [computedSections])
 
   useEffect(() => {
     if (activeRef.current) {
       activeRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' })
     }
-  }, [activeIdx])
+  }, [activeId])
 
   const applyQuickFill =
     (prevSection: Section | undefined) =>
     (count: number, wire: WireMark, load: string, phases: PhaseCount, length_m: string) => {
       if (!count || count < 1) return
 
-      const baseIdx = prevSection?.idx ?? -1
       const basePole = prevSection?.poleNumber ?? '0'
 
       const next: Section[] = []
       let lastPole = basePole
 
       for (let i = 1; i <= count; i++) {
-        const newSection = mkSection(baseIdx + i, lastPole, wire, phases, length_m)
+        const newSection = mkSection(lastPole, wire, phases, length_m)
         if (load) {
           newSection.loads_kw = [{ power: load, type: LoadType.Household }]
         }
@@ -70,27 +71,35 @@ export function useSections(cosPhiNum: number, useKsim: boolean, k_heatDecNum: n
       }
 
       pushHistory((prev) => [...prev, ...next])
-      setActiveId(next[0].idx)
+      setActiveId(next[0].id)
     }
 
   const addSection = () => {
     const last = sections.at(-1)
 
     const newSection = last
-      ? mkSection(sections.length, last.poleNumber, last.wire, last.phases, last.length_m)
-      : mkSection(sections.length, '0', WIRE_MARKS[0], PhaseCount.three, '0')
+      ? mkSection(last.poleNumber, last.wire, last.phases, last.length_m)
+      : mkSection('0', WIRE_MARKS[0], PhaseCount.three, '0')
 
     pushHistory((prev) => [...prev, newSection])
-    setActiveId(newSection.idx)
+    setActiveId(newSection.id)
   }
 
-  const removeSection = (id: number) => pushHistory((prev) => prev.filter((s) => s.idx !== id))
+  const removeSection = (id: string) => {
+    if (activeId === id) {
+      const currentIndex = sections.findIndex((s) => s.id === id)
+      const next = sections.filter((s) => s.id !== id)
+      const newActive = next[currentIndex] ?? next[currentIndex - 1] ?? null
+      setActiveId(newActive?.id ?? null)
+    }
+    pushHistory((prev) => prev.filter((s) => s.id !== id))
+  }
 
-  const updateSection = (id: number, patch: Partial<Section>) => {
+  const updateSection = (id: string, patch: Partial<Section>) => {
     pushHistory((prev) => {
-      const updated = prev.map((s) => (s.idx === id ? { ...s, ...patch } : s))
+      const updated = prev.map((s) => (s.id === id ? { ...s, ...patch } : s))
 
-      const startIndex = updated.findIndex((s) => s.idx === id)
+      const startIndex = updated.findIndex((s) => s.id === id)
 
       if (patch.poleNumber !== undefined) {
         for (let i = startIndex + 1; i < updated.length; i++) {
@@ -108,8 +117,8 @@ export function useSections(cosPhiNum: number, useKsim: boolean, k_heatDecNum: n
     })
   }
 
-  const addLoad = (id: number) => {
-    const section: Section | undefined = sections.find((s) => s.idx === id)
+  const addLoad = (id: string) => {
+    const section: Section | undefined = sections.find((s) => s.id === id)
     if (!section || !section.newLoadPower) return
 
     const validateResult = validateLoadPower(section.newLoadPower)
@@ -122,12 +131,12 @@ export function useSections(cosPhiNum: number, useKsim: boolean, k_heatDecNum: n
   }
 
   const removeLoad = (s: Section) => (i) =>
-    updateSection(s.idx, {
+    updateSection(s.id, {
       loads_kw: s.loads_kw.filter((_, idx) => idx !== i)
     })
 
   const handleCreateNewComputing = () => {
-    pushHistory([mkSection(0)])
+    pushHistory([mkSection()])
   }
 
   return {
@@ -138,7 +147,7 @@ export function useSections(cosPhiNum: number, useKsim: boolean, k_heatDecNum: n
     redo,
     canRedo,
     canUndo,
-    activeIdx,
+    activeId,
     setActiveId,
     applyQuickFill,
     activeRef,

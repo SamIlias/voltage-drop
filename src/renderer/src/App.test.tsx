@@ -1,8 +1,17 @@
-import { render, screen, fireEvent } from '@testing-library/react'
+import { render, screen, fireEvent, act } from '@testing-library/react'
 import App from './App'
 import { ThemeProvider } from './providers/theme/ThemeProvider'
 
 const loadDataMock = jest.fn()
+
+let id = 0
+jest.mock('uuid', () => ({
+  v4: () => {
+    id += 1
+    return `${id + 1}`
+  }
+}))
+
 const AppTest = () => {
   return (
     <ThemeProvider>
@@ -38,16 +47,20 @@ test('adds new section', () => {
   expect(sections.length).toBe(2)
 })
 
-test('removes section', () => {
+test('removes section', async () => {
   render(<AppTest />)
 
   const addBtn = screen.getByText('+ Добавить участок')
 
-  fireEvent.click(addBtn)
+  await act(async () => {
+    fireEvent.click(addBtn)
+  })
 
   const removeButtons = screen.getAllByTestId('remove-section')
 
-  fireEvent.click(removeButtons[0])
+  await act(async () => {
+    fireEvent.click(removeButtons[0])
+  })
 
   const sections = screen.getAllByTestId('section-block')
 
@@ -59,13 +72,15 @@ test('calls saveData API', async () => {
 
   const saveButton = screen.getByText('Сохранить')
 
-  fireEvent.click(saveButton)
+  await act(async () => {
+    fireEvent.click(saveButton)
+  })
 
   expect(window.api.saveData).toHaveBeenCalled()
 })
 
 test('loads sections from API', async () => {
-  const mockSections = [{ id: 1, loads_kw: [] }]
+  const mockSections = [{ id: '1l', loads_kw: [] }]
 
   loadDataMock.mockResolvedValue(mockSections)
 
@@ -73,17 +88,21 @@ test('loads sections from API', async () => {
 
   const loadButton = screen.getByText('Загрузить')
 
-  fireEvent.click(loadButton)
+  await act(async () => {
+    fireEvent.click(loadButton)
+  })
 
   expect(window.api.loadData).toHaveBeenCalled()
 })
 
-test('quick fill adds multiple sections', () => {
+test('quick fill adds multiple sections', async () => {
   render(<AppTest />)
 
   const addButton = screen.getByRole('button', { name: /добавить/i })
 
-  fireEvent.click(addButton)
+  await act(async () => {
+    fireEvent.click(addButton)
+  })
 
   const sections = screen.getAllByTestId('section-block')
 

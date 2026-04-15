@@ -1,14 +1,41 @@
 @import 'tailwindcss';
 
-/* @source ".*.{ts,tsx}"; */
+@font-face {
+  font-family: 'Inter';
+  src: url('./fonts/Inter-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
 
-/* @layer base {
-  body {
-    @apply min-h-screen font-sans bg-white text-black dark:bg-[#1a1a2e] dark:text-[#eee];
-  }
-} */
+@font-face {
+  font-family: 'Inter';
+  src: url('./fonts/Inter-Bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: '';
+  src: url('./fonts/JetBrainsMono-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: '';
+  src: url('./fonts/JetBrainsMono-Bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
 
 :root {
+  --font-sans: 'Inter', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+
   --bg: #f1f1f1;
   --bg-input: #ffffff;
   --bg-scheme: #ffffff;
@@ -72,5 +99,28 @@
   body {
     background: var(--bg);
     color: var(--text);
+    font-family: 'Inter', Arial, sans-serif;
+    font-variant-numeric: tabular-nums;
+
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+}
+
+@media print {
+  body {
+    font-family:
+      'Inter',
+      system-ui,
+      -apple-system,
+      sans-serif;
+    font-variant-numeric: tabular-nums;
+  }
+
+  * {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
   }
 }

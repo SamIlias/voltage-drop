@@ -66,14 +66,14 @@ export function ReportContent({ meta, sections }: SectionReportProps) {
           <tbody>
             {sections.map((s, rowIdx) => (
               <tr
-                key={s.idx}
+                key={s.id}
                 className={[
                   'border border-zinc-400 last:border-0',
                   rowIdx % 2 === 0 ? 'bg-white' : 'bg-zinc-50',
                   'hover:bg-blue-50 transition-colors'
                 ].join(' ')}
               >
-                <td className="px-3 py-2 text-zinc-400 w-8 border border-zinc-400">{s.idx + 1}</td>
+                <td className="px-3 py-2 text-zinc-400 w-8 border border-zinc-400">{rowIdx + 1}</td>
                 <td className="px-3 py-2 border border-zinc-400 font-semibold whitespace-nowrap text-zinc-900">
                   {s.prevPoleNumber} — {s.poleNumber}
                 </td>

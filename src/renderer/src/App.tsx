@@ -37,7 +37,7 @@ export default function App() {
     redo,
     canRedo,
     canUndo,
-    activeIdx,
+    activeId,
     setActiveId,
     applyQuickFill,
     activeRef,
@@ -139,22 +139,22 @@ export default function App() {
             setIsAboutOpen
           }}
         />
-        <Schema sections={computedSections} activeId={activeIdx} onActivate={setActiveId} />
+        <Schema sections={computedSections} activeId={activeId} onActivate={setActiveId} />
         <QuickFill onApply={applyQuickFill(sections[sections.length - 1])} />
 
         <main className="flex-1 overflow-y-auto px-6 py-4">
           <div className="space-y-3">
             {computedSections.map((s, i) => (
               <SectionBlock
-                key={s.idx}
-                ref={s.idx === activeIdx ? activeRef : null}
+                key={s.id}
+                ref={s.id === activeId ? activeRef : null}
                 section={s}
                 index={i}
-                isActive={s.idx === activeIdx}
-                onActivate={() => setActiveId(s.idx)}
-                onRemove={() => removeSection(s.idx)}
-                onChange={(patch) => updateSection(s.idx, patch)}
-                onAddLoad={() => addLoad(s.idx)}
+                isActive={s.id === activeId}
+                onActivate={() => setActiveId(s.id)}
+                onRemove={() => removeSection(s.id)}
+                onChange={(patch) => updateSection(s.id, patch)}
+                onAddLoad={() => addLoad(s.id)}
                 onRemoveLoad={removeLoad(s)}
               />
             ))}

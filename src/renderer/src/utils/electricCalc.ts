@@ -68,12 +68,13 @@ export type LoadSummary = {
 }
 
 export function getLoadSummary(
-  sectionId: number,
+  sectionId: string,
   sections: Section[],
   useKsim: boolean,
   k_heatDec: number
 ): LoadSummary {
-  const relevantSections = sections.filter((s) => s.idx >= sectionId)
+  const startIndex = sections.findIndex((s) => s.id === sectionId)
+  const relevantSections = startIndex !== -1 ? sections.slice(startIndex) : []
 
   let householdPower = 0
   let householdCount = 0
@@ -153,7 +154,7 @@ export function getLoadSummary(
 }
 
 function getLoadThroughSection(
-  sectionId: number,
+  sectionId: string,
   sections: Section[],
   useKsim: boolean,
   k_heatDec: number
@@ -168,7 +169,7 @@ export function getTransformerLoad(
   k_heatDec: number,
   cosPhi: number
 ): number {
-  const load = getLoadThroughSection(0, sections, useKsim, k_heatDec)
+  const load = getLoadThroughSection(sections[0].id, sections, useKsim, k_heatDec)
   return (load * 100) / (parseInt(transformerPower) * cosPhi)
 }
 
@@ -196,8 +197,8 @@ export function calculateDownstreamPass(
   k_heatDec: number
 ): DownstreamData[] {
   return sections.map((section) => {
-    const Psec = getLoadThroughSection(section.idx, sections, useKsim, k_heatDec)
-    const phases = getEffectivePhases(section.idx, sections)
+    const Psec = getLoadThroughSection(section.id, sections, useKsim, k_heatDec)
+    const phases = getEffectivePhases(section.id, sections)
     const Isec1 = calculateSectionCurrent(Psec * 1000, phases, Unom220, cosPhi)
     const R0_om_km = getWireResistance_om_km(section.wire)
     const Rsec =

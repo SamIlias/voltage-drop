@@ -35,6 +35,6 @@ export function historyReducer(state: HistoryState, action: HistoryAction): Hist
       return { past: [...state.past, state.present], present: next, future: state.future.slice(1) }
     }
     case 'RESET':
-      return { past: [], present: [mkSection(0)], future: [] }
+      return { past: [], present: [mkSection()], future: [] }
   }
 }

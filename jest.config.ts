@@ -10,7 +10,6 @@ const config: Config = {
   ],
 
   transform: {
-    // Важно: расширение должно ловить и .ts, и .tsx
     '^.+\\.tsx?$': [
       'ts-jest',
       {
@@ -18,16 +17,14 @@ const config: Config = {
       }
     ]
   },
+  transformIgnorePatterns: ['/node_modules/(?!(uuid)/)'],
 
   moduleNameMapper: {
-    // Статика должна быть в приоритете
     '\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$':
       'jest-transform-stub',
 
-    // Стили
     '\\.(css|less|scss|sass)$': 'identity-obj-proxy',
 
-    // Алиасы
     '^@renderer/(.*)$': '<rootDir>/src/renderer/src/$1',
     '^electron$': '<rootDir>/src/__mocks__/electron.ts'
   }

@@ -20,12 +20,20 @@ jest.mock('@renderer/constants', () => {
   }
 })
 
+let id = 0
+jest.mock('uuid', () => ({
+  v4: () => {
+    id += 1
+    return `${id + 1}`
+  }
+}))
+
 jest.mock('../sections', () => ({
   getEffectivePhases: jest.fn(() => PhaseCount.three)
 }))
 
 const createSection = (overrides: Partial<Section> = {}): Section => ({
-  idx: 0,
+  id: '0',
   poleNumber: '1',
   prevPoleNumber: '0',
   wire: 'А-16' as any,
@@ -43,7 +51,7 @@ describe('calculations', () => {
     it('должен корректно считать загрузку трансформатора', () => {
       const sections = [
         createSection({
-          idx: 0,
+          id: '0',
           loads_kw: [{ type: LoadType.Household, power: '10' }]
         })
       ]
@@ -59,7 +67,7 @@ describe('calculations', () => {
     it('должен рассчитывать параметры участка', () => {
       const sections = [
         createSection({
-          idx: 0,
+          id: '0',
           length_m: '100',
           loads_kw: [{ type: LoadType.Household, power: '10' }]
         })
@@ -80,7 +88,7 @@ describe('calculations', () => {
 
   describe('calculateUpstreamPass', () => {
     it('должен накапливать падение напряжения', () => {
-      const sections = [createSection({ idx: 0 }), createSection({ idx: 1 })]
+      const sections = [createSection({ id: '0' }), createSection({ id: '1' })]
 
       const downstream = [
         { Psec: 10, phases: PhaseCount.three, Isec1: 1, Rsec: 1, dUsec: 5 },

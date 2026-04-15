@@ -31,7 +31,7 @@ export enum ResultStatus {
 }
 
 export interface Section {
-  idx: number
+  id: string
   poleNumber: string
   prevPoleNumber: string
   wire: WireMark
@@ -72,7 +72,7 @@ export function isSectionArray(data: unknown): data is Section[] {
       (item): item is Section =>
         typeof item === 'object' &&
         item !== null &&
-        typeof (item as any).idx === 'number' &&
+        typeof (item as any).id === 'string' &&
         typeof (item as any).poleNumber === 'string' &&
         typeof (item as any).wire === 'string' &&
         typeof (item as any).length_m === 'string' &&

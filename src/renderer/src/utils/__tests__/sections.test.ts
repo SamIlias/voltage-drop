@@ -27,8 +27,16 @@ jest.mock('../electricCalc', () => ({
   ])
 }))
 
+let id = 0
+jest.mock('uuid', () => ({
+  v4: () => {
+    id += 1
+    return `${id + 1}`
+  }
+}))
+
 const createSection = (overrides: Partial<Section> = {}): Section => ({
-  idx: 0,
+  id: '0',
   poleNumber: '1',
   prevPoleNumber: '0',
   wire: 'A' as any,
@@ -58,16 +66,15 @@ describe('sections utils', () => {
 
   describe('mkSection', () => {
     it('создаёт секцию с корректными значениями по умолчанию', () => {
-      const section = mkSection(1)
+      const section = mkSection()
 
-      expect(section.idx).toBe(1)
       expect(section.poleNumber).toBe('1')
       expect(section.prevPoleNumber).toBe('0')
       expect(section.loads_kw).toEqual([])
     })
 
     it('использует переданный prevPole', () => {
-      const section = mkSection(1, '5')
+      const section = mkSection('5')
 
       expect(section.poleNumber).toBe('6')
     })
@@ -96,12 +103,12 @@ describe('sections utils', () => {
   describe('getEffectivePhases', () => {
     it('возвращает минимальное число фаз среди предыдущих', () => {
       const sections = [
-        createSection({ idx: 0, phases: PhaseCount.three }),
-        createSection({ idx: 1, phases: PhaseCount.one }),
-        createSection({ idx: 2, phases: PhaseCount.three })
+        createSection({ id: '0', phases: PhaseCount.three }),
+        createSection({ id: '1', phases: PhaseCount.one }),
+        createSection({ id: '2', phases: PhaseCount.three })
       ]
 
-      const result = getEffectivePhases(2, sections)
+      const result = getEffectivePhases(sections[2].id, sections)
 
       expect(result).toBe(PhaseCount.one)
     })

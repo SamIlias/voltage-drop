@@ -13,44 +13,6 @@ import myLogo from '@renderer/assets/logo.png'
 import { LineParameters } from './LineParameters'
 import { AppSettings } from '@renderer/hooks/useAppSettings'
 
-// interface HeaderProps {
-//   handleUndo: () => void
-//   handleRedo: () => void
-//   canRedo: boolean
-//   canUndo: boolean
-//   handleLoad: () => void
-//   handleSave: () => void
-//   onCreateNewComputation: () => void
-//   lineName: string
-//   setLineName: (v: string) => void
-//   calcDate: string
-//   setCalcDate: (v: string) => void
-//   cosPhi: string
-//   setCosPhi: (v: string) => void
-//   dUallowNumPercent: number
-//   dUallowPercent: string
-//   setDUallow: (v: string) => void
-//   useKsim: boolean
-//   setUseKsim: (v: boolean) => void
-//   k_heatDec: string
-//   setK_heatDec: (v: string) => void
-//   transformerPower: string
-//   setTransformerPower: (v: TransformerPower) => void
-//   transformerScheme: TransformerScheme
-//   setTransformerScheme: (v: TransformerScheme) => void
-//   transformerLoad: number | null
-//   voltageDrop: number | null
-//   powerReserve: number | null
-//   fullWorkCurrent: number | null
-//   lineLength: number | null
-//   loadSummary: LoadSummary
-//   poleForCalcReserve: string | null
-//   setPoleForCalcReserve: (v: string | null) => void
-//   sections: Section[]
-//   IkzSummary: IkzSummary | null
-//   setIsAboutOpen: (v: boolean) => void
-// }
-
 type HeaderProps = {
   history: {
     undo: () => void
@@ -101,41 +63,6 @@ type HeaderProps = {
 }
 
 export function Header({
-  // handleUndo,
-  // handleRedo,
-  // canRedo,
-  // canUndo,
-  // handleLoad,
-  // handleSave,
-  // onCreateNewComputation,
-  // lineName,
-  // setLineName,
-  // calcDate,
-  // setCalcDate,
-  // cosPhi,
-  // setCosPhi,
-  // dUallowPercent,
-  // dUallowNumPercent,
-  // setDUallow,
-  // useKsim,
-  // setUseKsim,
-  // k_heatDec,
-  // setK_heatDec,
-  // transformerPower,
-  // setTransformerPower,
-  // transformerScheme,
-  // setTransformerScheme,
-  // transformerLoad,
-  // voltageDrop,
-  // powerReserve,
-  // fullWorkCurrent,
-  // poleForCalcReserve,
-  // setPoleForCalcReserve,
-  // lineLength,
-  // loadSummary,
-  // sections,
-  // IkzSummary,
-  // setIsAboutOpen
   history,
   metrics,
   electrical,

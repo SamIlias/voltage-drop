@@ -174,7 +174,7 @@ export function getPrintStyles() {
     display: flex;
     flex-wrap: wrap;
     gap: 3px;
-    justify-content: center;
+    justify-content: start;
   }
 
   .consumer {

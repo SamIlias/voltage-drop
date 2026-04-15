@@ -5,7 +5,7 @@ import { Tooltip } from '../Tooltip'
 
 export function LoadsSummaryBlock({ loadSummary }: { loadSummary: LoadSummary }) {
   return (
-    <div>
+    <div className="font-mono">
       <p className="text-center text-sm border-b border-(--color-secondary)">
         Информация о потребителях
       </p>
