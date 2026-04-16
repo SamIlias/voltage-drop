@@ -126,7 +126,7 @@ describe('sections utils', () => {
     })
 
     it('возвращает строку для числа', () => {
-      expect(formatResult(12.34)).toBe('12.34')
+      expect(formatResult(12.34)).toBe('12.340')
     })
   })
 

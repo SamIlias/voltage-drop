@@ -115,7 +115,8 @@ export default function App() {
             cosPhiNum,
             dUallowNumPercent,
             useKsim: appSettings.useKsim,
-            k_heatDec: appSettings.k_heatDec
+            k_heatDec: appSettings.k_heatDec,
+            fullLineResistance: fullLineResistance
           }}
           transformer={{
             power: appSettings.transformerPower,

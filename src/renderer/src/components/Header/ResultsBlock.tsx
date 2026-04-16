@@ -15,13 +15,12 @@ interface ResultsBlockProps {
   voltageDrop: number | null
   powerReserve: number | null
   fullWorkCurrent: number | null
+  fullLineResistance: number | null
   lineLength: number | null
   poleForCalcReserve: string | null
   setPoleForCalcReserve: (v: string | null) => void
   useKsim: boolean
   setUseKsim: (v: boolean) => void
-  k_heatDec: string
-  setK_heatDec: (v: string) => void
   loadSummary: LoadSummary
   sections: Section[]
   IkzSummary: IkzSummary | null
@@ -33,13 +32,12 @@ export function ResultsBlock({
   voltageDrop,
   powerReserve,
   fullWorkCurrent,
+  fullLineResistance,
   lineLength,
   poleForCalcReserve,
   setPoleForCalcReserve,
   useKsim,
   setUseKsim,
-  k_heatDec,
-  setK_heatDec,
   loadSummary,
   sections,
   IkzSummary
@@ -58,9 +56,9 @@ export function ResultsBlock({
 
   return (
     <div className="flex gap-4 shrink-0 items-end">
-      <div className="flex flex-col gap-1">
+      <div className="flex flex-col gap-1 justify-end">
         <FieldLabel text="Кодн">
-          <div className="flex gap-2 items-center">
+          <div className="flex gap-1 items-center">
             <Tooltip content="Применять Коэфф. одновременности">
               <input
                 type="checkbox"
@@ -70,15 +68,11 @@ export function ResultsBlock({
               />
             </Tooltip>
             <div className="flex flex-col text-[10px] text-(--color-active)">
-              <span>Kбыт = {loadSummary.household.ksim}</span>
-              <span>Kпром = {loadSummary.prom.ksim}</span>
+              <span>Kбыт = {loadSummary.household.ksim.toFixed(3)}</span>
+              <span>Kпром = {loadSummary.prom.ksim.toFixed(3)}</span>
             </div>
           </div>
         </FieldLabel>
-
-        <Tooltip content="Понижающий коэфф. для мощности нагрева">
-          <KHeatDecField value={k_heatDec} setK_heatDec={setK_heatDec} />
-        </Tooltip>
 
         <Tooltip content="Выбрать опору для определения резерва мощности">
           <FieldLabel text="Выберите опору">
@@ -94,6 +88,18 @@ export function ResultsBlock({
               ))}
             </select>
           </FieldLabel>
+        </Tooltip>
+
+        <Tooltip
+          content="Резерв мощности постоянной нагрузки для указанной опоры"
+          className="text-[7px] max-w-60"
+        >
+          <ResultBadge
+            label="Резерв мощности"
+            value={powerReserve}
+            unit="кВт"
+            status={reserveStatus}
+          />
         </Tooltip>
       </div>
 
@@ -114,15 +120,12 @@ export function ResultsBlock({
           status={ResultStatus.DEFAULT}
         />
 
-        <Tooltip
-          content="Резерв мощности постоянной нагрузки для указанной опоры"
-          className="text-[7px] max-w-60"
-        >
+        <Tooltip content="Суммарное активное сопротивление линии" className="text-[7px] max-w-60">
           <ResultBadge
-            label="Резерв мощности"
-            value={powerReserve}
-            unit="кВт"
-            status={reserveStatus}
+            label="RΣ линии"
+            value={fullLineResistance}
+            unit="Ом"
+            status={ResultStatus.DEFAULT}
           />
         </Tooltip>
       </div>

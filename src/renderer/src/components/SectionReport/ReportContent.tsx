@@ -17,6 +17,8 @@ export interface ReportMeta {
 
   voltageDrop_v: number | null
   fullLength: number | null
+  fullResistance: number | null
+
   cosPhi: string
 }
 

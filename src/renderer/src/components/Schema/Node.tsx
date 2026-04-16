@@ -94,9 +94,11 @@ export function SchemaNode({ section, nextSection, isActive, onClick }: SchemaNo
           <div className="w-full flex justify-end gap-4 px-2 whitespace-nowrap">
             <span className="text-[10px] text-(--text) mb-1">{nextSection.wire}</span>
             <span className="text-[10px] text-(--status-default) mb-1">
-              {nextSection.length_m || '0'}м
+              {nextSection.length_m.trim() || '--- '}м
             </span>
-            <span className={`text-[10px] mb-1 ${statusClass}`}>{nextSection.results.Uend} В</span>
+            <span className={`text-[10px] mb-1 ${statusClass}`}>
+              {nextSection.results.Uend?.toFixed(1)} В
+            </span>
           </div>
           <PhaseLines phases={nextSection.phases} />
         </div>

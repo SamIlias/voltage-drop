@@ -39,7 +39,7 @@ function getSimultaneityFactor(count: number, factorList: Record<number, number>
   // Формула линейной интерполяции: y = y1 + (x - x1) * (y2 - y1) / (x2 - x1)
   const factor = leftVal + ((count - leftKey) * (rightVal - leftVal)) / (rightKey - leftKey)
 
-  return Number(factor.toFixed(4)) // Округляем для чистоты результата
+  return Number(factor.toFixed(5)) // Округляем для чистоты результата
 }
 
 export type LoadSummary = {
@@ -179,7 +179,6 @@ function getFullDU(sections: Section[]): number {
 
 export function getFullDUPercent(sections: Section[]): number {
   return (getFullDU(sections) * 100) / Unom220
-  // return (getFullDU(sections) * 100) / Usource230
 }
 
 type DownstreamData = {
@@ -201,8 +200,8 @@ export function calculateDownstreamPass(
     const phases = getEffectivePhases(section.id, sections)
     const Isec1 = calculateSectionCurrent(Psec * 1000, phases, Unom220, cosPhi)
     const R0_om_km = getWireResistance_om_km(section.wire)
-    const Rsec =
-      section.length_m === '0' ? 0 : (R0_om_km * parseFloat(section.length_m)) / 1000 || null
+    const len = Number(section.length_m)
+    const Rsec = !len ? 0 : (R0_om_km * len) / 1000
     const dUsec =
       phases === PhaseCount.three
         ? Rsec !== null
@@ -230,12 +229,12 @@ export function calculateUpstreamPass(
     const Uend = Math.max(0, Usource230 - dUsumFromStart)
 
     results.push({
-      Psec_kw: +d.Psec.toFixed(2),
-      Isec1: +d.Isec1.toFixed(2),
-      Rsec: d.Rsec ? +d.Rsec.toFixed(4) : null,
-      dUsec: d.dUsec ? +d.dUsec.toFixed(2) : null,
-      dUsecPercent: d.dUsec ? +((d.dUsec * 100) / Unom220).toFixed(2) : null,
-      Uend: +Uend.toFixed(1),
+      Psec_kw: d.Psec,
+      Isec1: d.Isec1,
+      Rsec: d.Rsec ? d.Rsec : null,
+      dUsec: d.dUsec ? d.dUsec : null,
+      dUsecPercent: d.dUsec ? (d.dUsec * 100) / Unom220 : null,
+      Uend: Uend,
       effectivePhaseCount: d.phases
     })
   }

@@ -103,6 +103,7 @@ ${getPrintStyles()}
             ${renderMetaItem('Длина линии', fmtSafe(meta.fullLength), 'м')}
           </div>
           <div>
+            ${renderMetaItem('R линии', fmtSafe(meta.fullResistance), 'Ом')}
             ${renderMetaItem('ΔU', fmtSafe(meta.voltageDrop_v), 'В')}
             ${renderMetaItem(
               'ΔU%',

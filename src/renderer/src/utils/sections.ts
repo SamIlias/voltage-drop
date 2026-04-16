@@ -66,10 +66,10 @@ export function getEffectivePhases(sectionId: string, sections: Section[]): Phas
   return minPhases
 }
 
-export const formatResult = (v: number | null | undefined) => {
+export const formatResult = (v: number | null | undefined, decimal = 3) => {
   if (v === 0) return '0'
   if (v === undefined || v === null || Number.isNaN(v)) return '-'
-  return String(v)
+  return String(v.toFixed(decimal))
 }
 
 export function getLineLength(sections: Section[]): number {

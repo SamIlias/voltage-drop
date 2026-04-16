@@ -7,6 +7,8 @@ import { useTheme } from '@renderer/providers/theme/useTheme'
 import { Theme } from '@renderer/providers/theme/types'
 import { POWER_SCHEMES } from '@renderer/constants/transformers'
 import { ChangeEvent } from 'react'
+import { Tooltip } from '../Tooltip'
+import { KHeatDecField } from '../validatedFields/KHeatDecField'
 
 interface LineParamsProps {
   lineName: string
@@ -21,6 +23,8 @@ interface LineParamsProps {
   setTransformerPower: (v: TransformerPower) => void
   transformerScheme: TransformerScheme
   setTransformerScheme: (v: TransformerScheme) => void
+  k_heatDec: string
+  setK_heatDec: (v: string) => void
 }
 
 export function LineParameters({
@@ -35,7 +39,9 @@ export function LineParameters({
   transformerPower,
   setTransformerPower,
   transformerScheme,
-  setTransformerScheme
+  setTransformerScheme,
+  k_heatDec,
+  setK_heatDec
 }: LineParamsProps) {
   const { theme } = useTheme()
 
@@ -54,7 +60,7 @@ export function LineParameters({
     <div className="flex flex-col gap-1 items-start my-2 ">
       <FieldLabel text="Название линии">
         <input
-          className={`${inputCls} min-w-61`}
+          className={`${inputCls} min-w-74`}
           value={lineName}
           onChange={(e) => setLineName(e.target.value)}
           placeholder="ВЛ 0,4 кВ от КТП"
@@ -72,6 +78,9 @@ export function LineParameters({
         </FieldLabel>
         <CosPhiField value={cosPhi} setCosPhi={setCosPhi} />
         <DUPercentField value={dUallowPercent} setDUAllow={setDUallow} />
+        <Tooltip content="Понижающий коэфф. для мощности нагрева">
+          <KHeatDecField value={k_heatDec} setK_heatDec={setK_heatDec} />
+        </Tooltip>
       </div>
 
       <div className="flex gap-1 ">

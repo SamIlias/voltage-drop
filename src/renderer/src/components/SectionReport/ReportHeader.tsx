@@ -27,6 +27,7 @@ export function ReportHeader({ meta }: { meta: ReportMeta }) {
             <MetaItem label="Длина" value={fmt(meta.fullLength)} unit="м" />
           </div>
           <div className="flex flex-col justify-center">
+            <MetaItem label="R линии" value={fmt(meta.fullResistance)} unit="Ом" />
             <MetaItem label="Потери, ΔU" value={fmt(meta.voltageDrop_v)} unit="В" />
             <MetaItem
               label="Потери, ΔU%"

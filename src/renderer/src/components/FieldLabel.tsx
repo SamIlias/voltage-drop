@@ -15,7 +15,7 @@ export function FieldLabel({ text, error, children, addClsName }: FieldLabelProp
           className="
             absolute top-full left-1/2 -translate-x-1/2 mt-2
             bg-(--bg-error) text-(--text-error) text-[10px] border border-red-500 px-2 py-1 rounded shadow-lg
-            whitespace-nowrap z-20
+            whitespace-nowrap z-200
             animate-in fade-in slide-in-from-top-1 duration-200
           "
         >

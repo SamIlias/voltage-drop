@@ -34,6 +34,7 @@ type HeaderProps = {
     dUallowNumPercent: number
     useKsim: boolean
     k_heatDec: string
+    fullLineResistance: number | null
   }
 
   transformer: {
@@ -85,6 +86,8 @@ export function Header({
     fullWorkCurrent: metrics.fullWorkCurrent,
     voltageDrop_v: metrics.voltageDrop ? (metrics.voltageDrop * Unom220) / 100 : null,
     fullLength: metrics.lineLength || null,
+    fullResistance: electrical.fullLineResistance,
+
     cosPhi: settings.cosPhi,
 
     IkzSummary: metrics.IkzSummary,
@@ -132,6 +135,8 @@ export function Header({
         setTransformerPower={settings.setTransformerPower}
         transformerScheme={settings.transformerScheme}
         setTransformerScheme={settings.setTransformerScheme}
+        k_heatDec={electrical.k_heatDec}
+        setK_heatDec={settings.setK_heatDec}
       />
 
       <VDivider />
@@ -141,6 +146,7 @@ export function Header({
         lineLength={metrics.lineLength}
         powerReserve={metrics.powerReserve}
         fullWorkCurrent={metrics.fullWorkCurrent}
+        fullLineResistance={electrical.fullLineResistance}
         transformerLoad={transformer.load}
         voltageDrop={metrics.voltageDrop}
         poleForCalcReserve={sections.poleForCalcReserve}
@@ -150,8 +156,6 @@ export function Header({
         useKsim={electrical.useKsim}
         sections={sections.data}
         IkzSummary={metrics.IkzSummary}
-        k_heatDec={electrical.k_heatDec}
-        setK_heatDec={settings.setK_heatDec}
       />
 
       <VDivider />
