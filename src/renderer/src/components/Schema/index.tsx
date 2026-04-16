@@ -1,6 +1,7 @@
 import { Section } from '@renderer/types'
 import { SchemaNode } from './Node'
 import { getMaxUniqueLoadTypes } from '@renderer/utils'
+import { useEffect, useRef } from 'react'
 
 interface SchemaProps {
   sections: Section[]
@@ -10,6 +11,8 @@ interface SchemaProps {
 
 export function Schema({ sections, activeId, onActivate }: SchemaProps) {
   const maxUniqueLoadTypes = getMaxUniqueLoadTypes(sections)
+
+  const nodesRef = useRef<Record<string, HTMLDivElement | null>>({})
 
   const getDivHeight = (num: number): number => {
     switch (num) {
@@ -26,6 +29,16 @@ export function Schema({ sections, activeId, onActivate }: SchemaProps) {
     }
   }
 
+  useEffect(() => {
+    if (activeId && nodesRef.current[activeId]) {
+      nodesRef.current[activeId]?.scrollIntoView({
+        behavior: 'smooth',
+        inline: 'center',
+        block: 'nearest'
+      })
+    }
+  }, [activeId])
+
   return (
     <section
       className={`flex items-end shrink-0 overflow-x-auto border-b border-(--color-border) bg-(--bg-scheme) px-8 pb-3`}
@@ -35,6 +48,9 @@ export function Schema({ sections, activeId, onActivate }: SchemaProps) {
       {sections.map((s, i) => (
         <SchemaNode
           key={s.id}
+          ref={(el) => {
+            nodesRef.current[s.id] = el
+          }}
           section={s}
           nextSection={sections[i + 1]}
           isActive={s.id === activeId}
