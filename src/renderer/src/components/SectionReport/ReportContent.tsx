@@ -12,8 +12,8 @@ export interface ReportMeta {
   transformerLoad: number | null
 
   fullWorkCurrent: number | null
-  loadSummary: LoadSummary
-  IkzSummary: IkzSummary
+  loadSummary: LoadSummary | null
+  IkzSummary: IkzSummary | null
 
   voltageDrop_v: number | null
   fullLength: number | null

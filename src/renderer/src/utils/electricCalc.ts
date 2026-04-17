@@ -158,7 +158,8 @@ function getLoadThroughSection(
   sections: Section[],
   useKsim: boolean,
   k_heatDec: number
-): number {
+): number | null {
+  if (!sectionId) return null
   return getLoadSummary(sectionId, sections, useKsim, k_heatDec).totalPower
 }
 
@@ -168,23 +169,27 @@ export function getTransformerLoad(
   useKsim: boolean,
   k_heatDec: number,
   cosPhi: number
-): number {
-  const load = getLoadThroughSection(sections[0].id, sections, useKsim, k_heatDec)
+): number | null {
+  const load = getLoadThroughSection(sections[0]?.id, sections, useKsim, k_heatDec)
+  if (!load) return null
   return (load * 100) / (parseInt(transformerPower) * cosPhi)
 }
 
-function getFullDU(sections: Section[]): number {
+function getFullDU(sections: Section[]): number | null {
+  if (!sections.length) return null
   return sections.reduce((sum, s) => sum + (s.results.dUsec ?? 0), 0)
 }
 
-export function getFullDUPercent(sections: Section[]): number {
-  return (getFullDU(sections) * 100) / Unom220
+export function getFullDUPercent(sections: Section[]): number | null {
+  const dU = getFullDU(sections)
+
+  return dU ? (dU * 100) / Unom220 : null
 }
 
 type DownstreamData = {
-  Psec: number
+  Psec: number | null
   phases: PhaseCount
-  Isec1: number
+  Isec1: number | null
   Rsec: number | null
   dUsec: number | null
 }
@@ -198,16 +203,16 @@ export function calculateDownstreamPass(
   return sections.map((section) => {
     const Psec = getLoadThroughSection(section.id, sections, useKsim, k_heatDec)
     const phases = getEffectivePhases(section.id, sections)
-    const Isec1 = calculateSectionCurrent(Psec * 1000, phases, Unom220, cosPhi)
+    const Isec1 = Psec ? calculateSectionCurrent(Psec * 1000, phases, Unom220, cosPhi) : null
     const R0_om_km = getWireResistance_om_km(section.wire)
     const len = Number(section.length_m)
     const Rsec = !len ? 0 : (R0_om_km * len) / 1000
     const dUsec =
       phases === PhaseCount.three
-        ? Rsec !== null
+        ? Rsec !== null && Isec1
           ? Isec1 * Rsec
           : null
-        : Rsec !== null
+        : Rsec !== null && Isec1
           ? 2 * Isec1 * Rsec
           : null
 

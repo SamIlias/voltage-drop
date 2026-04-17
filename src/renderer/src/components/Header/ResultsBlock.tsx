@@ -7,7 +7,6 @@ import { Tooltip } from '../Tooltip'
 import { LoadSummary } from '@renderer/utils/electricCalc'
 import { Unom220 } from '@renderer/constants'
 import { inputCls } from '@renderer/assets/common'
-import { KHeatDecField } from '../validatedFields/KHeatDecField'
 
 interface ResultsBlockProps {
   dUallowNum: number
@@ -21,7 +20,7 @@ interface ResultsBlockProps {
   setPoleForCalcReserve: (v: string | null) => void
   useKsim: boolean
   setUseKsim: (v: boolean) => void
-  loadSummary: LoadSummary
+  loadSummary: LoadSummary | null
   sections: Section[]
   IkzSummary: IkzSummary | null
 }
@@ -68,8 +67,8 @@ export function ResultsBlock({
               />
             </Tooltip>
             <div className="flex flex-col text-[10px] text-(--color-active)">
-              <span>Kбыт = {loadSummary.household.ksim.toFixed(3)}</span>
-              <span>Kпром = {loadSummary.prom.ksim.toFixed(3)}</span>
+              <span>Kбыт = {loadSummary?.household.ksim.toFixed(3) || 1}</span>
+              <span>Kпром = {loadSummary?.prom.ksim.toFixed(3) || 1}</span>
             </div>
           </div>
         </FieldLabel>
@@ -82,7 +81,7 @@ export function ResultsBlock({
               onChange={(e) => setPoleForCalcReserve(e.target.value)}
             >
               {sections.map((s) => (
-                <option key={s.poleNumber} value={s.poleNumber}>
+                <option key={s.id} value={s.poleNumber}>
                   {s.poleNumber}
                 </option>
               ))}
@@ -140,20 +139,10 @@ export function ResultsBlock({
           />
         </Tooltip>
 
-        <ResultBadge
-          label="Потеря напряжения"
-          value={voltageDrop_v || 0}
-          unit="В"
-          status={dropStatus}
-        />
+        <ResultBadge label="Потеря напряжения" value={voltageDrop_v} unit="В" status={dropStatus} />
 
         <Tooltip content="Потери в конце линии">
-          <ResultBadge
-            label="Потеря напряжения"
-            value={voltageDrop || 0}
-            unit="%"
-            status={dropStatus}
-          />
+          <ResultBadge label="Потеря напряжения" value={voltageDrop} unit="%" status={dropStatus} />
         </Tooltip>
       </div>
 

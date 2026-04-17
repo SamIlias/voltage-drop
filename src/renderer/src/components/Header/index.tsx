@@ -4,7 +4,7 @@ import { ActionButton } from '../ActionButton'
 import { Tooltip } from '../Tooltip'
 import { LoadsSummaryBlock } from './LoadsSummaryBlock'
 import { ResultsBlock } from './ResultsBlock'
-import { Section } from '@renderer/types'
+import { IkzSummary, Section } from '@renderer/types'
 import { SectionReport } from '../SectionReport'
 import { ReportMeta } from '../SectionReport/ReportContent'
 import { ThemeToggle } from '../ThemeToggle'
@@ -12,6 +12,7 @@ import { ThemeToggle } from '../ThemeToggle'
 import myLogo from '@renderer/assets/logo.png'
 import { LineParameters } from './LineParameters'
 import { AppSettings } from '@renderer/hooks/useAppSettings'
+import { LoadSummary } from '@renderer/utils/electricCalc'
 
 type HeaderProps = {
   history: {
@@ -47,9 +48,9 @@ type HeaderProps = {
     voltageDrop: number | null
     powerReserve: number | null
     fullWorkCurrent: number | null
-    lineLength: number
-    loadSummary: any
-    IkzSummary: any
+    lineLength: number | null
+    loadSummary: LoadSummary | null
+    IkzSummary: IkzSummary | null
   }
 
   sections: {
@@ -85,7 +86,7 @@ export function Header({
 
     fullWorkCurrent: metrics.fullWorkCurrent,
     voltageDrop_v: metrics.voltageDrop ? (metrics.voltageDrop * Unom220) / 100 : null,
-    fullLength: metrics.lineLength || null,
+    fullLength: metrics.lineLength,
     fullResistance: electrical.fullLineResistance,
 
     cosPhi: settings.cosPhi,

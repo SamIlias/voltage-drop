@@ -42,24 +42,24 @@ export function ReportHeader({ meta }: { meta: ReportMeta }) {
         <SectionLabel>Нагрузки</SectionLabel>
         <div className={`flex gap-2 justify-around ${baseBlockInput}`}>
           <div>
-            <MetaItem label="NΣ" value={meta.loadSummary.totalCount} unit="шт" />
-            <MetaItem label="PΣ" value={fmt(meta.loadSummary.totalPower)} unit="кВт" />
+            <MetaItem label="NΣ" value={meta.loadSummary?.totalCount || '--'} unit="шт" />
+            <MetaItem label="PΣ" value={fmt(meta.loadSummary?.totalPower) || '--'} unit="кВт" />
           </div>
 
           <div>
             <MetaItem
               label={`N${LoadType.Household}`}
-              value={meta.loadSummary.household.count}
+              value={meta.loadSummary?.household.count || '--'}
               unit="шт"
             />
             <MetaItem
               label={`P${LoadType.Household}`}
-              value={fmt(meta.loadSummary.household.power)}
+              value={fmt(meta.loadSummary?.household.power) || '--'}
               unit="кВт"
             />
             <MetaItem
               label={`K${LoadType.Household}`}
-              value={meta.loadSummary.household.ksim}
+              value={meta.loadSummary?.household.ksim || '--'}
               unit="шт"
             />
           </div>
@@ -67,17 +67,17 @@ export function ReportHeader({ meta }: { meta: ReportMeta }) {
           <div>
             <MetaItem
               label={`N${LoadType.Heating}`}
-              value={meta.loadSummary.heating.count}
+              value={meta.loadSummary?.heating.count || '--'}
               unit="шт"
             />
             <MetaItem
               label={`P${LoadType.Heating}`}
-              value={fmt(meta.loadSummary.heating.power)}
+              value={fmt(meta.loadSummary?.heating.power) || '--'}
               unit="кВт"
             />
             <MetaItem
               label={`K${LoadType.Heating}`}
-              value={meta.loadSummary.heating.ksim}
+              value={meta.loadSummary?.heating.ksim || '--'}
               unit="шт"
             />
           </div>
@@ -85,28 +85,36 @@ export function ReportHeader({ meta }: { meta: ReportMeta }) {
           <div>
             <MetaItem
               label={`N${LoadType.ElectricCar}`}
-              value={meta.loadSummary.electricCar.count}
+              value={meta.loadSummary?.electricCar.count || '--'}
               unit="шт"
             />
             <MetaItem
               label={`P${LoadType.ElectricCar}`}
-              value={fmt(meta.loadSummary.electricCar.power)}
+              value={fmt(meta.loadSummary?.electricCar.power) || '--'}
               unit="кВт"
             />
             <MetaItem
               label={`K${LoadType.ElectricCar}`}
-              value={meta.loadSummary.electricCar.ksim}
+              value={meta.loadSummary?.electricCar.ksim || '--'}
               unit="шт"
             />
           </div>
           <div>
-            <MetaItem label={`N${LoadType.Prom}`} value={meta.loadSummary.prom.count} unit="шт" />
+            <MetaItem
+              label={`N${LoadType.Prom}`}
+              value={meta.loadSummary?.prom.count || '--'}
+              unit="шт"
+            />
             <MetaItem
               label={`P${LoadType.Prom}`}
-              value={fmt(meta.loadSummary.prom.power)}
+              value={fmt(meta.loadSummary?.prom.power) || '--'}
               unit="кВт"
             />
-            <MetaItem label={`K${LoadType.Prom}`} value={meta.loadSummary.prom.ksim} unit="шт" />
+            <MetaItem
+              label={`K${LoadType.Prom}`}
+              value={meta.loadSummary?.prom.ksim || '--'}
+              unit="шт"
+            />
           </div>
         </div>
       </div>
@@ -114,9 +122,9 @@ export function ReportHeader({ meta }: { meta: ReportMeta }) {
       <div className="">
         <SectionLabel>Токи КЗ</SectionLabel>
         <div className={`flex flex-col ${baseBlockInput}`}>
-          <MetaItem label="3-фазное КЗ" value={fmt(meta.IkzSummary.Ikz3)} unit="А" />
-          <MetaItem label="2-фазное КЗ" value={fmt(meta.IkzSummary.Ikz2)} unit="А" />
-          <MetaItem label="1-фазное КЗ" value={fmt(meta.IkzSummary.Ikz1)} unit="А" />
+          <MetaItem label="3-фазное КЗ" value={fmt(meta.IkzSummary?.Ikz3) || '--'} unit="А" />
+          <MetaItem label="2-фазное КЗ" value={fmt(meta.IkzSummary?.Ikz2) || '--'} unit="А" />
+          <MetaItem label="1-фазное КЗ" value={fmt(meta.IkzSummary?.Ikz1) || '--'} unit="А" />
         </div>
       </div>
     </div>

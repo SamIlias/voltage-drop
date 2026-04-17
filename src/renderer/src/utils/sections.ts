@@ -72,13 +72,15 @@ export const formatResult = (v: number | null | undefined, decimal = 3) => {
   return String(v.toFixed(decimal))
 }
 
-export function getLineLength(sections: Section[]): number {
+export function getLineLength(sections: Section[]): number | null {
+  if (!sections.length) return null
   return sections.reduce((len, s) => {
     return len + parseFloat(s.length_m) || 0
   }, 0)
 }
 
-export function getLineResistance(sections: Section[]): number {
+export function getLineResistance(sections: Section[]): number | null {
+  if (!sections.length) return null
   return sections.reduce((R, s) => {
     return R + (s.results.Rsec || 0)
   }, 0)

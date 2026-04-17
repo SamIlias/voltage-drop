@@ -120,32 +120,32 @@ ${getPrintStyles()}
         <div class="meta-block row">
 
           <div>
-            ${renderMetaItem('NΣ', meta.loadSummary.totalCount)}
-            ${renderMetaItem('PΣ', fmtSafe(meta.loadSummary.totalPower), 'кВт')}
+            ${renderMetaItem('NΣ', fmtSafe(meta.loadSummary?.totalCount, 0))}
+            ${renderMetaItem('PΣ', fmtSafe(meta.loadSummary?.totalPower), 'кВт')}
           </div>
 
           <div>
-            ${renderMetaItem('Nбыт', meta.loadSummary.household.count)}
-            ${renderMetaItem('Pбыт', fmtSafe(meta.loadSummary.household.power))}
-            ${renderMetaItem('Kбыт', meta.loadSummary.household.ksim)}
+            ${renderMetaItem('Nбыт', fmtSafe(meta.loadSummary?.household.count, 0))}
+            ${renderMetaItem('Pбыт', fmtSafe(meta.loadSummary?.household.power))}
+            ${renderMetaItem('Kбыт', fmtSafe(meta.loadSummary?.household.ksim))}
           </div>
 
           <div>
-            ${renderMetaItem('Nнагр', meta.loadSummary.heating.count)}
-            ${renderMetaItem('Pнагр', fmtSafe(meta.loadSummary.heating.power))}
-            ${renderMetaItem('Kнагр', meta.loadSummary.heating.ksim)}
+            ${renderMetaItem('Nнагр', fmtSafe(meta.loadSummary?.heating.count, 0))}
+            ${renderMetaItem('Pнагр', fmtSafe(meta.loadSummary?.heating.power))}
+            ${renderMetaItem('Kнагр', fmtSafe(meta.loadSummary?.heating.ksim))}
           </div>
 
           <div>
-            ${renderMetaItem('Nэл.авто', meta.loadSummary.electricCar.count)}
-            ${renderMetaItem('Pэл.авто', fmtSafe(meta.loadSummary.electricCar.power))}
-            ${renderMetaItem('Kэл.авто', meta.loadSummary.electricCar.ksim)}
+            ${renderMetaItem('Nэл.авто', fmtSafe(meta.loadSummary?.electricCar.count, 0))}
+            ${renderMetaItem('Pэл.авто', fmtSafe(meta.loadSummary?.electricCar.power))}
+            ${renderMetaItem('Kэл.авто', fmtSafe(meta.loadSummary?.electricCar.ksim))}
           </div>
 
           <div>
-            ${renderMetaItem('Nпром', meta.loadSummary.prom.count)}
-            ${renderMetaItem('Pпром', fmtSafe(meta.loadSummary.prom.power))}
-            ${renderMetaItem('Kпром', meta.loadSummary.prom.ksim)}
+            ${renderMetaItem('Nпром', fmtSafe(meta.loadSummary?.prom.count, 0))}
+            ${renderMetaItem('Pпром', fmtSafe(meta.loadSummary?.prom.power))}
+            ${renderMetaItem('KпромfmtSafe(', meta.loadSummary?.prom.ksim)}
           </div>
 
         </div>
@@ -155,9 +155,9 @@ ${getPrintStyles()}
       <div>
         <p class="section-label">Токи КЗ</p>
         <div class="meta-block">
-          ${renderMetaItem('3ф', fmtSafe(meta.IkzSummary.Ikz3), 'А')}
-          ${renderMetaItem('2ф', fmtSafe(meta.IkzSummary.Ikz2), 'А')}
-          ${renderMetaItem('1ф', fmtSafe(meta.IkzSummary.Ikz1), 'А')}
+          ${renderMetaItem('3ф', fmtSafe(meta.IkzSummary?.Ikz3), 'А')}
+          ${renderMetaItem('2ф', fmtSafe(meta.IkzSummary?.Ikz2), 'А')}
+          ${renderMetaItem('1ф', fmtSafe(meta.IkzSummary?.Ikz1), 'А')}
         </div>
       </div>
 
