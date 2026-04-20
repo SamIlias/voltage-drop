@@ -24,8 +24,13 @@ export function LengthField({ value, onChange }: LengthFieldProps) {
         onClick={stop}
         placeholder="0"
         onChange={(e) => {
-          field.onChange(e)
-          onChange({ length_m: removeLeadingZeros(e.target.value) })
+          const normalizedValue = e.target.value.replace(',', '.')
+
+          field.onChange({
+            ...e,
+            target: { ...e.target, value: normalizedValue }
+          })
+          onChange({ length_m: removeLeadingZeros(normalizedValue) })
         }}
         onBlur={field.onBlur}
         className={`${field.inputCls} w-full`}

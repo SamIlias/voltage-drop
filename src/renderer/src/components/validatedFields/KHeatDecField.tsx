@@ -23,8 +23,12 @@ export function KHeatDecField({ value, setK_heatDec }: KHeatDecProps) {
         className={`${field.inputCls} w-12`}
         value={value}
         onChange={(e) => {
-          field.onChange(e)
-          setK_heatDec(e.target.value)
+          const normalizedValue = e.target.value.replace(',', '.')
+          field.onChange({
+            ...e,
+            target: { ...e.target, value: normalizedValue }
+          })
+          setK_heatDec(normalizedValue)
         }}
         onBlur={field.onBlur}
         placeholder="1"

@@ -24,8 +24,12 @@ export function LoadPowerField({ value, onChange, onAddLoad }: LoadPowerFieldPro
         onClick={stop}
         placeholder="кВт"
         onChange={(e) => {
-          field.onChange(e)
-          onChange({ newLoadPower: e.target.value })
+          const normalizedValue = e.target.value.replace(',', '.')
+          field.onChange({
+            ...e,
+            target: { ...e.target, value: normalizedValue }
+          })
+          onChange({ newLoadPower: normalizedValue })
         }}
         onKeyDown={(e) => e.key === 'Enter' && onAddLoad()}
         onBlur={field.onBlur}

@@ -23,8 +23,12 @@ export function CosPhiField({ value, setCosPhi }: CosPhiFieldProps) {
         className={`${field.inputCls} w-12`}
         value={value}
         onChange={(e) => {
-          field.onChange(e)
-          setCosPhi(e.target.value)
+          const normalizedValue = e.target.value.replace(',', '.')
+          field.onChange({
+            ...e,
+            target: { ...e.target, value: normalizedValue }
+          })
+          setCosPhi(normalizedValue)
         }}
         onBlur={field.onBlur}
         placeholder="0.9"

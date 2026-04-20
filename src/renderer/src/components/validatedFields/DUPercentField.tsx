@@ -23,8 +23,12 @@ export function DUPercentField({ value, setDUAllow }: DUPercentFieldProps) {
         className={`${field.inputCls} w-15`}
         value={value}
         onChange={(e) => {
-          field.onChange(e)
-          setDUAllow(e.target.value)
+          const normalizedValue = e.target.value.replace(',', '.')
+          field.onChange({
+            ...e,
+            target: { ...e.target, value: normalizedValue }
+          })
+          setDUAllow(normalizedValue)
         }}
         onBlur={field.onBlur}
         placeholder="13"
