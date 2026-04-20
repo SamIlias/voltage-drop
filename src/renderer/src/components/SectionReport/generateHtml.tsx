@@ -122,30 +122,31 @@ ${getPrintStyles()}
           <div>
             ${renderMetaItem('NΣ', fmtSafe(meta.loadSummary?.totalCount, 0))}
             ${renderMetaItem('PΣ', fmtSafe(meta.loadSummary?.totalPower), 'кВт')}
+            ${renderMetaItem('Kнагрев', fmtSafe(Number(meta.k_heatDec), 0) || null)}
           </div>
 
           <div>
             ${renderMetaItem('Nбыт', fmtSafe(meta.loadSummary?.household.count, 0))}
             ${renderMetaItem('Pбыт', fmtSafe(meta.loadSummary?.household.power))}
-            ${renderMetaItem('Kбыт', fmtSafe(meta.loadSummary?.household.ksim))}
+            ${renderMetaItem('Kодн.быт', fmtSafe(meta.loadSummary?.household.ksim, 0))}
           </div>
 
           <div>
             ${renderMetaItem('Nнагр', fmtSafe(meta.loadSummary?.heating.count, 0))}
             ${renderMetaItem('Pнагр', fmtSafe(meta.loadSummary?.heating.power))}
-            ${renderMetaItem('Kнагр', fmtSafe(meta.loadSummary?.heating.ksim))}
+            ${renderMetaItem('Kодн.нагр', fmtSafe(meta.loadSummary?.heating.ksim, 0))}
           </div>
 
           <div>
             ${renderMetaItem('Nэл.авто', fmtSafe(meta.loadSummary?.electricCar.count, 0))}
             ${renderMetaItem('Pэл.авто', fmtSafe(meta.loadSummary?.electricCar.power))}
-            ${renderMetaItem('Kэл.авто', fmtSafe(meta.loadSummary?.electricCar.ksim))}
+            ${renderMetaItem('Kодн.эл.авто', fmtSafe(meta.loadSummary?.electricCar.ksim, 0))}
           </div>
 
           <div>
             ${renderMetaItem('Nпром', fmtSafe(meta.loadSummary?.prom.count, 0))}
             ${renderMetaItem('Pпром', fmtSafe(meta.loadSummary?.prom.power))}
-            ${renderMetaItem('KпромfmtSafe(', meta.loadSummary?.prom.ksim)}
+            ${renderMetaItem('Kодн.пром', fmtSafe(meta.loadSummary?.prom.ksim, 0))}
           </div>
 
         </div>

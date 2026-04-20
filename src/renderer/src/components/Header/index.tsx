@@ -92,7 +92,8 @@ export function Header({
     cosPhi: settings.cosPhi,
 
     IkzSummary: metrics.IkzSummary,
-    loadSummary: metrics.loadSummary
+    loadSummary: metrics.loadSummary,
+    k_heatDec: electrical.k_heatDec
   }
 
   return (

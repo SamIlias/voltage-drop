@@ -19,11 +19,8 @@ export function ResultsBlock({ section: s }: ResultBlockProps) {
         const value = formatResult(s.results[key], decimal)
 
         return (
-          <Tooltip content={description}>
-            <div
-              key={key}
-              className="flex gap-4 justify-between items-center bg-(--bg-section-results) rounded px-2 py-1"
-            >
+          <Tooltip key={key} content={description}>
+            <div className="flex gap-4 justify-between items-center bg-(--bg-section-results) rounded px-2 py-1">
               <span className="text-xs text-(--text)">{label}</span>
               <span className="text-xs font-bold text-(--status-default)">
                 {value} <span className="text-(--color-secondary) font-normal">{unit}</span>

@@ -44,6 +44,7 @@ export function ReportHeader({ meta }: { meta: ReportMeta }) {
           <div>
             <MetaItem label="NΣ" value={meta.loadSummary?.totalCount || '--'} unit="шт" />
             <MetaItem label="PΣ" value={fmt(meta.loadSummary?.totalPower) || '--'} unit="кВт" />
+            <MetaItem label={`Kнагрев`} value={meta.k_heatDec || '--'} unit="" />
           </div>
 
           <div>
@@ -58,9 +59,9 @@ export function ReportHeader({ meta }: { meta: ReportMeta }) {
               unit="кВт"
             />
             <MetaItem
-              label={`K${LoadType.Household}`}
+              label={`Kодн.${LoadType.Household}`}
               value={meta.loadSummary?.household.ksim || '--'}
-              unit="шт"
+              unit=""
             />
           </div>
 
@@ -76,9 +77,9 @@ export function ReportHeader({ meta }: { meta: ReportMeta }) {
               unit="кВт"
             />
             <MetaItem
-              label={`K${LoadType.Heating}`}
+              label={`Kодн.${LoadType.Heating}`}
               value={meta.loadSummary?.heating.ksim || '--'}
-              unit="шт"
+              unit=""
             />
           </div>
 
@@ -94,9 +95,9 @@ export function ReportHeader({ meta }: { meta: ReportMeta }) {
               unit="кВт"
             />
             <MetaItem
-              label={`K${LoadType.ElectricCar}`}
+              label={`Kодн.${LoadType.ElectricCar}`}
               value={meta.loadSummary?.electricCar.ksim || '--'}
-              unit="шт"
+              unit=""
             />
           </div>
           <div>
@@ -111,9 +112,9 @@ export function ReportHeader({ meta }: { meta: ReportMeta }) {
               unit="кВт"
             />
             <MetaItem
-              label={`K${LoadType.Prom}`}
+              label={`Kодн.${LoadType.Prom}`}
               value={meta.loadSummary?.prom.ksim || '--'}
-              unit="шт"
+              unit=""
             />
           </div>
         </div>

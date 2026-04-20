@@ -20,6 +20,7 @@ export interface ReportMeta {
   fullResistance: number | null
 
   cosPhi: string
+  k_heatDec: string
 }
 
 export interface SectionReportProps {

@@ -3,26 +3,6 @@ export interface ValidationResult {
   error?: string
 }
 
-export function parsePoleNumber(value: string): number | null {
-  const trimmed = value.trim()
-
-  // Формат: целое число
-  if (/^\d+$/.test(trimmed)) {
-    return parseInt(trimmed, 10)
-  }
-
-  // Формат: дробный номер X/Y (оба — натуральные числа)
-  const fractionMatch = trimmed.match(/^(\d+)\/(\d+)$/)
-  if (fractionMatch) {
-    const numerator = parseInt(fractionMatch[1], 10)
-    const denominator = parseInt(fractionMatch[2], 10)
-    if (denominator === 0) return null
-    return numerator + denominator / 1000 // "3/2" → 3.002, для сравнения
-  }
-
-  return null
-}
-
 function parsePositiveFloat(value: string): number | null {
   const trimmed = value.trim()
 
@@ -52,26 +32,75 @@ export function validateLength(value: string): ValidationResult {
   return { valid: true }
 }
 
+// Pole number validation ----------------------------
+type PoleNumber = {
+  main: number
+  branchNum: number | null
+}
+
+export function parsePoleNumber(value: string): PoleNumber | null {
+  const trimmed = value.trim()
+
+  if (/^\d+$/.test(trimmed)) {
+    return { main: parseInt(trimmed, 10), branchNum: null }
+  }
+
+  const match = trimmed.match(/^(\d+)\/(\d+)$/)
+  if (match) {
+    const main = parseInt(match[1], 10)
+    const branchNum = parseInt(match[2], 10)
+
+    return { main, branchNum }
+  }
+
+  return null
+}
+
+function comparePoleNumbers(a: PoleNumber, b: PoleNumber): number {
+  if (a.main !== b.main) {
+    return a.main - b.main
+  }
+
+  const aBranch = a.branchNum ?? 0
+  const bBranch = b.branchNum ?? 0
+
+  return aBranch - bBranch
+}
+
 export function validatePoleNumber(value: string, prevPoleNumber?: string): ValidationResult {
   if (value.trim() === '') {
     return { valid: false, error: 'Введите номер опоры' }
   }
 
-  const n = parsePoleNumber(value)
+  const current = parsePoleNumber(value)
 
-  if (n === null) {
+  if (!current) {
     return { valid: false, error: 'Допустимы целое число или формат X/Y' }
   }
-  if (n <= 0) {
+
+  if (current.main <= 0) {
     return { valid: false, error: 'Номер опоры должен быть больше 0' }
   }
 
-  if (prevPoleNumber && prevPoleNumber.trim() !== '') {
+  if (current.branchNum !== null && current.branchNum <= 0) {
+    return { valid: false, error: 'Номер отпайки должен быть больше 0' }
+  }
+
+  if (prevPoleNumber) {
     const prev = parsePoleNumber(prevPoleNumber)
-    if (prev !== null && n <= prev) {
+
+    if (prev && prev.branchNum === null && current.branchNum !== null) {
+      return { valid: true }
+    }
+
+    if (prev && prev.branchNum !== null && current.branchNum === null) {
+      return { valid: true }
+    }
+
+    if (prev && comparePoleNumbers(current, prev) <= 0) {
       return {
         valid: false,
-        error: `Номер опоры должен быть больше предыдущего (${prevPoleNumber})`
+        error: `Номер опоры (отпайки) должен быть больше предыдущего (${prevPoleNumber})`
       }
     }
   }
