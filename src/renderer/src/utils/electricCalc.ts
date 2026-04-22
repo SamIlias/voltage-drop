@@ -251,8 +251,8 @@ export function calcIkz3(Rl: number, Xl: number, zt: number): number {
   return Usource400 / (Math.sqrt(3) * (Math.sqrt(Rl ** 2 + Xl ** 2) + zt))
 }
 
-export function calcIkz2(Ikz3: number): number {
-  return Ikz3 * 0.866
+export function calcIkz2(Rl: number, Xl: number, zt: number): number {
+  return (0.866 * Usource400) / (Math.sqrt(3) * (Math.sqrt(Rl ** 2 + Xl ** 2) + zt))
 }
 
 export function calcIkz1(Rl: number, Xl: number, zt0: number): number {

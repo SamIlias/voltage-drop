@@ -20,6 +20,7 @@ import AboutDialog from './components/AboutDialog'
 import { useAboutDialog } from './hooks/useAboutDialog'
 import { LoaderOverlay } from './components/LoaderOverlay'
 import { useLoader } from './hooks/useLoader'
+import { PhaseCount } from './types'
 
 export default function App() {
   const appSettings = useAppSettings()
@@ -62,6 +63,7 @@ export default function App() {
 
   const dUallowNumPercent = parseFloat(appSettings.dUallowPercent)
   const dUAllowNum = (Unom220 * dUallowNumPercent) / 100
+
   const { powerReserve } = usePowerReserve(
     computedSections,
     appSettings.poleForCalcReserve,
@@ -81,11 +83,15 @@ export default function App() {
     appSettings
   )
   const { lineLength_m } = useLineLength(computedSections)
+
+  const effectivePhaseCount = computedSections.at(-1)?.results.effectivePhaseCount
+
   const IkzSummary = useShortCircuitCurrent(
     appSettings.transformerPower,
     appSettings.transformerScheme,
     fullLineResistance,
-    lineLength_m
+    lineLength_m,
+    effectivePhaseCount || PhaseCount.three
   )
 
   return (
