@@ -1,5 +1,7 @@
 import { isSavedData, SavedData, Section } from '@renderer/types'
 import { AppSettings } from './useAppSettings'
+import { mkSection } from '@renderer/utils'
+import { defaultConstants } from '@renderer/constants'
 
 export function useFileHandlers(
   computedSections: Section[],
@@ -8,6 +10,16 @@ export function useFileHandlers(
   setIsLoading: (v: boolean) => void,
   appSettings: AppSettings
 ) {
+  const onCreateNew = () => {
+    appSettings.setLineName('')
+    appSettings.setCalcDate(new Date().toISOString().slice(0, 10))
+    appSettings.setCosPhiStr(`${defaultConstants.cosPhi}`)
+    appSettings.setDUallow(`${defaultConstants.dUallow}`)
+    appSettings.setK_heatDec(`${defaultConstants.k_heatDec}`)
+    appSettings.setUseKsim(true)
+    pushHistory([mkSection()])
+  }
+
   const handleSave = async () => {
     try {
       setIsLoading(true)
@@ -68,5 +80,5 @@ export function useFileHandlers(
     }
   }
 
-  return { handleLoad, handleSave }
+  return { handleLoad, handleSave, onCreateNew }
 }

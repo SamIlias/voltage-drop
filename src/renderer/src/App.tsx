@@ -46,7 +46,6 @@ export default function App() {
     updateSection,
     addLoad,
     addSection,
-    handleCreateNewComputing,
     fullLoadSummary,
     fullLineResistance
   } = useSections(cosPhiNum, appSettings.useKsim, k_heatDecNum)
@@ -74,7 +73,7 @@ export default function App() {
 
   const { resetError, error, setError } = useError()
 
-  const { handleLoad, handleSave } = useFileHandlers(
+  const { handleLoad, handleSave, onCreateNew } = useFileHandlers(
     computedSections,
     pushHistory,
     setError,
@@ -108,7 +107,7 @@ export default function App() {
           file={{
             handleSave,
             handleLoad,
-            onCreateNew: handleCreateNewComputing
+            onCreateNew
           }}
           settings={appSettings}
           electrical={{

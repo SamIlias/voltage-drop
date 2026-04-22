@@ -122,31 +122,31 @@ ${getPrintStyles()}
           <div>
             ${renderMetaItem('NΣ', fmtSafe(meta.loadSummary?.totalCount, 0))}
             ${renderMetaItem('PΣ', fmtSafe(meta.loadSummary?.totalPower), 'кВт')}
-            ${renderMetaItem('Kнагрев', fmtSafe(Number(meta.k_heatDec), 0) || null)}
+            ${renderMetaItem('Kнагрев', fmtSafe(Number(meta.k_heatDec)) || null)}
           </div>
 
           <div>
             ${renderMetaItem('Nбыт', fmtSafe(meta.loadSummary?.household.count, 0))}
             ${renderMetaItem('Pбыт', fmtSafe(meta.loadSummary?.household.power))}
-            ${renderMetaItem('Kодн.быт', fmtSafe(meta.loadSummary?.household.ksim, 0))}
+            ${renderMetaItem('Kодн.быт', fmtSafe(meta.loadSummary?.household.ksim))}
           </div>
 
           <div>
             ${renderMetaItem('Nнагр', fmtSafe(meta.loadSummary?.heating.count, 0))}
             ${renderMetaItem('Pнагр', fmtSafe(meta.loadSummary?.heating.power))}
-            ${renderMetaItem('Kодн.нагр', fmtSafe(meta.loadSummary?.heating.ksim, 0))}
+            ${renderMetaItem('Kодн.нагр', fmtSafe(meta.loadSummary?.heating.ksim))}
           </div>
 
           <div>
             ${renderMetaItem('Nэл.авто', fmtSafe(meta.loadSummary?.electricCar.count, 0))}
             ${renderMetaItem('Pэл.авто', fmtSafe(meta.loadSummary?.electricCar.power))}
-            ${renderMetaItem('Kодн.эл.авто', fmtSafe(meta.loadSummary?.electricCar.ksim, 0))}
+            ${renderMetaItem('Kодн.эл.авто', fmtSafe(meta.loadSummary?.electricCar.ksim))}
           </div>
 
           <div>
             ${renderMetaItem('Nпром', fmtSafe(meta.loadSummary?.prom.count, 0))}
             ${renderMetaItem('Pпром', fmtSafe(meta.loadSummary?.prom.power))}
-            ${renderMetaItem('Kодн.пром', fmtSafe(meta.loadSummary?.prom.ksim, 0))}
+            ${renderMetaItem('Kодн.пром', fmtSafe(meta.loadSummary?.prom.ksim))}
           </div>
 
         </div>
@@ -173,11 +173,11 @@ ${getPrintStyles()}
           <th>№</th>
           <th>Участок</th>
           <th>Провод</th>
-          <th>R</th>
-          <th>P</th>
-          <th>L</th>
-          <th>I</th>
-          <th>ΔU</th>
+          <th>R, Ом</th>
+          <th>P, кВт</th>
+          <th>L, м</th>
+          <th>I, А</th>
+          <th>ΔU, В</th>
           <th>Потребители</th>
           <th>Фаз</th>
         </tr>

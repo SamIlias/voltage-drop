@@ -101,8 +101,8 @@ describe('electricCalc integration', () => {
     })
 
     upstream.forEach((u) => {
-      // expect(u.Psec_kw).toBe(null)
-      // expect(u.Uend).toBeGreaterThan(0)
+      expect(u.Psec_kw).toBe(0)
+      expect(u.Uend).toBeGreaterThan(0)
     })
   })
 })

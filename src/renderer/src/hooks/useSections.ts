@@ -135,10 +135,6 @@ export function useSections(cosPhiNum: number, useKsim: boolean, k_heatDecNum: n
       loads_kw: s.loads_kw.filter((_, idx) => idx !== i)
     })
 
-  const handleCreateNewComputing = () => {
-    pushHistory([mkSection()])
-  }
-
   return {
     computedSections,
     sections,
@@ -156,7 +152,6 @@ export function useSections(cosPhiNum: number, useKsim: boolean, k_heatDecNum: n
     updateSection,
     addLoad,
     addSection,
-    handleCreateNewComputing,
     fullLoadSummary,
     fullLineResistance
   }

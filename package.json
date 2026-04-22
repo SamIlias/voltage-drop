@@ -1,5 +1,5 @@
 {
-  "name": "voltage-drop",
+  "name": "power-line-analyzer",
   "version": "1.0.0",
   "description": "An Electron application with React and TypeScript",
   "main": "./out/main/index.js",
@@ -23,6 +23,22 @@
     "build:win": "npm run build && electron-builder --win",
     "build:mac": "electron-vite build && electron-builder --mac",
     "build:linux": "electron-vite build && electron-builder --linux"
+  },
+  "build": {
+    "appId": "iliasSam",
+    "productName": "PowerLine Analyzer",
+    "directories": {
+      "buildResources": "build"
+    },
+    "win": {
+      "icon": "build/icon.ico"
+    },
+    "linux": {
+      "icon": "build"
+    },
+    "mac": {
+      "icon": "build/icon.icns"
+    }
   },
   "dependencies": {
     "@electron-toolkit/preload": "^3.0.2",

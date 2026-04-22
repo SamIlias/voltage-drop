@@ -2,7 +2,7 @@ import { app, shell, BrowserWindow, ipcMain, dialog } from 'electron'
 import { join } from 'path'
 import * as fs from 'fs'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
-import icon from '../../resources/icon1.png?asset'
+import icon from '../../resources/icon.png?asset'
 import { printHtml, savePdf } from './utils'
 
 function createWindow(): void {
