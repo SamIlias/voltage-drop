@@ -6,6 +6,7 @@ import {
 } from '../electricCalc'
 
 import { LoadType, PhaseCount, Section } from '@renderer/types'
+const Usource230 = 230
 
 jest.mock('@renderer/constants', () => {
   const actual = jest.requireActual('@renderer/constants')
@@ -95,7 +96,7 @@ describe('calculations', () => {
         { Psec: 5, phases: PhaseCount.three, Isec1: 1, Rsec: 1, dUsec: 3 }
       ]
 
-      const result = calculateUpstreamPass(sections, downstream)
+      const result = calculateUpstreamPass(sections, downstream, Usource230)
 
       expect(result).toHaveLength(2)
 
@@ -126,7 +127,7 @@ describe('calculations', () => {
       const sections = [createSection()]
 
       const downstream = calculateDownstreamPass(sections, 0.9, true, 1)
-      const upstream = calculateUpstreamPass(sections, downstream)
+      const upstream = calculateUpstreamPass(sections, downstream, Usource230)
 
       expect(downstream[0].Psec).toBe(0)
       expect(upstream[0].Psec_kw).toBe(0)

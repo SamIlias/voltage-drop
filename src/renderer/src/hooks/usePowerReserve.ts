@@ -1,4 +1,4 @@
-import { Usource230 } from '@renderer/constants'
+// import { Usource230 } from '@renderer/constants'
 import { LoadType, Section, SectionResults } from '@renderer/types'
 import { calculateAllSections } from '@renderer/utils'
 import { useMemo } from 'react'
@@ -9,7 +9,8 @@ export function usePowerReserve(
   dUAllow: number,
   cosPhi: number,
   useKsim: boolean,
-  k_heatDec: number
+  k_heatDec: number,
+  Usource230: number
 ) {
   const powerReserve = useMemo(() => {
     if (!poleForCalcReserve) return null
@@ -42,7 +43,7 @@ export function usePowerReserve(
       const mid = (left + right) / 2
 
       const testSections = withAddedLoad(mid)
-      const results = calculateAllSections(testSections, cosPhi, useKsim, k_heatDec)
+      const results = calculateAllSections(testSections, cosPhi, useKsim, k_heatDec, Usource230)
 
       const dU = getTotalVoltageDrop(results)
 
@@ -54,7 +55,7 @@ export function usePowerReserve(
       }
     }
     return +best.toFixed(2)
-  }, [sections, poleForCalcReserve, dUAllow, cosPhi, useKsim])
+  }, [sections, poleForCalcReserve, dUAllow, cosPhi, useKsim, Usource230])
 
   return { powerReserve }
 }

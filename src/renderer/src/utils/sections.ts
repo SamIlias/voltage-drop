@@ -90,8 +90,9 @@ export function calculateAllSections(
   sections: Section[],
   cosPhi: number,
   useKsim: boolean,
-  k_heatDec: number
+  k_heatDec: number,
+  Usource230: number
 ): SectionResults[] {
   const downstreamData = calculateDownstreamPass(sections, cosPhi, useKsim, k_heatDec)
-  return calculateUpstreamPass(sections, downstreamData)
+  return calculateUpstreamPass(sections, downstreamData, Usource230)
 }

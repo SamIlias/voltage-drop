@@ -9,7 +9,12 @@ import { getLoadSummary } from '@renderer/utils/electricCalc'
 import { getLineResistance } from '@renderer/utils/sections'
 import { WireMark } from '@renderer/constants/wires'
 
-export function useSections(cosPhiNum: number, useKsim: boolean, k_heatDecNum: number) {
+export function useSections(
+  cosPhiNum: number,
+  useKsim: boolean,
+  k_heatDecNum: number,
+  Usource230: number
+) {
   const [activeId, setActiveId] = useState<string | null>(null)
 
   const [historyState, dispatch] = useReducer(historyReducer, {
@@ -29,13 +34,13 @@ export function useSections(cosPhiNum: number, useKsim: boolean, k_heatDecNum: n
   const activeRef = useRef<HTMLDivElement>(null)
 
   const computedSections = useMemo(() => {
-    const allResults = calculateAllSections(sections, cosPhiNum, useKsim, k_heatDecNum)
+    const allResults = calculateAllSections(sections, cosPhiNum, useKsim, k_heatDecNum, Usource230)
     return sections.map((s, i) => ({
       ...s,
       prevPoleNumber: sections[i - 1]?.poleNumber || '0',
       results: allResults[i]
     }))
-  }, [sections, cosPhiNum, useKsim, k_heatDecNum])
+  }, [sections, cosPhiNum, useKsim, k_heatDecNum, Usource230])
 
   const fullLoadSummary = useMemo(
     () =>

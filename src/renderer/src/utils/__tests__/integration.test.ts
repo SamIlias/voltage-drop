@@ -11,6 +11,8 @@ jest.mock('uuid', () => ({
   }
 }))
 
+const Usource230 = 230
+
 const createSection = (overrides: Partial<Section>): Section => ({
   id: '0',
   poleNumber: '1',
@@ -51,7 +53,7 @@ describe('electricCalc integration', () => {
     const cosPhi = 0.9
 
     const downstream = calculateDownstreamPass(sections, cosPhi, true, 1)
-    const upstream = calculateUpstreamPass(sections, downstream)
+    const upstream = calculateUpstreamPass(sections, downstream, Usource230)
 
     // --- базовые проверки ---
     expect(downstream).toHaveLength(3)
@@ -92,7 +94,7 @@ describe('electricCalc integration', () => {
     const sections: Section[] = [createSection({ id: '0' }), createSection({ id: '1' })]
 
     const downstream = calculateDownstreamPass(sections, 0.9, true, 1)
-    const upstream = calculateUpstreamPass(sections, downstream)
+    const upstream = calculateUpstreamPass(sections, downstream, Usource230)
 
     downstream.forEach((d) => {
       expect(d.Psec).toBe(0)

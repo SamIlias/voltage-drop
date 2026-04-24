@@ -9,6 +9,7 @@ import { POWER_SCHEMES } from '@renderer/constants/transformers'
 import { ChangeEvent } from 'react'
 import { Tooltip } from '../Tooltip'
 import { KHeatDecField } from '../validatedFields/KHeatDecField'
+import { UsourseField } from '../validatedFields/UsourceField'
 
 interface LineParamsProps {
   lineName: string
@@ -25,6 +26,8 @@ interface LineParamsProps {
   setTransformerScheme: (v: TransformerScheme) => void
   k_heatDec: string
   setK_heatDec: (v: string) => void
+  Usource230: string
+  setUsource230: (v: string) => void
 }
 
 export function LineParameters({
@@ -41,7 +44,9 @@ export function LineParameters({
   transformerScheme,
   setTransformerScheme,
   k_heatDec,
-  setK_heatDec
+  setK_heatDec,
+  Usource230,
+  setUsource230
 }: LineParamsProps) {
   const { theme } = useTheme()
 
@@ -57,7 +62,7 @@ export function LineParameters({
   }
 
   return (
-    <div className="flex flex-col gap-1 items-start my-2 ">
+    <div className="flex flex-col gap-1 items-start my-2">
       <FieldLabel text="Название линии">
         <input
           className={`${inputCls} min-w-74`}
@@ -111,6 +116,10 @@ export function LineParameters({
             ))}
           </select>
         </FieldLabel>
+
+        <Tooltip content="Фазное напряжение на источнике">
+          <UsourseField value={Usource230} setValue={setUsource230} />
+        </Tooltip>
       </div>
     </div>
   )

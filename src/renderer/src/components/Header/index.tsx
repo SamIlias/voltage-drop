@@ -139,6 +139,8 @@ export function Header({
         setTransformerScheme={settings.setTransformerScheme}
         k_heatDec={electrical.k_heatDec}
         setK_heatDec={settings.setK_heatDec}
+        Usource230={settings.Usource230Str}
+        setUsource230={settings.setUsource230Str}
       />
 
       <VDivider />

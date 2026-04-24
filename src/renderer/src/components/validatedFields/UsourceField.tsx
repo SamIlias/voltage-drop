@@ -1,24 +1,24 @@
 import { MouseEvent } from 'react'
-import { validateDUPercent } from '@renderer/utils/validation'
+import { validateUsource } from '@renderer/utils/validation'
 import { useValidatedField } from '@renderer/hooks/useValidatedField'
 import { FieldLabel } from '@renderer/components/FieldLabel'
 import { defaultConstants } from '@renderer/constants'
 
 interface DUPercentFieldProps {
   value: string
-  setDUAllow: (value: string) => void
+  setValue: (value: string) => void
 }
 
-export function DUPercentField({ value, setDUAllow }: DUPercentFieldProps) {
+export function UsourseField({ value, setValue }: DUPercentFieldProps) {
   const field = useValidatedField(value, {
-    validate: validateDUPercent,
+    validate: validateUsource,
     validateOn: 'change'
   })
 
   const stop = (e: MouseEvent) => e.stopPropagation()
 
   return (
-    <FieldLabel text="dU% доп" error={field.error}>
+    <FieldLabel text="U на КТП" error={field.error} errorPosition="top">
       <input
         onClick={stop}
         className={`${field.inputCls} w-15`}
@@ -29,10 +29,10 @@ export function DUPercentField({ value, setDUAllow }: DUPercentFieldProps) {
             ...e,
             target: { ...e.target, value: normalizedValue }
           })
-          setDUAllow(normalizedValue)
+          setValue(normalizedValue)
         }}
         onBlur={field.onBlur}
-        placeholder={String(defaultConstants.dUallow)}
+        placeholder={String(defaultConstants.Usource230)}
       />
     </FieldLabel>
   )

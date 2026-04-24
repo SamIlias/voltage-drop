@@ -143,6 +143,23 @@ export function validateKFromZeroToOne(value: string): ValidationResult {
   return { valid: true }
 }
 
+export function validateUsource(value: string): ValidationResult {
+  if (value.trim() === '') {
+    return { valid: false, error: 'Введите значение' }
+  }
+
+  const n = parsePositiveFloat(value)
+
+  if (n === null) {
+    return { valid: false, error: 'Некорректное число' }
+  }
+  if (n < 200 || n > 300) {
+    return { valid: false, error: 'Ввдите число в пределах от 200 до 300' }
+  }
+
+  return { valid: true }
+}
+
 export function validateDUPercent(value: string): ValidationResult {
   if (value.trim() === '') {
     return { valid: false, error: 'Введите значение' }

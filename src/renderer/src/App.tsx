@@ -13,7 +13,7 @@ import { useAppSettings } from '@renderer/hooks/useAppSettings'
 import { useError } from '@renderer/hooks/useError'
 import { useFileHandlers } from '@renderer/hooks/useFileHandlers'
 import { useLineLength } from './hooks/useLineLength'
-import { Unom220 } from './constants'
+import { defaultConstants, Unom220 } from './constants'
 import { useFullWorkCurrent } from './hooks/useFullWorkCurrent'
 import { useShortCircuitCurrent } from './hooks/useShortCircuitCurrent'
 import AboutDialog from './components/AboutDialog'
@@ -29,6 +29,9 @@ export default function App() {
 
   const cosPhiNum = parseFloat(appSettings.cosPhi) || 0.9
   const k_heatDecNum = parseFloat(appSettings.k_heatDec) || 1
+  const Usource230 = parseFloat(appSettings.Usource230Str) || defaultConstants.Usource230
+  const Usource400 = Usource230 * Math.sqrt(3)
+  console.log(Usource230, Usource400)
 
   const {
     computedSections,
@@ -49,7 +52,7 @@ export default function App() {
     addSection,
     fullLoadSummary,
     fullLineResistance
-  } = useSections(cosPhiNum, appSettings.useKsim, k_heatDecNum)
+  } = useSections(cosPhiNum, appSettings.useKsim, k_heatDecNum, Usource230)
   const { transformerLoad } = useTransformerLoad(
     appSettings.transformerPower,
     computedSections,
@@ -70,7 +73,8 @@ export default function App() {
     dUAllowNum,
     cosPhiNum,
     appSettings.useKsim,
-    k_heatDecNum
+    k_heatDecNum,
+    Usource230
   )
 
   const { resetError, error, setError } = useError()
@@ -91,7 +95,9 @@ export default function App() {
     appSettings.transformerScheme,
     fullLineResistance,
     lineLength_m,
-    effectivePhaseCount || PhaseCount.three
+    effectivePhaseCount || PhaseCount.three,
+    Usource400,
+    Usource230
   )
 
   return (

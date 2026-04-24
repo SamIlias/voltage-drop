@@ -2,9 +2,9 @@ import {
   INDUSTRIAL_SIMULTANEITY_FACTOR,
   RESIDENTIAL_SIMULTANEITY_FACTOR,
   TransformerPower,
-  Unom220,
-  Usource230,
-  Usource400
+  Unom220
+  // Usource230,
+  // Usource400
 } from '@renderer/constants'
 import { LoadType, PhaseCount, Section, SectionResults } from '@renderer/types'
 import { getEffectivePhases } from './sections'
@@ -222,7 +222,8 @@ export function calculateDownstreamPass(
 
 export function calculateUpstreamPass(
   sections: Section[],
-  downstreamData: DownstreamData[]
+  downstreamData: DownstreamData[],
+  Usource230: number
 ): SectionResults[] {
   let dUsumFromStart = 0
   const results: SectionResults[] = []
@@ -247,14 +248,14 @@ export function calculateUpstreamPass(
   return results
 }
 
-export function calcIkz3(Rl: number, Xl: number, zt: number): number {
+export function calcIkz3(Rl: number, Xl: number, zt: number, Usource400): number {
   return Usource400 / (Math.sqrt(3) * (Math.sqrt(Rl ** 2 + Xl ** 2) + zt))
 }
 
-export function calcIkz2(Rl: number, Xl: number, zt: number): number {
+export function calcIkz2(Rl: number, Xl: number, zt: number, Usource400): number {
   return (0.866 * Usource400) / (Math.sqrt(3) * (Math.sqrt(Rl ** 2 + Xl ** 2) + zt))
 }
 
-export function calcIkz1(Rl: number, Xl: number, zt0: number): number {
+export function calcIkz1(Rl: number, Xl: number, zt0: number, Usource230): number {
   return Usource230 / (Math.sqrt((2 * Rl) ** 2 + Xl ** 2) + zt0 / 3)
 }

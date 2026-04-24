@@ -17,6 +17,7 @@ export function useFileHandlers(
     appSettings.setDUallow(`${defaultConstants.dUallow}`)
     appSettings.setK_heatDec(`${defaultConstants.k_heatDec}`)
     appSettings.setUseKsim(true)
+    appSettings.setUsource230Str(String(defaultConstants.Usource230))
     pushHistory([mkSection()])
   }
 

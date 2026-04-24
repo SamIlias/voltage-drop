@@ -1,6 +1,6 @@
 import { inputCls } from '@renderer/assets/common'
 import { ValidationResult } from '@renderer/utils/validation'
-import { useCallback, useState } from 'react'
+import { ChangeEvent, useCallback, useState } from 'react'
 
 const inputBase = inputCls
 // 'bg-[#0d1117] border border-[#30363d] rounded px-2 py-1 text-xs text-[#cdd9e5] outline-none focus:border-[#58a6ff]'
@@ -29,7 +29,7 @@ export function useValidatedField(
   )
 
   const onChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
+    (e: ChangeEvent<HTMLInputElement>) => {
       if (validateOn === 'change') check(e.target.value)
     },
     [check, validateOn]

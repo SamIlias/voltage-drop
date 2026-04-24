@@ -35,6 +35,8 @@ jest.mock('uuid', () => ({
   }
 }))
 
+const Usource230 = 230
+
 const createSection = (overrides: Partial<Section> = {}): Section => ({
   id: '0',
   poleNumber: '1',
@@ -142,7 +144,7 @@ describe('sections utils', () => {
     it('вызывает downstream и upstream расчёты', () => {
       const sections = [createSection()]
 
-      const result = calculateAllSections(sections, 0.9, true, 1)
+      const result = calculateAllSections(sections, 0.9, true, 1, Usource230)
 
       expect(result).toHaveLength(1)
       expect(result[0].Psec_kw).toBe(10)
