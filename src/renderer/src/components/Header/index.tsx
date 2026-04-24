@@ -1,4 +1,4 @@
-import { TransformerPower, TransformerScheme, Unom220 } from '@renderer/constants'
+import { defaultConstants, TransformerPower, TransformerScheme, Unom220 } from '@renderer/constants'
 import { VDivider } from '../VerticalDivider'
 import { ActionButton } from '../ActionButton'
 import { Tooltip } from '../Tooltip'
@@ -76,6 +76,10 @@ export function Header({
 }: HeaderProps) {
   const openAboutDialog = () => ui.setIsAboutOpen(true)
 
+  const Usource230 = parseFloat(settings.Usource230Str) || defaultConstants.Usource230
+  const Usource400 = Usource230 * Math.sqrt(3)
+  const Uend = sections.data.at(-1)?.results.Uend || Usource230
+
   const meta: ReportMeta = {
     title: settings.lineName,
     date: settings.calcDate,
@@ -93,7 +97,11 @@ export function Header({
 
     IkzSummary: metrics.IkzSummary,
     loadSummary: metrics.loadSummary,
-    k_heatDec: electrical.k_heatDec
+    k_heatDec: electrical.k_heatDec,
+
+    Usource230,
+    Usource400,
+    Uend
   }
 
   return (

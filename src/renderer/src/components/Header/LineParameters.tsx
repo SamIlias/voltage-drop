@@ -88,7 +88,7 @@ export function LineParameters({
         </Tooltip>
       </div>
 
-      <div className="flex gap-1 ">
+      <div className="flex gap-2 ">
         <FieldLabel text="Мощность тр-ра">
           <select
             className={`${inputCls} text-xs w-25 cursor-pointer`}

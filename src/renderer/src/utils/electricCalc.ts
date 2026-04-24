@@ -3,8 +3,6 @@ import {
   RESIDENTIAL_SIMULTANEITY_FACTOR,
   TransformerPower,
   Unom220
-  // Usource230,
-  // Usource400
 } from '@renderer/constants'
 import { LoadType, PhaseCount, Section, SectionResults } from '@renderer/types'
 import { getEffectivePhases } from './sections'

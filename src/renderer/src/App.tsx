@@ -31,7 +31,6 @@ export default function App() {
   const k_heatDecNum = parseFloat(appSettings.k_heatDec) || 1
   const Usource230 = parseFloat(appSettings.Usource230Str) || defaultConstants.Usource230
   const Usource400 = Usource230 * Math.sqrt(3)
-  console.log(Usource230, Usource400)
 
   const {
     computedSections,

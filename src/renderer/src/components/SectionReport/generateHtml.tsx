@@ -52,6 +52,7 @@ const renderRows = (sections: Section[]) =>
           <td>${s.length_m ?? '—'}</td>
           <td>${fmtSafe(s.results.Isec1)}</td>
           <td>${fmtSafe(s.results.dUsec)}</td>
+          <td>${fmtSafe(s.results.Uend)}</td>
           <td>${renderLoadCell(s)}</td>
           <td>${s.results.effectivePhaseCount ?? s.phases ?? '—'}</td>
         </tr>
@@ -110,6 +111,11 @@ ${getPrintStyles()}
               fmtSafe(meta.voltageDrop_v ? (meta.voltageDrop_v / 220) * 100 : null),
               '%'
             )}
+          </div>
+          <div>
+            ${renderMetaItem('Uл источника', fmtSafe(meta.Usource400), 'В')}
+            ${renderMetaItem('Uф источника', fmtSafe(meta.Usource230), 'В')}
+            ${renderMetaItem('Uф в конце линии', fmtSafe(meta.Uend), 'В')}
           </div>
         </div>
       </div>
@@ -178,6 +184,7 @@ ${getPrintStyles()}
           <th>L, м</th>
           <th>I, А</th>
           <th>ΔU, В</th>
+          <th>Uкон, В</th>
           <th>Потребители</th>
           <th>Фаз</th>
         </tr>

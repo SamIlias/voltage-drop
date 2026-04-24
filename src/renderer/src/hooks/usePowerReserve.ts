@@ -1,4 +1,3 @@
-// import { Usource230 } from '@renderer/constants'
 import { LoadType, Section, SectionResults } from '@renderer/types'
 import { calculateAllSections } from '@renderer/utils'
 import { useMemo } from 'react'

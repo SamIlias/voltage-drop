@@ -21,6 +21,10 @@ export interface ReportMeta {
 
   cosPhi: string
   k_heatDec: string
+
+  Usource230: number | null
+  Usource400: number | null
+  Uend: number | null
 }
 
 export interface SectionReportProps {
@@ -57,6 +61,7 @@ export function ReportContent({ meta, sections }: SectionReportProps) {
                 'L, м',
                 'I, А',
                 'ΔU, В',
+                'Uкон, В',
                 'Потребители',
                 'Фаз'
               ].map((h) => (
@@ -93,6 +98,9 @@ export function ReportContent({ meta, sections }: SectionReportProps) {
                 </td>
                 <td className="px-3 py-2 border border-zinc-400 text-zinc-700">
                   {fmt(s.results.dUsec)}
+                </td>
+                <td className="px-3 py-2 border border-zinc-400 text-zinc-700">
+                  {fmt(s.results.Uend)}
                 </td>
                 <td className="px-3 py-2 font-bold border border-zinc-400 max-w-100">
                   <LoadCell section={s} />

@@ -20,13 +20,13 @@ export function ReportHeader({ meta }: { meta: ReportMeta }) {
 
       <div className="">
         <SectionLabel>Линия</SectionLabel>
-        <div className={`flex gap-1 ${baseBlockInput}`}>
+        <div className={`flex gap-2 ${baseBlockInput}`}>
           <div>
             <MetaItem label="Ток 1 фазы" value={fmt(meta.fullWorkCurrent)} unit="А" />
             <MetaItem label="cos φ" value={meta.cosPhi} />
             <MetaItem label="Длина" value={fmt(meta.fullLength)} unit="м" />
           </div>
-          <div className="flex flex-col justify-center">
+          <div className="">
             <MetaItem label="R линии" value={fmt(meta.fullResistance)} unit="Ом" />
             <MetaItem label="Потери, ΔU" value={fmt(meta.voltageDrop_v)} unit="В" />
             <MetaItem
@@ -34,6 +34,11 @@ export function ReportHeader({ meta }: { meta: ReportMeta }) {
               value={fmt(meta.voltageDrop_v ? (meta.voltageDrop_v / Unom220) * 100 : null)}
               unit="%"
             />
+          </div>
+          <div className="">
+            <MetaItem label="Uл источника" value={fmt(meta.Usource400)} unit="В" />
+            <MetaItem label="Uф источника" value={fmt(meta.Usource230)} unit="В" />
+            <MetaItem label="Uф в конце линии" value={fmt(meta.Uend)} unit="В" />
           </div>
         </div>
       </div>

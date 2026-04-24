@@ -18,7 +18,7 @@ export function UsourseField({ value, setValue }: DUPercentFieldProps) {
   const stop = (e: MouseEvent) => e.stopPropagation()
 
   return (
-    <FieldLabel text="U на КТП" error={field.error} errorPosition="top">
+    <FieldLabel text="Uф на КТП" error={field.error} errorPosition="top">
       <input
         onClick={stop}
         className={`${field.inputCls} w-15`}
