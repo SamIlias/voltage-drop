@@ -6,12 +6,16 @@ const api = {
   saveData: (data: unknown, fileName?: string) => ipcRenderer.invoke('data:save', data, fileName),
   loadData: () => ipcRenderer.invoke('data:load'),
   printHtml: (html: string) => ipcRenderer.invoke('print:html', html),
-  savePdf: (html: string, fileName: string) => ipcRenderer.invoke('save:pdf', html, fileName)
+  savePdf: (html: string, fileName: string) => ipcRenderer.invoke('save:pdf', html, fileName),
+
+  onBeforeClose: (callback: () => void) => {
+    ipcRenderer.on('app:before-close', callback)
+    return () => ipcRenderer.removeListener('app:before-close', callback)
+  },
+  confirmClose: () => ipcRenderer.invoke('app:confirm-close'),
+  cancelClose: () => ipcRenderer.invoke('app:cancel-close')
 }
 
-// Use `contextBridge` APIs to expose Electron APIs to
-// renderer only if context isolation is enabled, otherwise
-// just add to the DOM global.
 if (process.contextIsolated) {
   try {
     contextBridge.exposeInMainWorld('electron', electronAPI)

@@ -5,6 +5,10 @@ interface api {
   loadData: () => Promise<unknown>
   printHtml: (html: string) => Promise<void>
   savePdf: (html: string, fileName: string) => Promise<void>
+
+  onBeforeClose: (callback: () => void) => () => void
+  confirmClose: () => Promise<void>
+  cancelClose: () => Promise<void>
 }
 
 declare global {

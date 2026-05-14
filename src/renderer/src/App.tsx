@@ -21,6 +21,8 @@ import { useAboutDialog } from './hooks/useAboutDialog'
 import { LoaderOverlay } from './components/LoaderOverlay'
 import { useLoader } from './hooks/useLoader'
 import { PhaseCount } from './types'
+import { useSaveConfirm } from './components/SaveConfirmModal/useSaveConfirm'
+import { SaveConfirmModal } from './components/SaveConfirmModal'
 
 export default function App() {
   const appSettings = useAppSettings()
@@ -85,6 +87,30 @@ export default function App() {
     setIsLoading,
     appSettings
   )
+
+  const { isModalConfirmOpen, reason, confirmNew, handleModalSave, handleDiscard, handleCancel } =
+    useSaveConfirm(handleSave)
+
+  const handleNewCalculation = () => {
+    if (computedSections.length <= 1 && !computedSections[0]?.results.Rsec) {
+      onCreateNew()
+    } else {
+      confirmNew(() => {
+        onCreateNew()
+      })
+    }
+  }
+
+  const handleLoadCalculation = () => {
+    if (computedSections.length <= 1 && !computedSections[0]?.results.Rsec) {
+      handleLoad()
+    } else {
+      confirmNew(() => {
+        handleLoad()
+      })
+    }
+  }
+
   const { lineLength_m } = useLineLength(computedSections)
 
   const effectivePhaseCount = computedSections.at(-1)?.results.effectivePhaseCount
@@ -117,8 +143,8 @@ export default function App() {
           }}
           file={{
             handleSave,
-            handleLoad,
-            onCreateNew
+            handleLoadCalculation,
+            handleNewCalculation
           }}
           settings={appSettings}
           electrical={{
@@ -177,6 +203,13 @@ export default function App() {
             </button>
           </div>
         </main>
+        <SaveConfirmModal
+          isOpen={isModalConfirmOpen}
+          reason={reason}
+          onSave={handleModalSave}
+          onDiscard={handleDiscard}
+          onCancel={handleCancel}
+        />
         <footer className="flex justify-between px-6 py-1">
           <span className="text-xs text-(--color-secondary) mb-1">
             Version 1.0.0. Support: Samovichilias@gmail.com

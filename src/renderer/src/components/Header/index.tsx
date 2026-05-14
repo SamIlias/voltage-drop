@@ -24,8 +24,8 @@ type HeaderProps = {
 
   file: {
     handleSave: () => void
-    handleLoad: () => void
-    onCreateNew: () => void
+    handleLoadCalculation: () => void
+    handleNewCalculation: () => void
   }
 
   settings: AppSettings
@@ -117,11 +117,11 @@ export function Header({
           О программе
         </ActionButton>
 
-        <ActionButton icon="📂" onClick={file.handleLoad}>
+        <ActionButton icon="📂" onClick={file.handleLoadCalculation}>
           Загрузить
         </ActionButton>
 
-        <ActionButton icon="️📝" onClick={file.onCreateNew}>
+        <ActionButton icon="️📝" onClick={file.handleNewCalculation}>
           Новый расчёт
         </ActionButton>
 

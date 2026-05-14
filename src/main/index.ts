@@ -5,6 +5,8 @@ import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
 import { printHtml, savePdf } from './utils'
 
+let forceQuit = false
+
 function createWindow(): void {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
@@ -21,6 +23,13 @@ function createWindow(): void {
 
   mainWindow.on('ready-to-show', () => {
     mainWindow.show()
+  })
+
+  mainWindow.on('close', (event) => {
+    if (!forceQuit) {
+      event.preventDefault()
+      mainWindow.webContents.send('app:before-close')
+    }
   })
 
   mainWindow.webContents.setWindowOpenHandler((details) => {
@@ -93,6 +102,15 @@ app.whenReady().then(() => {
     } catch {
       return null
     }
+  })
+
+  ipcMain.handle('app:confirm-close', () => {
+    forceQuit = true
+    app.quit()
+  })
+
+  ipcMain.handle('app:cancel-close', () => {
+    forceQuit = false
   })
 
   createWindow()
